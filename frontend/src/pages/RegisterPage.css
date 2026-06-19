@@ -1,0 +1,161 @@
+.register-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fafafa;
+  padding: 24px;
+}
+
+.register-box {
+  width: 100%;
+  max-width: 380px;
+}
+
+.register-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 32px;
+}
+
+.register-back {
+  background: none;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+  color: #333;
+  padding: 0;
+  line-height: 1;
+}
+
+.register-progress {
+  display: flex;
+  gap: 6px;
+  flex: 1;
+}
+
+.progress-bar {
+  flex: 1;
+  height: 4px;
+  border-radius: 2px;
+  background: #eee;
+  transition: background 0.3s;
+}
+
+.progress-bar--active {
+  background: #ff6b35;
+}
+
+.register-step h2 {
+  font-size: 24px;
+  font-weight: 800;
+  color: #111;
+  margin-bottom: 6px;
+}
+
+.register-step p {
+  font-size: 14px;
+  color: #aaa;
+  margin-bottom: 28px;
+}
+
+.register-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.register-fields input {
+  height: 52px;
+  border: 1.5px solid #e8e8e8;
+  border-radius: 12px;
+  padding: 0 16px;
+  font-size: 15px;
+  outline: none;
+  background: #fff;
+  transition: border-color 0.2s;
+}
+
+.register-fields input:focus {
+  border-color: #ff6b35;
+}
+
+.category-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.category-chip {
+  padding: 10px 16px;
+  border-radius: 24px;
+  border: 1.5px solid #e8e8e8;
+  background: #fff;
+  font-size: 14px;
+  font-weight: 500;
+  color: #555;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.category-chip--active {
+  background: #fff1eb;
+  border-color: #ff6b35;
+  color: #ff6b35;
+  font-weight: 700;
+}
+
+.register-error {
+  font-size: 13px;
+  color: #e53e3e;
+  text-align: center;
+  margin: 12px 0;
+}
+
+.register-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 32px;
+}
+
+.btn-primary {
+  width: 100%;
+  height: 52px;
+  background: #ff6b35;
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.btn-primary:disabled {
+  opacity: 0.6;
+}
+
+.btn-skip {
+  width: 100%;
+  height: 48px;
+  background: none;
+  border: none;
+  font-size: 14px;
+  color: #aaa;
+  cursor: pointer;
+}
+
+.register-login-link {
+  display: block;
+  text-align: center;
+  font-size: 14px;
+  color: #888;
+  text-decoration: none;
+  margin-top: 20px;
+}
+
+.register-login-link strong {
+  color: #ff6b35;
+}

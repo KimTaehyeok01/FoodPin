@@ -21,8 +21,26 @@
 | 프론트엔드 | React (Vite + TypeScript), 포트 5173 |
 | 백엔드 | NestJS (TypeScript), 포트 3000 |
 | DB | MySQL + TypeORM |
-| 지도 | 카카오 지도 JavaScript API |
+| 지도 | Leaflet + OpenStreetMap (카카오맵 심사 후 교체 예정) |
+| 모바일 | Capacitor (iOS/Android) |
+| 인증 | 네이버/카카오 OAuth2 + JWT |
 | 배포 | AWS Lightsail (Ubuntu) |
+
+---
+
+## 개발 순서 및 현황
+
+| 단계 | 내용 | 상태 |
+|------|------|------|
+| 1 | 모노레포 세팅 (NestJS + Vite React TS) | ✅ 완료 |
+| 2 | 지도 연동 (Leaflet + OpenStreetMap) | ✅ 완료 |
+| 3 | 백엔드 CRUD API (restaurant) | ✅ 완료 |
+| 4 | 지도 클릭 → 핀 추가 폼 | ✅ 완료 |
+| 5 | 핀 목록 UI + 삭제/수정 | 🔲 |
+| 6 | 네이버/카카오 OAuth2 + JWT | 🔲 |
+| 7 | Capacitor 세팅 (iOS/Android) | 🔲 |
+| 8 | 모바일 반응형 UI | 🔲 |
+| 9 | AWS Lightsail 배포 | 🔲 |
 
 ---
 
@@ -33,19 +51,20 @@
 ```
 FoodPin/
 ├── CLAUDE.md
-├── package.json          ← npm workspaces 루트
-├── backend/              ← NestJS
+├── package.json              ← npm workspaces 루트
+├── backend/                  ← NestJS
 │   ├── src/
 │   │   ├── main.ts
 │   │   ├── app.module.ts
-│   │   └── restaurants/
-│   │       ├── restaurants.module.ts
-│   │       ├── restaurants.controller.ts
-│   │       ├── restaurants.service.ts
-│   │       ├── restaurant.entity.ts
-│   │       └── dto/
+│   │   ├── restaurants/
+│   │   │   ├── restaurants.module.ts
+│   │   │   ├── restaurants.controller.ts
+│   │   │   ├── restaurants.service.ts
+│   │   │   ├── restaurant.entity.ts
+│   │   │   └── dto/
+│   │   └── auth/             ← OAuth2 + JWT (예정)
 │   └── .env
-└── frontend/             ← React (Vite + TS)
+└── frontend/                 ← React (Vite + TS)
     ├── src/
     │   ├── App.tsx
     │   ├── components/
@@ -64,6 +83,10 @@ FoodPin/
 | POST | /restaurants | 식당 등록 |
 | PATCH | /restaurants/:id | 식당 수정 |
 | DELETE | /restaurants/:id | 식당 삭제 |
+| GET | /auth/kakao | 카카오 OAuth2 시작 |
+| GET | /auth/kakao/callback | 카카오 OAuth2 콜백 |
+| GET | /auth/naver | 네이버 OAuth2 시작 |
+| GET | /auth/naver/callback | 네이버 OAuth2 콜백 |
 
 ---
 
@@ -85,6 +108,16 @@ FoodPin/
 | created_at | DATETIME | 등록일 |
 | updated_at | DATETIME | 수정일 |
 
+**user 테이블 (예정)**
+
+| 컬럼 | 타입 | 설명 |
+|------|------|------|
+| id | INT (PK, AI) | 고유 ID |
+| provider | VARCHAR(20) | kakao / naver |
+| provider_id | VARCHAR(100) | 소셜 고유 ID |
+| nickname | VARCHAR(50) | 닉네임 |
+| created_at | DATETIME | 가입일 |
+
 ---
 
 ## 환경변수
@@ -98,13 +131,20 @@ DB_PORT=3306
 DB_USERNAME=root
 DB_PASSWORD=
 DB_DATABASE=foodpin
+JWT_SECRET=
+KAKAO_CLIENT_ID=
+KAKAO_CLIENT_SECRET=
+KAKAO_CALLBACK_URL=http://localhost:3000/auth/kakao/callback
+NAVER_CLIENT_ID=
+NAVER_CLIENT_SECRET=
+NAVER_CALLBACK_URL=http://localhost:3000/auth/naver/callback
 ```
 
 ### frontend/.env
 
 ```
 VITE_API_URL=http://localhost:3000
-VITE_KAKAO_MAP_KEY=발급후입력
+VITE_KAKAO_MAP_KEY=3c968d8908eb81ac45ef8a39e7e3889f
 ```
 
 ---
@@ -131,6 +171,8 @@ VITE_KAKAO_MAP_KEY=발급후입력
 | `application.yml` | `.env` + `ConfigModule` |
 | JPA Entity | TypeORM Entity |
 | `ddl-auto: update` | `synchronize: true` (개발만) |
+| Spring Security + OAuth2 | Passport.js + @nestjs/passport |
+| JWT (jjwt) | @nestjs/jwt |
 
 ---
 
@@ -140,3 +182,4 @@ VITE_KAKAO_MAP_KEY=발급후입력
 - 키 종류: JavaScript 키
 - 플랫폼 등록: `http://localhost:5173` (개발) / 배포 도메인 (운영)
 - 키 입력 위치: `frontend/.env` → `VITE_KAKAO_MAP_KEY`
+- 현재 상태: 비즈 앱 심사 신청 완료 → 승인 후 Leaflet 교체 예정

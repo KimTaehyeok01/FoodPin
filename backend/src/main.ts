@@ -1,27 +1,35 @@
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
+import { NestExpressApplication } from '@nestjs/platform-express';
+import { join } from 'path';
+import { existsSync, mkdirSync } from 'fs';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
-  // Spring의 @CrossOrigin 또는 WebMvcConfigurer CORS 설정과 동일한 역할
   app.enableCors({
-    origin: 'http://localhost:5173',
+    origin: process.env.FRONTEND_URL ?? 'http://localhost:5173',
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
     credentials: true,
   });
 
-  // Spring의 @Valid + BindingResult 역할 — DTO 유효성 검사 전역 적용
   app.useGlobalPipes(
     new ValidationPipe({
-      whitelist: true,      // DTO에 없는 필드 자동 제거
+      whitelist: true,
       forbidNonWhitelisted: true,
-      transform: true,      // 요청 데이터를 DTO 타입으로 자동 변환
+      transform: true,
     }),
   );
 
-  const port = process.env.PORT ?? 3001;
+  // uploads 폴더 없으면 자동 생성
+  const uploadsDir = join(process.cwd(), 'uploads');
+  if (!existsSync(uploadsDir)) mkdirSync(uploadsDir);
+
+  // /uploads/* 정적 파일 서빙
+  app.useStaticAssets(uploadsDir, { prefix: '/uploads' });
+
+  const port = process.env.PORT ?? 3000;
   await app.listen(port);
   console.log(`FoodPin API running on http://localhost:${port}`);
 }

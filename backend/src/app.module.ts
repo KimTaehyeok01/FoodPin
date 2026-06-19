@@ -4,6 +4,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { RestaurantsModule } from './restaurants/restaurants.module';
+import { AuthModule } from './auth/auth.module';
+import { UploadModule } from './upload/upload.module';
+import { PinsModule } from './pins/pins.module';
 
 @Module({
   imports: [
@@ -20,10 +23,13 @@ import { RestaurantsModule } from './restaurants/restaurants.module';
         database: config.get('DB_DATABASE'),
         entities: [__dirname + '/**/*.entity{.ts,.js}'],
         synchronize: true,
-        logging: true,
+        logging: false,
       }),
     }),
+    AuthModule,
     RestaurantsModule,
+    PinsModule,
+    UploadModule,
   ],
   controllers: [AppController],
   providers: [AppService],

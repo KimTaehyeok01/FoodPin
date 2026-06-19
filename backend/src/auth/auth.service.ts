@@ -1,0 +1,80 @@
+import {
+  Injectable,
+  ConflictException,
+  UnauthorizedException,
+} from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { JwtService } from '@nestjs/jwt';
+import * as bcrypt from 'bcrypt';
+import { User } from '../users/user.entity';
+import { RegisterDto } from './dto/register.dto';
+import { LoginDto } from './dto/login.dto';
+
+interface SocialProfile {
+  provider: string;
+  providerId: string;
+  nickname: string;
+  profileImage: string | null;
+}
+
+@Injectable()
+export class AuthService {
+  constructor(
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
+    private readonly jwtService: JwtService,
+  ) {}
+
+  // 소셜 로그인: 없으면 생성, 있으면 조회
+  async findOrCreate(profile: SocialProfile): Promise<User> {
+    let user = await this.userRepository.findOneBy({
+      provider: profile.provider,
+      providerId: profile.providerId,
+    });
+    if (!user) {
+      user = this.userRepository.create({
+        ...profile,
+        email: null,
+        password: null,
+      });
+      await this.userRepository.save(user);
+    }
+    return user;
+  }
+
+  // 일반 회원가입
+  async register(dto: RegisterDto): Promise<User> {
+    const exists = await this.userRepository.findOneBy({ email: dto.email });
+    if (exists) throw new ConflictException('이미 사용 중인 이메일입니다.');
+
+    const hashed = await bcrypt.hash(dto.password, 10);
+    const user = this.userRepository.create({
+      email: dto.email,
+      password: hashed,
+      nickname: dto.nickname,
+      address: dto.address ?? null,
+      age: dto.age ?? null,
+      favoriteCategories: dto.favoriteCategories ?? null,
+      provider: null,
+      providerId: null,
+      profileImage: null,
+    });
+    return this.userRepository.save(user);
+  }
+
+  // 일반 로그인
+  async login(dto: LoginDto): Promise<string> {
+    const user = await this.userRepository.findOneBy({ email: dto.email });
+    if (!user || !user.password) throw new UnauthorizedException('이메일 또는 비밀번호가 올바르지 않습니다.');
+
+    const valid = await bcrypt.compare(dto.password, user.password);
+    if (!valid) throw new UnauthorizedException('이메일 또는 비밀번호가 올바르지 않습니다.');
+
+    return this.generateToken(user);
+  }
+
+  generateToken(user: User): string {
+    return this.jwtService.sign({ sub: user.id });
+  }
+}

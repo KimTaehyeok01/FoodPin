@@ -1,0 +1,153 @@
+.pin-form-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.pin-form {
+  background: #fff;
+  width: 100%;
+  max-width: 480px;
+  border-radius: 24px 24px 0 0;
+  padding: 12px 20px 40px;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: slideUp 0.25s ease;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+.pin-form__drag-bar {
+  width: 40px;
+  height: 4px;
+  background: #e0e0e0;
+  border-radius: 2px;
+  margin: 0 auto 16px;
+}
+
+.pin-form__restaurant-info {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.pin-form__restaurant-photo {
+  width: 64px;
+  height: 64px;
+  border-radius: 12px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.pin-form__restaurant-no-photo {
+  width: 64px;
+  height: 64px;
+  border-radius: 12px;
+  background: #f5f5f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  flex-shrink: 0;
+}
+
+.pin-form__title {
+  font-size: 17px;
+  font-weight: 700;
+  color: #111;
+  margin-bottom: 4px;
+}
+
+.pin-form__category {
+  display: inline-block;
+  font-size: 12px;
+  color: #ff6b35;
+  background: #fff1eb;
+  padding: 2px 8px;
+  border-radius: 10px;
+  margin-bottom: 4px;
+}
+
+.pin-form__address {
+  font-size: 12px;
+  color: #888;
+  margin-top: 4px;
+}
+
+.pin-form__field {
+  margin-bottom: 16px;
+}
+
+.pin-form__field label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: #444;
+  margin-bottom: 8px;
+}
+
+.pin-form__field textarea {
+  width: 100%;
+  border: 1.5px solid #e8e8e8;
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 15px;
+  outline: none;
+  resize: none;
+  font-family: inherit;
+  transition: border-color 0.2s;
+}
+
+.pin-form__field textarea:focus {
+  border-color: #ff6b35;
+}
+
+.pin-form__stars {
+  display: flex;
+  gap: 6px;
+}
+
+.star {
+  background: none;
+  border: none;
+  font-size: 30px;
+  color: #e0e0e0;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+  transition: color 0.15s;
+}
+
+.star--active {
+  color: #ff6b35;
+}
+
+.pin-form__actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.btn {
+  flex: 1;
+  height: 50px;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn--cancel { background: #f5f5f5; color: #555; }
+.btn--save { background: #ff6b35; color: #fff; }
+.btn--unpin { background: #fff0f0; color: #e53e3e; }

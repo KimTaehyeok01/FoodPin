@@ -1,8 +1,8 @@
 import { useEffect, useRef } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import type { Restaurant } from '../api/restaurants';
 
-// Leaflet 기본 마커 아이콘 경로 문제 해결 (Vite 빌드 시 발생)
 import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
 import markerIcon from 'leaflet/dist/images/marker-icon.png';
 import markerShadow from 'leaflet/dist/images/marker-shadow.png';
@@ -14,13 +14,39 @@ L.Icon.Default.mergeOptions({
   shadowUrl: markerShadow,
 });
 
+const pinnedIcon = new L.Icon({
+  iconUrl: 'data:image/svg+xml;utf8,' + encodeURIComponent(`
+    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="41" viewBox="0 0 25 41">
+      <path d="M12.5 0C5.6 0 0 5.6 0 12.5c0 9.4 12.5 28.5 12.5 28.5S25 21.9 25 12.5C25 5.6 19.4 0 12.5 0z" fill="#ff6b35"/>
+      <circle cx="12.5" cy="12.5" r="5" fill="white"/>
+    </svg>
+  `),
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+});
+
+const defaultIcon = new L.Icon({
+  iconUrl: markerIcon,
+  iconRetinaUrl: markerIcon2x,
+  shadowUrl: markerShadow,
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41],
+});
+
 interface Props {
   onMapClick?: (lat: number, lng: number, address: string) => void;
+  onMarkerClick?: (restaurant: Restaurant) => void;
+  restaurants?: Restaurant[];
+  pinnedIds?: Set<number>;
 }
 
-export default function MapView({ onMapClick }: Props) {
+export default function MapView({ onMapClick, onMarkerClick, restaurants = [], pinnedIds = new Set() }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<L.Map | null>(null);
+  const markersRef = useRef<L.Marker[]>([]);
 
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
@@ -35,7 +61,6 @@ export default function MapView({ onMapClick }: Props) {
     map.on('click', (e: L.LeafletMouseEvent) => {
       if (!onMapClick) return;
       const { lat, lng } = e.latlng;
-      // Leaflet은 역지오코딩 내장이 없어서 좌표만 전달 (주소는 추후 API 연동)
       onMapClick(lat, lng, '');
     });
 
@@ -44,6 +69,28 @@ export default function MapView({ onMapClick }: Props) {
       mapRef.current = null;
     };
   }, []);
+
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+
+    markersRef.current.forEach((m) => m.remove());
+    markersRef.current = [];
+
+    restaurants.forEach((r) => {
+      const isPinned = pinnedIds.has(r.id);
+      const marker = L.marker([r.latitude, r.longitude], {
+        icon: isPinned ? pinnedIcon : defaultIcon,
+      }).addTo(map);
+
+      marker.on('click', (e) => {
+        L.DomEvent.stopPropagation(e);
+        onMarkerClick?.(r);
+      });
+
+      markersRef.current.push(marker);
+    });
+  }, [restaurants, pinnedIds]);
 
   return <div ref={containerRef} style={{ width: '100%', height: '100%' }} />;
 }
