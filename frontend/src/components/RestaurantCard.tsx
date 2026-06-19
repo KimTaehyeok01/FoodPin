@@ -1,4 +1,4 @@
-import { MapPin } from 'lucide-react';
+import { Bookmark } from 'lucide-react';
 import type { Restaurant, Pin } from '../api/restaurants';
 import './RestaurantCard.css';
 
@@ -8,9 +8,10 @@ interface Props {
   restaurant: Restaurant;
   pinned?: boolean;
   myPin?: Pin;
+  hot?: boolean;
 }
 
-export default function RestaurantCard({ restaurant, pinned, myPin }: Props) {
+export default function RestaurantCard({ restaurant, pinned, myPin, hot }: Props) {
   const rating = myPin?.rating ?? 0;
 
   return (
@@ -24,25 +25,25 @@ export default function RestaurantCard({ restaurant, pinned, myPin }: Props) {
         {restaurant.category && (
           <span className="rc__badge">{restaurant.category}</span>
         )}
-        {pinned && (
-          <span className="rc__pinned-dot" />
-        )}
+        <button className={`rc__pin-btn ${pinned ? 'rc__pin-btn--active' : ''}`} aria-label="핀">
+          <Bookmark size={14} strokeWidth={2} fill={pinned ? '#ff6b35' : 'none'} />
+        </button>
+        {hot && <span className="rc__hot-badge">🔥 HOT</span>}
       </div>
 
       <div className="rc__body">
         <p className="rc__name">{restaurant.name}</p>
-        {myPin && (
-          <p className="rc__stars">
-            {'★'.repeat(rating)}{'☆'.repeat(5 - rating)}
-          </p>
-        )}
         {restaurant.address && (
-          <p className="rc__addr">
-            <MapPin size={10} strokeWidth={2} style={{ display: 'inline', marginRight: 3, verticalAlign: 'middle' }} />
-            {restaurant.address}
-          </p>
+          <p className="rc__addr">📍 {restaurant.address}</p>
         )}
-        {myPin?.memo && <p className="rc__memo">{myPin.memo}</p>}
+        <div className="rc__meta">
+          {rating > 0 ? (
+            <span className="rc__stars">⭐ {rating}.0</span>
+          ) : (
+            <span className="rc__stars rc__stars--empty">⭐ -</span>
+          )}
+          {myPin && <span className="rc__pinned-label">핀함</span>}
+        </div>
       </div>
     </div>
   );

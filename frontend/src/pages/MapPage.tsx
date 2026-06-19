@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Navigation, Search } from 'lucide-react';
 import MapView from '../components/KakaoMap';
 import AddRestaurantForm from '../components/AddPinForm';
 import PinForm from '../components/PinForm';
@@ -69,8 +70,15 @@ export default function MapPage() {
     <div className="map-page">
       <header className="map-header">
         <h1>지도</h1>
-        <span className="map-header__count">{restaurants.length}곳</span>
+        <button className="map-header__location-btn">
+          <Navigation size={14} strokeWidth={2.5} />
+          내 위치
+        </button>
       </header>
+      <div className="map-search-wrap">
+        <Search size={15} strokeWidth={2} className="map-search-icon" />
+        <input className="map-search" placeholder="지역이나 맛집 검색..." readOnly />
+      </div>
       <div className="map-view">
         <MapView
           restaurants={restaurants}

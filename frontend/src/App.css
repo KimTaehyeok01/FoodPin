@@ -8,6 +8,7 @@ html, body {
   height: 100%;
   font-family: -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
   background: #f5f5f7;
+  -webkit-font-smoothing: antialiased;
 }
 
 #root {

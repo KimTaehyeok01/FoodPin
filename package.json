@@ -11,5 +11,8 @@
     "dev:frontend": "npm run dev --workspace=frontend",
     "build:backend": "npm run build --workspace=backend",
     "build:frontend": "npm run build --workspace=frontend"
+  },
+  "devDependencies": {
+    "@types/jest": "^30.0.0"
   }
 }

@@ -1,8 +1,8 @@
 .rc {
   background: #fff;
-  border-radius: 18px;
+  border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
   cursor: pointer;
   transition: transform 0.18s, box-shadow 0.18s;
 }
@@ -10,14 +10,11 @@
 @media (min-width: 960px) {
   .rc:hover {
     transform: translateY(-4px);
-    box-shadow: 0 8px 28px rgba(0,0,0,0.12);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
   }
 }
 
-.rc:active {
-  transform: scale(0.97);
-  box-shadow: 0 1px 6px rgba(0,0,0,0.06);
-}
+.rc:active { transform: scale(0.97); }
 
 .rc__img-wrap {
   position: relative;
@@ -39,12 +36,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 40px;
+  font-size: 36px;
 }
 
+/* 카테고리 배지 (좌상단) */
 .rc__badge {
   position: absolute;
-  bottom: 8px;
+  top: 8px;
   left: 8px;
   background: rgba(0,0,0,0.55);
   color: #fff;
@@ -53,23 +51,45 @@
   padding: 3px 8px;
   border-radius: 10px;
   backdrop-filter: blur(4px);
-  letter-spacing: 0.2px;
 }
 
-.rc__pinned-dot {
+/* 핀 버튼 (우상단) */
+.rc__pin-btn {
   position: absolute;
-  top: 10px;
-  right: 10px;
-  width: 10px;
-  height: 10px;
-  background: #ff6b35;
+  top: 8px;
+  right: 8px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
-  border: 2px solid #fff;
-  box-shadow: 0 1px 4px rgba(255,107,53,0.5);
+  background: rgba(255,255,255,0.9);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #ff6b35;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.1);
+  transition: background 0.15s;
 }
 
+.rc__pin-btn--active { background: #fff2ed; }
+
+/* HOT 배지 (좌하단) */
+.rc__hot-badge {
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+  background: #ff6b35;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 10px;
+}
+
+/* 카드 바디 */
 .rc__body {
-  padding: 12px 12px 14px;
+  padding: 10px 12px 12px;
 }
 
 .rc__name {
@@ -83,13 +103,6 @@
   margin-bottom: 4px;
 }
 
-.rc__stars {
-  font-size: 12px;
-  color: #ff6b35;
-  letter-spacing: 1.5px;
-  margin-bottom: 3px;
-}
-
 .rc__addr {
   font-size: 11px;
   color: #bbb;
@@ -97,13 +110,28 @@
   white-space: nowrap;
   text-overflow: ellipsis;
   font-weight: 500;
+  margin-bottom: 6px;
 }
 
-.rc__memo {
+.rc__meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.rc__stars {
   font-size: 12px;
-  color: #999;
-  margin-top: 5px;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
+  font-weight: 700;
+  color: #ff6b35;
+}
+
+.rc__stars--empty { color: #ccc; }
+
+.rc__pinned-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: #ff6b35;
+  background: #fff2ed;
+  padding: 2px 6px;
+  border-radius: 6px;
 }
