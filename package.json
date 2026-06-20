@@ -13,6 +13,7 @@
     "build:frontend": "npm run build --workspace=frontend"
   },
   "devDependencies": {
-    "@types/jest": "^30.0.0"
+    "@types/jest": "^30.0.0",
+    "prettier": "^3.8.4"
   }
 }
