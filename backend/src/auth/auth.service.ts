@@ -8,6 +8,7 @@ import { Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { User } from '../users/user.entity';
+import { UserFavoriteCategory } from '../users/user-favorite-category.entity';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 
@@ -23,6 +24,8 @@ export class AuthService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    @InjectRepository(UserFavoriteCategory)
+    private readonly favCategoryRepo: Repository<UserFavoriteCategory>,
     private readonly jwtService: JwtService,
   ) {}
 
@@ -49,18 +52,28 @@ export class AuthService {
     if (exists) throw new ConflictException('이미 사용 중인 이메일입니다.');
 
     const hashed = await bcrypt.hash(dto.password, 10);
-    const user = this.userRepository.create({
-      email: dto.email,
-      password: hashed,
-      nickname: dto.nickname,
-      address: dto.address ?? null,
-      age: dto.age ?? null,
-      favoriteCategories: dto.favoriteCategories ?? null,
-      provider: null,
-      providerId: null,
-      profileImage: null,
-    });
-    return this.userRepository.save(user);
+    const user = await this.userRepository.save(
+      this.userRepository.create({
+        email: dto.email,
+        password: hashed,
+        nickname: dto.nickname,
+        address: dto.address ?? null,
+        age: dto.age ?? null,
+        provider: null,
+        providerId: null,
+        profileImage: null,
+      }),
+    );
+
+    if (dto.favoriteCategories?.length) {
+      await this.favCategoryRepo.save(
+        dto.favoriteCategories.map((category) =>
+          this.favCategoryRepo.create({ userId: user.id, category }),
+        ),
+      );
+    }
+
+    return user;
   }
 
   // 일반 로그인

@@ -1,96 +1,150 @@
-import { useEffect, useRef } from 'react';
-import L from 'leaflet';
-import 'leaflet/dist/leaflet.css';
-import type { Restaurant } from '../api/restaurants';
+import { useEffect, useRef, useState } from 'react';
+import type { Restaurant, Pin } from '../api/restaurants';
 
-import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
-import markerIcon from 'leaflet/dist/images/marker-icon.png';
-import markerShadow from 'leaflet/dist/images/marker-shadow.png';
+const APP_KEY = import.meta.env.VITE_KAKAO_MAP_KEY as string;
 
-delete (L.Icon.Default.prototype as any)._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconUrl: markerIcon,
-  iconRetinaUrl: markerIcon2x,
-  shadowUrl: markerShadow,
-});
+function loadKakaoScript(): Promise<void> {
+  return new Promise((resolve, reject) => {
+    if (window.kakao?.maps) { resolve(); return; }
+    const existing = document.getElementById('kakao-map-script');
+    if (existing) {
+      existing.addEventListener('load', () => window.kakao.maps.load(resolve));
+      return;
+    }
+    const script = document.createElement('script');
+    script.id = 'kakao-map-script';
+    script.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${APP_KEY}&autoload=false`;
+    script.onload = () => window.kakao.maps.load(resolve);
+    script.onerror = reject;
+    document.head.appendChild(script);
+  });
+}
 
-const pinnedIcon = new L.Icon({
-  iconUrl: 'data:image/svg+xml;utf8,' + encodeURIComponent(`
-    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="41" viewBox="0 0 25 41">
-      <path d="M12.5 0C5.6 0 0 5.6 0 12.5c0 9.4 12.5 28.5 12.5 28.5S25 21.9 25 12.5C25 5.6 19.4 0 12.5 0z" fill="#ff6b35"/>
-      <circle cx="12.5" cy="12.5" r="5" fill="white"/>
-    </svg>
-  `),
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-  popupAnchor: [1, -34],
-});
+function makeLabel(restaurant: Restaurant, isPinned: boolean, rating?: number): HTMLElement {
+  const wrap = document.createElement('div');
+  wrap.style.cssText = `
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background: ${isPinned ? 'rgba(255,107,53,0.95)' : 'rgba(15,20,42,0.88)'};
+    border: 1.5px solid ${isPinned ? '#ff6b35' : 'rgba(255,255,255,0.13)'};
+    border-radius: 20px;
+    padding: 5px 11px 5px 8px;
+    cursor: pointer;
+    white-space: nowrap;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.35);
+    backdrop-filter: blur(4px);
+    user-select: none;
+    pointer-events: auto;
+  `;
 
-const defaultIcon = new L.Icon({
-  iconUrl: markerIcon,
-  iconRetinaUrl: markerIcon2x,
-  shadowUrl: markerShadow,
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-  popupAnchor: [1, -34],
-  shadowSize: [41, 41],
-});
+  const icon = document.createElement('span');
+  icon.textContent = '📍';
+  icon.style.cssText = 'font-size: 13px; line-height: 1;';
+
+  const name = document.createElement('span');
+  name.textContent = restaurant.name;
+  name.style.cssText = `
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+  `;
+
+  wrap.appendChild(icon);
+  wrap.appendChild(name);
+
+  if (isPinned && rating != null) {
+    const star = document.createElement('span');
+    star.textContent = `★${rating}`;
+    star.style.cssText = `
+      color: #ffe066;
+      font-size: 11px;
+      font-weight: 700;
+      margin-left: 2px;
+    `;
+    wrap.appendChild(star);
+  }
+
+  return wrap;
+}
 
 interface Props {
   onMapClick?: (lat: number, lng: number, address: string) => void;
   onMarkerClick?: (restaurant: Restaurant) => void;
   restaurants?: Restaurant[];
   pinnedIds?: Set<number>;
+  myPins?: Pin[];
 }
 
-export default function MapView({ onMapClick, onMarkerClick, restaurants = [], pinnedIds = new Set() }: Props) {
+export default function MapView({
+  onMapClick,
+  onMarkerClick,
+  restaurants = [],
+  pinnedIds = new Set(),
+  myPins = [],
+}: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const mapRef = useRef<L.Map | null>(null);
-  const markersRef = useRef<L.Marker[]>([]);
+  const mapRef = useRef<kakao.maps.Map | null>(null);
+  const overlaysRef = useRef<kakao.maps.CustomOverlay[]>([]);
+  const [mapReady, setMapReady] = useState(false);
 
   useEffect(() => {
-    if (!containerRef.current || mapRef.current) return;
+    let destroyed = false;
 
-    const map = L.map(containerRef.current).setView([37.5665, 126.978], 13);
-    mapRef.current = map;
+    loadKakaoScript().then(() => {
+      if (destroyed || !containerRef.current || mapRef.current) return;
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '© OpenStreetMap contributors',
-    }).addTo(map);
+      const map = new kakao.maps.Map(containerRef.current, {
+        center: new kakao.maps.LatLng(37.5665, 126.978),
+        level: 5,
+      });
+      mapRef.current = map;
 
-    map.on('click', (e: L.LeafletMouseEvent) => {
-      if (!onMapClick) return;
-      const { lat, lng } = e.latlng;
-      onMapClick(lat, lng, '');
-    });
+      kakao.maps.event.addListener(map, 'click', (e: kakao.maps.event.MouseEvent) => {
+        if (!onMapClick) return;
+        onMapClick(e.latLng.getLat(), e.latLng.getLng(), '');
+      });
+
+      setMapReady(true);
+    }).catch(console.error);
 
     return () => {
-      map.remove();
+      destroyed = true;
       mapRef.current = null;
+      setMapReady(false);
     };
   }, []);
 
   useEffect(() => {
     const map = mapRef.current;
-    if (!map) return;
+    if (!mapReady || !map) return;
 
-    markersRef.current.forEach((m) => m.remove());
-    markersRef.current = [];
+    overlaysRef.current.forEach((o) => o.setMap(null));
+    overlaysRef.current = [];
+
+    const ratingMap = new Map(myPins.map((p) => [p.restaurantId, p.rating]));
 
     restaurants.forEach((r) => {
       const isPinned = pinnedIds.has(r.id);
-      const marker = L.marker([r.latitude, r.longitude], {
-        icon: isPinned ? pinnedIcon : defaultIcon,
-      }).addTo(map);
+      const rating = ratingMap.get(r.id);
+      const el = makeLabel(r, isPinned, rating);
 
-      marker.on('click', (e) => {
-        L.DomEvent.stopPropagation(e);
+      el.addEventListener('click', (e) => {
+        e.stopPropagation();
         onMarkerClick?.(r);
       });
 
-      markersRef.current.push(marker);
+      const overlay = new kakao.maps.CustomOverlay({
+        position: new kakao.maps.LatLng(r.latitude, r.longitude),
+        content: el,
+        yAnchor: 1,
+        map,
+      });
+
+      overlaysRef.current.push(overlay);
     });
-  }, [restaurants, pinnedIds]);
+  }, [mapReady, restaurants, pinnedIds, myPins]);
 
   return <div ref={containerRef} style={{ width: '100%', height: '100%' }} />;
 }

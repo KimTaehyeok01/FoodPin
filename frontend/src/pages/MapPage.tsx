@@ -76,13 +76,16 @@ export default function MapPage() {
         </button>
       </header>
       <div className="map-search-wrap">
-        <Search size={15} strokeWidth={2} className="map-search-icon" />
-        <input className="map-search" placeholder="지역이나 맛집 검색..." readOnly />
+        <div className="map-search-box">
+          <Search size={15} strokeWidth={2} className="map-search-icon" />
+          <input className="map-search" placeholder="지역이나 맛집 검색..." readOnly />
+        </div>
       </div>
       <div className="map-view">
         <MapView
           restaurants={restaurants}
           pinnedIds={pinnedIds}
+          myPins={myPins}
           onMapClick={(lat, lng, address) => setPendingLocation({ lat, lng, address })}
           onMarkerClick={(restaurant) => setSelectedRestaurant(restaurant)}
         />

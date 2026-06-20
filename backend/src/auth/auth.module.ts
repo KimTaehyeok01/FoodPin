@@ -9,11 +9,12 @@ import { KakaoStrategy } from './strategies/kakao.strategy';
 import { NaverStrategy } from './strategies/naver.strategy';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { User } from '../users/user.entity';
+import { UserFavoriteCategory } from '../users/user-favorite-category.entity';
 
 @Module({
   imports: [
     PassportModule,
-    TypeOrmModule.forFeature([User]),
+    TypeOrmModule.forFeature([User, UserFavoriteCategory]),
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],

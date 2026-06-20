@@ -6,6 +6,7 @@ import {
   OneToMany,
 } from 'typeorm';
 import { Pin } from '../pins/pin.entity';
+import { UserFavoriteCategory } from './user-favorite-category.entity';
 
 export const FOOD_CATEGORIES = [
   '한식', '중식', '일식', '양식', '분식',
@@ -43,12 +44,12 @@ export class User {
   @Column({ type: 'tinyint', unsigned: true, nullable: true })
   age: number | null;
 
-  @Column({ type: 'simple-json', nullable: true })
-  favoriteCategories: FoodCategory[] | null;
-
   @CreateDateColumn()
   createdAt: Date;
 
   @OneToMany(() => Pin, (pin) => pin.user)
   pins: Pin[];
+
+  @OneToMany(() => UserFavoriteCategory, (ufc) => ufc.user)
+  favoriteCategories: UserFavoriteCategory[];
 }
