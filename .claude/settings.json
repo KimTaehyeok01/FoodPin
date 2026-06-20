@@ -1,8 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "PowerShell(Stop-Process -Name \"node\" -ErrorAction SilentlyContinue)",
-      "mcp__5c827f7a-5c5d-43fe-af18-fbef04abcbf6__whoami"
-    ]
-  }
-}
