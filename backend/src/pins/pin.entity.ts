@@ -39,7 +39,9 @@ export class Pin {
   @JoinColumn({ name: 'userId' })
   user: User;
 
-  @ManyToOne(() => Restaurant, (restaurant) => restaurant.pins, { onDelete: 'CASCADE' })
+  @ManyToOne(() => Restaurant, (restaurant) => restaurant.pins, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'restaurantId' })
   restaurant: Restaurant;
 }

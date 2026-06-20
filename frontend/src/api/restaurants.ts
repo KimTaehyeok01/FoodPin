@@ -37,11 +37,11 @@ export interface CreatePinDto {
 }
 
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem("token");
   const res = await fetch(`${BASE_URL}${path}`, {
     ...options,
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
       ...options?.headers,
     },
@@ -55,32 +55,41 @@ async function request<T>(path: string, options?: RequestInit): Promise<T> {
 }
 
 export async function uploadImage(file: File): Promise<string> {
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem("token");
   const formData = new FormData();
-  formData.append('file', file);
+  formData.append("file", file);
   const res = await fetch(`${BASE_URL}/upload/image`, {
-    method: 'POST',
+    method: "POST",
     headers: { ...(token ? { Authorization: `Bearer ${token}` } : {}) },
     body: formData,
   });
-  if (!res.ok) throw new Error('이미지 업로드 실패');
+  if (!res.ok) throw new Error("이미지 업로드 실패");
   const data = await res.json();
   return data.url;
 }
 
 export const restaurantsApi = {
-  getAll: () => request<Restaurant[]>('/restaurants'),
+  getAll: () => request<Restaurant[]>("/restaurants"),
   getOne: (id: number) => request<Restaurant>(`/restaurants/${id}`),
   create: (dto: CreateRestaurantDto) =>
-    request<Restaurant>('/restaurants', { method: 'POST', body: JSON.stringify(dto) }),
+    request<Restaurant>("/restaurants", {
+      method: "POST",
+      body: JSON.stringify(dto),
+    }),
 };
 
 export const pinsApi = {
-  getMyPins: () => request<Pin[]>('/pins/me'),
+  getMyPins: () => request<Pin[]>("/pins/me"),
   pin: (restaurantId: number, dto: CreatePinDto) =>
-    request<Pin>(`/pins/${restaurantId}`, { method: 'POST', body: JSON.stringify(dto) }),
+    request<Pin>(`/pins/${restaurantId}`, {
+      method: "POST",
+      body: JSON.stringify(dto),
+    }),
   update: (restaurantId: number, dto: Partial<CreatePinDto>) =>
-    request<Pin>(`/pins/${restaurantId}`, { method: 'PATCH', body: JSON.stringify(dto) }),
+    request<Pin>(`/pins/${restaurantId}`, {
+      method: "PATCH",
+      body: JSON.stringify(dto),
+    }),
   unpin: (restaurantId: number) =>
-    request<void>(`/pins/${restaurantId}`, { method: 'DELETE' }),
+    request<void>(`/pins/${restaurantId}`, { method: "DELETE" }),
 };

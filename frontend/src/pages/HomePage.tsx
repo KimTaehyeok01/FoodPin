@@ -13,6 +13,7 @@ export default function HomePage() {
   const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
   const [myPins, setMyPins] = useState<Pin[]>([]);
   const [selectedCategory, setSelectedCategory] = useState('전체');
+  const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -24,9 +25,9 @@ export default function HomePage() {
 
   const pinnedIds = new Set(myPins.map((p) => p.restaurantId));
 
-  const filtered = selectedCategory === '전체'
-    ? restaurants
-    : restaurants.filter((r) => r.category === selectedCategory);
+  const filtered = restaurants
+    .filter((r) => selectedCategory === '전체' || r.category === selectedCategory)
+    .filter((r) => !searchQuery || r.name.includes(searchQuery) || r.address?.includes(searchQuery) || r.category?.includes(searchQuery));
 
   const hotRestaurants = restaurants.slice(0, 5);
 
@@ -51,8 +52,15 @@ export default function HomePage() {
       </header>
 
       <div className="home-search-wrap">
-        <Search size={15} strokeWidth={2} className="home-search-icon" />
-        <input className="home-search" placeholder="레스토랑, 음식 검색..." readOnly />
+        <div className="home-search-box">
+          <Search size={15} strokeWidth={2} className="home-search-icon" />
+          <input
+            className="home-search"
+            placeholder="레스토랑, 음식 검색..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
       </div>
 
       <div className="home-body">
