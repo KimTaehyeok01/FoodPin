@@ -1,10 +1,64 @@
+CREATE DATABASE IF NOT EXISTS foodpin
+  DEFAULT CHARACTER SET utf8mb4
+  DEFAULT COLLATE utf8mb4_unicode_ci;
+
 USE foodpin;
 
--- 기존 데이터 초기화
+CREATE TABLE IF NOT EXISTS `user` (
+  `id`           INT              NOT NULL AUTO_INCREMENT,
+  `provider`     VARCHAR(20)      NULL,
+  `providerId`   VARCHAR(100)     NULL,
+  `email`        VARCHAR(255)     NULL UNIQUE,
+  `password`     VARCHAR(255)     NULL,
+  `nickname`     VARCHAR(50)      NOT NULL,
+  `profileImage` VARCHAR(255)     NULL,
+  `address`      VARCHAR(255)     NULL,
+  `age`          TINYINT UNSIGNED NULL,
+  `createdAt`    DATETIME(6)      NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `restaurant` (
+  `id`        INT            NOT NULL AUTO_INCREMENT,
+  `name`      VARCHAR(100)   NOT NULL,
+  `latitude`  DECIMAL(10,7)  NOT NULL,
+  `longitude` DECIMAL(10,7)  NOT NULL,
+  `address`   VARCHAR(255)   NULL,
+  `photoUrl`  VARCHAR(500)   NULL,
+  `category`  VARCHAR(50)    NULL,
+  `createdAt` DATETIME(6)    NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+  `updatedAt` DATETIME(6)    NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `pin` (
+  `id`           INT              NOT NULL AUTO_INCREMENT,
+  `userId`       INT              NOT NULL,
+  `restaurantId` INT              NOT NULL,
+  `rating`       TINYINT UNSIGNED NOT NULL DEFAULT 3,
+  `memo`         TEXT             NULL,
+  `createdAt`    DATETIME(6)      NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+  `updatedAt`    DATETIME(6)      NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `UQ_pin_user_restaurant` (`userId`, `restaurantId`),
+  CONSTRAINT `FK_pin_user`       FOREIGN KEY (`userId`)       REFERENCES `user`       (`id`) ON DELETE CASCADE,
+  CONSTRAINT `FK_pin_restaurant` FOREIGN KEY (`restaurantId`) REFERENCES `restaurant` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `user_favorite_category` (
+  `id`       INT         NOT NULL AUTO_INCREMENT,
+  `userId`   INT         NOT NULL,
+  `category` VARCHAR(50) NOT NULL,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `FK_ufc_user` FOREIGN KEY (`userId`) REFERENCES `user` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ── 기존 데이터 초기화 ──
 TRUNCATE TABLE pin;
 DELETE FROM restaurant;
 ALTER TABLE restaurant AUTO_INCREMENT = 1;
 
+-- ── 식당 샘플 데이터 ──
 INSERT INTO restaurant (name, latitude, longitude, address, photoUrl, category, createdAt, updatedAt) VALUES
 ('광화문 국밥', 37.5720, 126.9769, '서울 종로구 세종대로 175', NULL, '한식', NOW(), NOW()),
 ('을지로 노가리골목', 37.5658, 126.9833, '서울 중구 을지로 119', NULL, '술집/포차', NOW(), NOW()),
