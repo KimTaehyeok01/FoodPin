@@ -46,7 +46,7 @@ export class AuthController {
   @UseGuards(AuthGuard('kakao'))
   kakaoCallback(@Req() req: { user: User }, @Res() res: any) {
     const token = this.authService.generateToken(req.user);
-    res.redirect(`${FRONTEND_URL}/auth/callback?token=${token}`);
+    res.redirect(`${FRONTEND_URL}/auth/callback#token=${token}`);
   }
 
   // 네이버 소셜 로그인
@@ -58,6 +58,6 @@ export class AuthController {
   @UseGuards(AuthGuard('naver'))
   naverCallback(@Req() req: { user: User }, @Res() res: any) {
     const token = this.authService.generateToken(req.user);
-    res.redirect(`${FRONTEND_URL}/auth/callback?token=${token}`);
+    res.redirect(`${FRONTEND_URL}/auth/callback#token=${token}`);
   }
 }

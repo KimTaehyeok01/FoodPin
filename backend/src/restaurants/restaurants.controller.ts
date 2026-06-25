@@ -6,14 +6,19 @@ import {
   Delete,
   Param,
   Body,
+  Req,
   UseGuards,
   ParseIntPipe,
   HttpCode,
   HttpStatus,
 } from '@nestjs/common';
+import { Request } from 'express';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RestaurantsService } from './restaurants.service';
 import { CreateRestaurantDto } from './dto/create-restaurant.dto';
+import { User } from '../users/user.entity';
+
+type AuthRequest = Request & { user: User };
 
 @Controller('restaurants')
 export class RestaurantsController {
@@ -31,8 +36,8 @@ export class RestaurantsController {
 
   @Post()
   @UseGuards(JwtAuthGuard)
-  create(@Body() dto: CreateRestaurantDto) {
-    return this.restaurantsService.create(dto);
+  create(@Body() dto: CreateRestaurantDto, @Req() req: AuthRequest) {
+    return this.restaurantsService.create(dto, req.user.id);
   }
 
   @Patch(':id')
@@ -40,14 +45,15 @@ export class RestaurantsController {
   update(
     @Param('id', ParseIntPipe) id: number,
     @Body() dto: Partial<CreateRestaurantDto>,
+    @Req() req: AuthRequest,
   ) {
-    return this.restaurantsService.update(id, dto);
+    return this.restaurantsService.update(id, req.user.id, dto);
   }
 
   @Delete(':id')
   @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
-  remove(@Param('id', ParseIntPipe) id: number) {
-    return this.restaurantsService.remove(id);
+  remove(@Param('id', ParseIntPipe) id: number, @Req() req: AuthRequest) {
+    return this.restaurantsService.remove(id, req.user.id);
   }
 }

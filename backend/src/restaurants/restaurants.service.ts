@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Restaurant } from './restaurant.entity';
@@ -21,19 +21,25 @@ export class RestaurantsService {
     return restaurant;
   }
 
-  create(dto: CreateRestaurantDto): Promise<Restaurant> {
-    const restaurant = this.restaurantRepo.create(dto);
+  create(dto: CreateRestaurantDto, userId: number): Promise<Restaurant> {
+    const restaurant = this.restaurantRepo.create({ ...dto, userId });
     return this.restaurantRepo.save(restaurant);
   }
 
-  async update(id: number, dto: Partial<CreateRestaurantDto>): Promise<Restaurant> {
+  async update(id: number, userId: number, dto: Partial<CreateRestaurantDto>): Promise<Restaurant> {
     const restaurant = await this.findOne(id);
+    if (restaurant.userId !== null && restaurant.userId !== userId) {
+      throw new ForbiddenException('수정 권한이 없습니다.');
+    }
     Object.assign(restaurant, dto);
     return this.restaurantRepo.save(restaurant);
   }
 
-  async remove(id: number): Promise<void> {
+  async remove(id: number, userId: number): Promise<void> {
     const restaurant = await this.findOne(id);
+    if (restaurant.userId !== null && restaurant.userId !== userId) {
+      throw new ForbiddenException('삭제 권한이 없습니다.');
+    }
     await this.restaurantRepo.remove(restaurant);
   }
 }

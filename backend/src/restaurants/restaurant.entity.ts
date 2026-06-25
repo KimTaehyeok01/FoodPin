@@ -13,6 +13,9 @@ export class Restaurant {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Column({ nullable: true })
+  userId: number | null;
+
   @Column({ length: 100 })
   name: string;
 
