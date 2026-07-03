@@ -6,7 +6,7 @@ import {
   JoinColumn,
 } from 'typeorm';
 import { User } from './user.entity';
-import { FoodCategory } from './user.entity';
+import { FoodCategory } from './food-category.constants';
 
 @Entity('user_favorite_category')
 export class UserFavoriteCategory {

@@ -13,7 +13,7 @@ export class Restaurant {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ nullable: true })
+  @Column({ type: 'int', nullable: true })
   userId: number | null;
 
   @Column({ length: 100 })

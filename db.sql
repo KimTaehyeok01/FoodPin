@@ -20,6 +20,7 @@ CREATE TABLE IF NOT EXISTS `user` (
 
 CREATE TABLE IF NOT EXISTS `restaurant` (
   `id`        INT            NOT NULL AUTO_INCREMENT,
+  `userId`    INT            NULL,
   `name`      VARCHAR(100)   NOT NULL,
   `latitude`  DECIMAL(10,7)  NOT NULL,
   `longitude` DECIMAL(10,7)  NOT NULL,
