@@ -1,25 +1,24 @@
-/* 식당 상세 페이지 스타일 — 모바일 퍼스트 (375px 기준) */
+/* 식당 상세 페이지 스타일 — 피그마 디자인 기반, 모바일 퍼스트 (375px) */
 
-.rd-page {
+.rdx {
   min-height: 100vh;
-  background: #f5f5f7;
-  padding-bottom: 88px;
+  background: linear-gradient(180deg, #0e1628 0%, #131f3a 100%);
 }
 
-/* ── 사진 헤더 ── */
-.rd-hero {
+/* ── 히어로 ── */
+.rdx-hero {
   position: relative;
-  height: 240px;
+  height: 300px;
   background: #0e1628;
 }
 
-.rd-hero__img {
+.rdx-hero__img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.rd-hero__no-img {
+.rdx-hero__no-img {
   width: 100%;
   height: 100%;
   display: flex;
@@ -29,22 +28,15 @@
   background: linear-gradient(135deg, #1a2744, #0e1628);
 }
 
-.rd-hero__overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to bottom, rgba(0,0,0,0.35) 0%, transparent 40%);
-  pointer-events: none;
-}
-
-.rd-back-btn {
+.rdx-hero__back {
   position: absolute;
   top: 52px;
   left: 16px;
-  width: 38px;
-  height: 38px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   border: none;
-  background: rgba(0,0,0,0.4);
+  background: rgba(0,0,0,0.45);
   color: #fff;
   display: flex;
   align-items: center;
@@ -53,193 +45,371 @@
   backdrop-filter: blur(4px);
 }
 
-/* ── 바디 ── */
-.rd-body {
-  background: #f5f5f7;
-  border-radius: 20px 20px 0 0;
-  margin-top: -20px;
-  position: relative;
-  padding: 20px 16px 0;
-}
-
-/* ── 기본 정보 ── */
-.rd-info {
-  background: #fff;
+.rdx-hero__badge {
+  position: absolute;
+  top: 56px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #ff6b35;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 6px 14px;
   border-radius: 16px;
-  padding: 18px 16px;
-  margin-bottom: 14px;
+  white-space: nowrap;
+  box-shadow: 0 2px 10px rgba(255,107,53,0.4);
 }
 
-.rd-info__head {
+.rdx-hero__actions {
+  position: absolute;
+  top: 52px;
+  right: 16px;
+  display: flex;
+  gap: 8px;
+}
+
+.rdx-hero__actions button {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(0,0,0,0.45);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  backdrop-filter: blur(4px);
+}
+
+.rdx-hero__actions .rdx-heart--active {
+  color: #ff6b35;
+}
+
+/* ── 정보 시트 ── */
+.rdx-sheet {
+  position: relative;
+  background: #fff;
+  border-radius: 24px 24px 0 0;
+  margin-top: -24px;
+  /* 하단 여백: 플로팅 CTA(52px) + 바텀 내비(68px) 위로 흰 배경이 이어지도록 */
+  padding: 24px 20px 170px;
+}
+
+.rdx-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.rdx-chips {
+  display: flex;
+  gap: 6px;
+}
+
+.rdx-chip {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 5px 12px;
+  border-radius: 14px;
+}
+
+.rdx-chip--cat {
+  background: #ffece3;
+  color: #ff6b35;
+}
+
+.rdx-chip--price {
+  background: #fff7e0;
+  color: #d9a400;
+}
+
+.rdx-rating {
+  text-align: right;
+}
+
+.rdx-rating__score {
+  display: block;
+  font-size: 18px;
+  font-weight: 800;
+  color: #111;
+}
+
+.rdx-rating__star { color: #ffb800; }
+
+.rdx-rating__count {
+  font-size: 11px;
+  color: #999;
+}
+
+.rdx-name {
+  font-size: 24px;
+  font-weight: 900;
+  color: #111;
+  letter-spacing: -0.6px;
+  margin-top: 10px;
+}
+
+/* ── 정보 행 ── */
+.rdx-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.rdx-row {
   display: flex;
   align-items: center;
   gap: 8px;
-  flex-wrap: wrap;
 }
 
-.rd-name {
-  font-size: 20px;
-  font-weight: 800;
-  color: #111;
-  letter-spacing: -0.5px;
+.rdx-row--hours { align-items: flex-start; }
+
+.rdx-row__icon { flex-shrink: 0; }
+.rdx-row__icon--orange { color: #ff6b35; }
+.rdx-row__icon--blue { color: #4a90e2; }
+.rdx-row__icon--green { color: #2fb56b; margin-top: 2px; }
+
+.rdx-row__text {
+  font-size: 14px;
+  color: #333;
+  flex: 1;
 }
 
-.rd-category {
-  background: #fff1ea;
-  color: #ff6b35;
-  font-size: 11px;
+.rdx-distance {
+  font-size: 13px;
   font-weight: 700;
-  padding: 4px 10px;
-  border-radius: 12px;
-}
-
-.rd-address {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  color: #888;
-  font-size: 13px;
-  margin-top: 8px;
-}
-
-.rd-stats {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  margin-top: 12px;
-  padding-top: 12px;
-  border-top: 1px solid #f0f0f3;
-}
-
-.rd-stats__rating {
-  font-size: 15px;
-  font-weight: 800;
-  color: #111;
-}
-
-.rd-stats__rating--empty { color: #bbb; }
-
-.rd-stats__count {
-  font-size: 13px;
-  color: #888;
-  font-weight: 600;
-}
-
-/* ── 섹션 공통 ── */
-.rd-section {
-  background: #fff;
-  border-radius: 16px;
-  padding: 18px 16px;
-  margin-bottom: 14px;
-}
-
-.rd-section__title {
-  font-size: 15px;
-  font-weight: 800;
-  color: #111;
-  letter-spacing: -0.3px;
-  margin-bottom: 12px;
-}
-
-.rd-section__count {
   color: #ff6b35;
-  margin-left: 2px;
+  flex-shrink: 0;
 }
 
-/* ── 지도 ── */
-.rd-map {
-  height: 180px;
-  border-radius: 12px;
-  overflow: hidden;
+.rdx-hours p {
+  font-size: 14px;
+  color: #333;
+  line-height: 1.7;
 }
 
-.rd-directions-btn {
+.rdx-hours b {
+  font-weight: 700;
+  color: #111;
+  margin-right: 6px;
+}
+
+.rdx-hours__break,
+.rdx-hours__break b {
+  color: #ff6b35 !important;
+}
+
+/* ── 소개 ── */
+.rdx-desc {
+  margin-top: 16px;
+  font-size: 14px;
+  color: #555;
+  line-height: 1.65;
+}
+
+/* ── 버튼 ── */
+.rdx-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.rdx-btn {
+  flex: 1;
+  height: 48px;
+  border-radius: 24px;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 6px;
-  margin-top: 12px;
-  height: 44px;
-  border-radius: 12px;
-  background: #fee500;
-  color: #191919;
   font-size: 14px;
   font-weight: 700;
   text-decoration: none;
-}
-
-/* ── 내 핀 ── */
-.rd-pin-btn {
-  width: 100%;
-  height: 48px;
-  border: none;
-  border-radius: 12px;
-  background: #ff6b35;
-  color: #fff;
-  font-size: 15px;
-  font-weight: 700;
   cursor: pointer;
 }
 
-.rd-my-pin {
-  background: #fff8f5;
-  border: 1px solid #ffe3d6;
-  border-radius: 12px;
-  padding: 14px;
+.rdx-btn--dark {
+  background: #131f3a;
+  color: #fff;
 }
 
-.rd-my-pin__head {
+.rdx-btn--orange {
+  background: #ff6b35;
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(255,107,53,0.35);
+}
+
+/* ── 탭 ── */
+.rdx-tabs {
+  display: flex;
+  margin-top: 24px;
+  border-bottom: 1.5px solid #f0f0f3;
+}
+
+.rdx-tab {
+  flex: 1;
+  background: none;
+  border: none;
+  padding: 12px 0;
+  font-size: 14px;
+  font-weight: 700;
+  color: #bbb;
+  cursor: pointer;
+  position: relative;
+}
+
+.rdx-tab--active { color: #ff6b35; }
+
+.rdx-tab--active::after {
+  content: '';
+  position: absolute;
+  bottom: -1.5px;
+  left: 25%;
+  width: 50%;
+  height: 2.5px;
+  border-radius: 2px;
+  background: #ff6b35;
+}
+
+.rdx-tab-empty {
+  text-align: center;
+  color: #bbb;
+  font-size: 13px;
+  padding: 36px 0;
+}
+
+/* ── 메뉴 탭 ── */
+.rdx-menu-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: 16px;
+}
+
+.rdx-menu {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  gap: 12px;
+  background: #fff;
+  border: 1px solid #f0f0f3;
+  border-radius: 16px;
+  padding: 12px 14px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
 }
 
-.rd-my-pin__stars {
+.rdx-menu__emoji {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: #f7f7fa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+}
+
+.rdx-menu__body { flex: 1; min-width: 0; }
+
+.rdx-menu__name {
+  font-size: 14px;
+  font-weight: 700;
+  color: #111;
+}
+
+.rdx-menu__popular {
+  display: inline-block;
+  margin-top: 3px;
+  font-size: 11px;
+  font-weight: 700;
   color: #ff6b35;
-  font-size: 16px;
-  letter-spacing: 2px;
 }
 
-.rd-my-pin__edit {
+.rdx-menu__price {
+  font-size: 14px;
+  font-weight: 800;
+  color: #111;
+  flex-shrink: 0;
+}
+
+/* ── 사진 탭 ── */
+.rdx-photo-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  padding-top: 16px;
+}
+
+.rdx-photo-grid img {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.rdx-photo-grid .rdx-tab-empty { grid-column: 1 / -1; }
+
+/* ── 리뷰 탭 ── */
+.rdx-review-area { padding-top: 16px; }
+
+.rdx-my-review {
+  background: #fff8f5;
+  border: 1px solid #ffe3d6;
+  border-radius: 14px;
+  padding: 14px;
+  margin-bottom: 16px;
+}
+
+.rdx-my-review__head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.rdx-my-review__label {
+  font-size: 12px;
+  font-weight: 800;
+  color: #ff6b35;
+}
+
+.rdx-my-review__stars {
+  color: #ff6b35;
+  font-size: 14px;
+  letter-spacing: 2px;
+  flex: 1;
+}
+
+.rdx-my-review__edit {
   background: none;
   border: 1px solid #ffcdb8;
   border-radius: 8px;
-  padding: 5px 12px;
+  padding: 4px 12px;
   color: #ff6b35;
   font-size: 12px;
   font-weight: 700;
   cursor: pointer;
 }
 
-.rd-my-pin__memo {
-  margin-top: 10px;
-  font-size: 14px;
+.rdx-my-review__memo {
+  margin-top: 8px;
+  font-size: 13px;
   color: #444;
   line-height: 1.5;
   white-space: pre-wrap;
 }
 
-/* ── 방문자 기록 ── */
-.rd-no-reviews {
-  text-align: center;
-  color: #bbb;
-  font-size: 13px;
-  padding: 24px 0;
-}
-
-.rd-review-list {
+.rdx-review-list {
   list-style: none;
   display: flex;
   flex-direction: column;
   gap: 16px;
 }
 
-.rd-review {
-  display: flex;
-  gap: 10px;
-}
+.rdx-review { display: flex; gap: 10px; }
 
-.rd-review__avatar {
+.rdx-review__avatar {
   width: 36px;
   height: 36px;
   border-radius: 50%;
@@ -252,33 +422,33 @@
   overflow: hidden;
 }
 
-.rd-review__avatar img {
+.rdx-review__avatar img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.rd-review__body { flex: 1; min-width: 0; }
+.rdx-review__body { flex: 1; min-width: 0; }
 
-.rd-review__head {
+.rdx-review__head {
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
-.rd-review__nickname {
+.rdx-review__nickname {
   font-size: 13px;
   font-weight: 700;
   color: #111;
 }
 
-.rd-review__stars {
+.rdx-review__stars {
   color: #ffb800;
   font-size: 12px;
   letter-spacing: 1px;
 }
 
-.rd-review__memo {
+.rdx-review__memo {
   margin-top: 4px;
   font-size: 13px;
   color: #555;
@@ -286,35 +456,57 @@
   white-space: pre-wrap;
 }
 
-.rd-review__date {
+.rdx-review__date {
   display: block;
   margin-top: 4px;
   font-size: 11px;
   color: #bbb;
 }
 
-/* ── 로딩/빈 상태 ── */
-.rd-skeleton {
-  height: 240px;
-  background: linear-gradient(90deg, #e8e8ec 25%, #f2f2f5 50%, #e8e8ec 75%);
-  background-size: 200% 100%;
-  animation: rd-shimmer 1.4s infinite;
+/* ── 플로팅 CTA ── */
+.rdx-cta {
+  position: fixed;
+  left: 16px;
+  right: 16px;
+  bottom: 84px;
+  height: 52px;
+  border: none;
+  border-radius: 26px;
+  background: linear-gradient(135deg, #ff8a5c 0%, #ff6b35 100%);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(255,107,53,0.45);
+  z-index: 150;
 }
 
-@keyframes rd-shimmer {
+/* ── 로딩 / 빈 상태 ── */
+.rdx-skeleton {
+  height: 300px;
+  background: linear-gradient(90deg, #1a2744 25%, #22335a 50%, #1a2744 75%);
+  background-size: 200% 100%;
+  animation: rdx-shimmer 1.4s infinite;
+}
+
+@keyframes rdx-shimmer {
   0%   { background-position: 200% 0; }
   100% { background-position: -200% 0; }
 }
 
-.rd-empty {
+.rdx-empty {
   text-align: center;
-  padding: 120px 0;
-  color: #ccc;
+  padding: 140px 0;
+  color: rgba(255,255,255,0.4);
   font-size: 15px;
   line-height: 2.2;
 }
 
-.rd-back-link {
+.rdx-empty__back {
   margin-top: 12px;
   background: #ff6b35;
   color: #fff;
@@ -326,37 +518,124 @@
   cursor: pointer;
 }
 
-/* ── 태블릿/PC (960px+) ── */
+/* ── 태블릿 (600px+) ── */
+@media (min-width: 600px) {
+  .rdx-hero { height: 380px; }
+}
+
+/* ── PC (960px+): 와이드 배너 + 좌측 콘텐츠 / 우측 고정 사이드 카드 ── */
 @media (min-width: 960px) {
-  .rd-page {
+  .rdx {
+    background: #f1f3f8;
     padding-top: 60px;
-    padding-bottom: 40px;
+    padding-bottom: 0;
   }
 
-  .rd-hero {
-    height: 320px;
+  .rdx-layout {
+    max-width: 1160px;
+    margin: 0 auto;
+    padding: 32px 40px 80px;
   }
 
-  .rd-back-btn { top: 16px; left: 24px; }
-
-  .rd-body {
-    max-width: 760px;
-    margin: -40px auto 0;
-    padding: 24px 0 0;
+  /* 와이드 배너 */
+  .rdx-hero {
+    height: 400px;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(14,22,40,0.15);
   }
 
-  .rd-info, .rd-section { padding: 22px 24px; }
+  .rdx-hero__back { top: 20px; left: 20px; }
+  .rdx-hero__badge { top: 24px; }
+  .rdx-hero__actions { top: 20px; right: 20px; }
 
-  .rd-name { font-size: 24px; }
+  /* 시트 → 투명 그리드 컨테이너 */
+  .rdx-sheet {
+    background: transparent;
+    border-radius: 0;
+    margin-top: 24px;
+    padding: 0;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 380px;
+    grid-template-rows: auto 1fr;
+    grid-template-areas:
+      "head aside"
+      "body aside";
+    column-gap: 24px;
+    row-gap: 24px;
+    align-items: start;
+  }
 
-  .rd-map { height: 260px; }
+  /* 제목 카드 */
+  .rdx-head {
+    grid-area: head;
+    background: #fff;
+    border-radius: 20px;
+    padding: 28px 32px;
+    box-shadow: 0 4px 20px rgba(14,22,40,0.06);
+  }
 
-  .rd-directions-btn { max-width: 320px; margin-left: auto; margin-right: auto; }
+  .rdx-name { font-size: 30px; margin-top: 12px; }
 
-  .rd-pin-btn { max-width: 320px; display: block; margin: 0 auto; }
+  /* 매장 정보 사이드 카드 (스크롤 시 고정) */
+  .rdx-aside {
+    grid-area: aside;
+    background: #fff;
+    border-radius: 20px;
+    padding: 26px 24px;
+    box-shadow: 0 4px 20px rgba(14,22,40,0.06);
+    position: sticky;
+    top: 84px;
+  }
+
+  .rdx-aside .rdx-rows { margin-top: 0; }
+
+  .rdx-actions {
+    flex-direction: column;
+    margin-top: 20px;
+  }
+
+  .rdx-btn {
+    flex: none;
+    height: 50px;
+  }
+
+  .rdx-cta {
+    position: static;
+    width: 100%;
+    height: 54px;
+    margin: 10px 0 0;
+    font-size: 15px;
+  }
+
+  /* 탭 콘텐츠 카드 */
+  .rdx-content {
+    grid-area: body;
+    background: #fff;
+    border-radius: 20px;
+    padding: 10px 32px 32px;
+    box-shadow: 0 4px 20px rgba(14,22,40,0.06);
+  }
+
+  .rdx-tabs { margin-top: 8px; }
+
+  .rdx-menu { border-color: #eef0f5; }
+
+  .rdx-skeleton {
+    max-width: 1160px;
+    margin: 32px auto 0;
+    border-radius: 24px;
+    height: 400px;
+    background: linear-gradient(90deg, #e3e6ee 25%, #eef0f6 50%, #e3e6ee 75%);
+    background-size: 200% 100%;
+  }
+
+  .rdx-empty { color: #a7adbb; }
+
+  .rdx-empty__back { border-radius: 12px; }
 }
 
 @media (min-width: 1280px) {
-  .rd-body { max-width: 860px; }
-  .rd-hero { height: 360px; }
+  .rdx-layout { max-width: 1240px; }
+  .rdx-hero { height: 440px; }
 }

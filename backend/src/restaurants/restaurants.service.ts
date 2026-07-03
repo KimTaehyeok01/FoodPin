@@ -16,7 +16,11 @@ export class RestaurantsService {
   }
 
   async findOne(id: number): Promise<Restaurant> {
-    const restaurant = await this.restaurantRepo.findOne({ where: { id } });
+    const restaurant = await this.restaurantRepo.findOne({
+      where: { id },
+      relations: { menus: true },
+      order: { menus: { id: 'ASC' } },
+    });
     if (!restaurant) throw new NotFoundException('식당을 찾을 수 없습니다.');
     return restaurant;
   }

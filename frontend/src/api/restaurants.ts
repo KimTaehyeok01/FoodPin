@@ -5,6 +5,14 @@ export function photoSrc(photoUrl: string): string {
   return photoUrl.startsWith('http') ? photoUrl : `${BASE_URL}${photoUrl}`;
 }
 
+export interface Menu {
+  id: number;
+  name: string;
+  price: number;
+  isPopular: boolean;
+  emoji: string | null;
+}
+
 export interface Restaurant {
   id: number;
   name: string;
@@ -13,8 +21,14 @@ export interface Restaurant {
   address: string | null;
   photoUrl: string | null;
   category: string | null;
+  phone: string | null;
+  description: string | null;
+  hoursWeekday: string | null;
+  hoursWeekend: string | null;
+  breakTime: string | null;
   createdAt: string;
   updatedAt: string;
+  menus?: Menu[]; // getOne 응답에만 포함
 }
 
 export interface Pin {

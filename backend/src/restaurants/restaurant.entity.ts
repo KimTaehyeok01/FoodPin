@@ -7,6 +7,7 @@ import {
   OneToMany,
 } from 'typeorm';
 import { Pin } from '../pins/pin.entity';
+import { RestaurantMenu } from './restaurant-menu.entity';
 
 @Entity('restaurant')
 export class Restaurant {
@@ -34,6 +35,21 @@ export class Restaurant {
   @Column({ type: 'varchar', length: 50, nullable: true })
   category: string | null;
 
+  @Column({ type: 'varchar', length: 20, nullable: true })
+  phone: string | null;
+
+  @Column({ type: 'text', nullable: true })
+  description: string | null;
+
+  @Column({ type: 'varchar', length: 50, nullable: true })
+  hoursWeekday: string | null;
+
+  @Column({ type: 'varchar', length: 50, nullable: true })
+  hoursWeekend: string | null;
+
+  @Column({ type: 'varchar', length: 50, nullable: true })
+  breakTime: string | null;
+
   @CreateDateColumn()
   createdAt: Date;
 
@@ -42,4 +58,7 @@ export class Restaurant {
 
   @OneToMany(() => Pin, (pin) => pin.restaurant)
   pins: Pin[];
+
+  @OneToMany(() => RestaurantMenu, (menu) => menu.restaurant)
+  menus: RestaurantMenu[];
 }

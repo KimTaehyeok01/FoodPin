@@ -26,9 +26,14 @@ CREATE TABLE IF NOT EXISTS `restaurant` (
   `name`      VARCHAR(100)   NOT NULL,
   `latitude`  DECIMAL(10,7)  NOT NULL,
   `longitude` DECIMAL(10,7)  NOT NULL,
-  `address`   VARCHAR(255)   NULL,
-  `photoUrl`  VARCHAR(500)   NULL,
-  `category`  VARCHAR(50)    NULL,
+  `address`      VARCHAR(255)  NULL,
+  `photoUrl`     VARCHAR(500)  NULL,
+  `category`     VARCHAR(50)   NULL,
+  `phone`        VARCHAR(20)   NULL,
+  `description`  TEXT          NULL,
+  `hoursWeekday` VARCHAR(50)   NULL,
+  `hoursWeekend` VARCHAR(50)   NULL,
+  `breakTime`    VARCHAR(50)   NULL,
   `createdAt` DATETIME(6)    NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
   `updatedAt` DATETIME(6)    NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
   PRIMARY KEY (`id`)
@@ -54,6 +59,17 @@ CREATE TABLE IF NOT EXISTS `user_favorite_category` (
   `category` VARCHAR(50) NOT NULL,
   PRIMARY KEY (`id`),
   CONSTRAINT `FK_ufc_user` FOREIGN KEY (`userId`) REFERENCES `user` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `restaurant_menu` (
+  `id`           INT          NOT NULL AUTO_INCREMENT,
+  `restaurantId` INT          NOT NULL,
+  `name`         VARCHAR(100) NOT NULL,
+  `price`        INT          NOT NULL,
+  `isPopular`    TINYINT(1)   NOT NULL DEFAULT 0,
+  `emoji`        VARCHAR(8)   NULL,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `FK_menu_restaurant` FOREIGN KEY (`restaurantId`) REFERENCES `restaurant` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ── 기존 데이터 초기화 ──
@@ -136,3 +152,144 @@ INSERT INTO restaurant (name, latitude, longitude, address, photoUrl, category, 
 ('일산 화덕피자', 37.6584, 126.7699, '경기 고양시 일산동구 중앙로1275번길 38-10', 'https://images.unsplash.com/photo-1571407970349-bc81e7e96d47?w=800&q=80', '치킨/피자', NOW(), NOW()),
 ('천안 호두과자 명가', 36.8151, 127.1139, '충남 천안시 동남구 중앙로 92', 'https://images.unsplash.com/photo-1543826173-70651703c5a4?w=800&q=80', '카페/디저트', NOW(), NOW()),
 ('청주 삼겹살 거리', 36.6424, 127.4890, '충북 청주시 상당구 서문시장길 20', 'https://images.unsplash.com/photo-1498654896293-37aacf113fd9?w=800&q=80', '고기/구이', NOW(), NOW());
+
+-- ── 식당 부가정보 시드 (전화 / 영업시간 / 소개글) ──
+UPDATE restaurant SET
+  phone = CONCAT('0507-1234-', LPAD(id, 4, '0')),
+  hoursWeekday = CASE
+    WHEN category = '술집/포차' THEN '17:00 – 01:00'
+    WHEN category = '카페/디저트' THEN '10:00 – 22:00'
+    ELSE '11:00 – 21:00'
+  END,
+  hoursWeekend = CASE
+    WHEN category = '술집/포차' THEN '17:00 – 02:00'
+    WHEN category = '카페/디저트' THEN '10:00 – 23:00'
+    ELSE '11:00 – 22:00'
+  END,
+  breakTime = CASE
+    WHEN category IN ('카페/디저트', '술집/포차') THEN NULL
+    ELSE '15:00 – 17:00'
+  END,
+  description = CASE category
+    WHEN '한식' THEN '신선한 재료와 정성스러운 손맛으로 만든 가정식 한식을 선보입니다. 동네 주민들의 오랜 단골집.'
+    WHEN '중식' THEN '불맛 가득한 정통 중화요리를 합리적인 가격에 즐길 수 있는 곳입니다.'
+    WHEN '일식' THEN '매일 아침 공수한 신선한 재료로 정성껏 준비하는 일식 전문점입니다.'
+    WHEN '양식' THEN '엄선한 재료로 만드는 캐주얼 다이닝. 데이트 코스로도 인기가 많습니다.'
+    WHEN '분식' THEN '추억의 맛 그대로, 언제 와도 부담 없는 분식 맛집입니다.'
+    WHEN '카페/디저트' THEN '직접 로스팅한 원두와 매일 굽는 디저트를 즐길 수 있는 공간입니다.'
+    WHEN '치킨/피자' THEN '주문 즉시 조리하는 바삭한 치킨과 화덕 피자 전문점입니다.'
+    WHEN '고기/구이' THEN '엄선된 국내산 고기를 합리적인 가격에 즐길 수 있는 구이 전문점입니다.'
+    WHEN '해산물' THEN '산지 직송 싱싱한 해산물을 그날그날 들여와 최상의 맛을 냅니다.'
+    WHEN '패스트푸드' THEN '수제 패티와 신선한 야채로 만드는 프리미엄 버거 하우스입니다.'
+    WHEN '술집/포차' THEN '푸짐한 안주와 시원한 술 한잔, 하루의 피로를 풀기 좋은 곳입니다.'
+    ELSE '정성을 다해 준비하는 동네 맛집입니다.'
+  END
+WHERE description IS NULL;
+
+-- ── 카테고리별 메뉴 시드 ──
+DELETE FROM restaurant_menu;
+
+INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
+SELECT id, '된장찌개 정식', 9500, 1, '🍲' FROM restaurant WHERE category = '한식';
+INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
+SELECT id, '제육볶음 정식', 10000, 0, '🍚' FROM restaurant WHERE category = '한식';
+INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
+SELECT id, '순두부찌개', 8500, 0, '🥘' FROM restaurant WHERE category = '한식';
+INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
+SELECT id, '비빔밥', 9000, 0, '🥗' FROM restaurant WHERE category = '한식';
+INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
+SELECT id, '갈비탕', 14000, 0, '🍖' FROM restaurant WHERE category = '한식';
+
+INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
+SELECT id, '짜장면', 7000, 1, '🍜' FROM restaurant WHERE category = '중식';
+INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
+SELECT id, '짬뽕', 8000, 0, '🍲' FROM restaurant WHERE category = '중식';
+INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
+SELECT id, '탕수육 (소)', 18000, 0, '🍖' FROM restaurant WHERE category = '중식';
+INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
+SELECT id, '볶음밥', 8000, 0, '🍚' FROM restaurant WHERE category = '중식';
+
+INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
+SELECT id, '모둠초밥', 16000, 1, '🍣' FROM restaurant WHERE category = '일식';
+INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
+SELECT id, '사케동', 15000, 0, '🍱' FROM restaurant WHERE category = '일식';
+INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
+SELECT id, '우동', 8000, 0, '🍜' FROM restaurant WHERE category = '일식';
+INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
+SELECT id, '가라아게', 12000, 0, '🍗' FROM restaurant WHERE category = '일식';
+
+INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
+SELECT id, '크림 파스타', 15000, 1, '🍝' FROM restaurant WHERE category = '양식';
+INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
+SELECT id, '토마토 파스타', 14000, 0, '🍝' FROM restaurant WHERE category = '양식';
+INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
+SELECT id, '마르게리타 피자', 16000, 0, '🍕' FROM restaurant WHERE category = '양식';
+INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
+SELECT id, '안심 스테이크', 29000, 0, '🥩' FROM restaurant WHERE category = '양식';
+
+INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
+SELECT id, '떡볶이', 5000, 1, '🌶️' FROM restaurant WHERE category = '분식';
+INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
+SELECT id, '김밥', 4000, 0, '🍙' FROM restaurant WHERE category = '분식';
+INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
+SELECT id, '순대', 6000, 0, '🥟' FROM restaurant WHERE category = '분식';
+INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
+SELECT id, '모둠튀김', 5000, 0, '🍤' FROM restaurant WHERE category = '분식';
+INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
+SELECT id, '라볶이', 7000, 0, '🍜' FROM restaurant WHERE category = '분식';
+
+INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
+SELECT id, '아메리카노', 4500, 1, '☕' FROM restaurant WHERE category = '카페/디저트';
+INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
+SELECT id, '카페라떼', 5000, 0, '🥛' FROM restaurant WHERE category = '카페/디저트';
+INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
+SELECT id, '크루아상', 4800, 0, '🥐' FROM restaurant WHERE category = '카페/디저트';
+INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
+SELECT id, '치즈케이크', 6500, 0, '🍰' FROM restaurant WHERE category = '카페/디저트';
+
+INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
+SELECT id, '후라이드 치킨', 19000, 1, '🍗' FROM restaurant WHERE category = '치킨/피자';
+INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
+SELECT id, '양념치킨', 20000, 0, '🍗' FROM restaurant WHERE category = '치킨/피자';
+INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
+SELECT id, '페퍼로니 피자', 21000, 0, '🍕' FROM restaurant WHERE category = '치킨/피자';
+INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
+SELECT id, '치즈볼', 6000, 0, '🧀' FROM restaurant WHERE category = '치킨/피자';
+
+INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
+SELECT id, '삼겹살 (150g)', 15000, 1, '🥓' FROM restaurant WHERE category = '고기/구이';
+INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
+SELECT id, '목살 (150g)', 14000, 0, '🥩' FROM restaurant WHERE category = '고기/구이';
+INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
+SELECT id, '양념갈비 (200g)', 22000, 0, '🍖' FROM restaurant WHERE category = '고기/구이';
+INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
+SELECT id, '된장찌개', 7000, 0, '🍲' FROM restaurant WHERE category = '고기/구이';
+INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
+SELECT id, '물냉면', 9000, 0, '🍜' FROM restaurant WHERE category = '고기/구이';
+
+INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
+SELECT id, '모둠회 (소)', 35000, 1, '🐟' FROM restaurant WHERE category = '해산물';
+INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
+SELECT id, '물회', 15000, 0, '🥣' FROM restaurant WHERE category = '해산물';
+INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
+SELECT id, '해물탕 (중)', 40000, 0, '🦐' FROM restaurant WHERE category = '해산물';
+INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
+SELECT id, '새우구이', 25000, 0, '🦞' FROM restaurant WHERE category = '해산물';
+
+INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
+SELECT id, '치즈버거 세트', 9500, 1, '🍔' FROM restaurant WHERE category = '패스트푸드';
+INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
+SELECT id, '더블버거 세트', 11500, 0, '🍔' FROM restaurant WHERE category = '패스트푸드';
+INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
+SELECT id, '감자튀김', 4000, 0, '🍟' FROM restaurant WHERE category = '패스트푸드';
+INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
+SELECT id, '콜라', 2500, 0, '🥤' FROM restaurant WHERE category = '패스트푸드';
+
+INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
+SELECT id, '노가리', 8000, 1, '🐟' FROM restaurant WHERE category = '술집/포차';
+INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
+SELECT id, '골뱅이무침', 15000, 0, '🐚' FROM restaurant WHERE category = '술집/포차';
+INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
+SELECT id, '계란말이', 10000, 0, '🥚' FROM restaurant WHERE category = '술집/포차';
+INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
+SELECT id, '생맥주 (500cc)', 4500, 0, '🍺' FROM restaurant WHERE category = '술집/포차';
