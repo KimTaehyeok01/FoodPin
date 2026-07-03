@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Bell, Search, MapPin } from 'lucide-react';
 import { restaurantsApi, pinsApi, photoSrc } from '../api/restaurants';
 import type { Restaurant, Pin } from '../api/restaurants';
@@ -8,6 +9,7 @@ import './HomePage.css';
 const CATEGORIES = ['전체', '한식', '중식', '일식', '양식', '분식', '카페/디저트', '치킨/피자', '고기/구이', '해산물'];
 
 export default function HomePage() {
+  const navigate = useNavigate();
   const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
   const [myPins, setMyPins] = useState<Pin[]>([]);
   const [selectedCategory, setSelectedCategory] = useState('전체');
@@ -82,7 +84,7 @@ export default function HomePage() {
             </div>
             <div className="hot-scroll">
               {hotRestaurants.map((r) => (
-                <div key={r.id} className="hot-card">
+                <div key={r.id} className="hot-card" onClick={() => navigate(`/restaurants/${r.id}`)}>
                   {r.photoUrl ? (
                     <img src={photoSrc(r.photoUrl)} alt={r.name} className="hot-card__img" />
                   ) : (

@@ -1,4 +1,5 @@
 import { Bookmark } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { photoSrc } from '../api/restaurants';
 import type { Restaurant, Pin } from '../api/restaurants';
 import './RestaurantCard.css';
@@ -11,10 +12,11 @@ interface Props {
 }
 
 export default function RestaurantCard({ restaurant, pinned, myPin, hot }: Props) {
+  const navigate = useNavigate();
   const rating = myPin?.rating ?? 0;
 
   return (
-    <div className="rc">
+    <div className="rc" onClick={() => navigate(`/restaurants/${restaurant.id}`)}>
       <div className="rc__img-wrap">
         {restaurant.photoUrl ? (
           <img src={photoSrc(restaurant.photoUrl)} alt={restaurant.name} className="rc__img" />

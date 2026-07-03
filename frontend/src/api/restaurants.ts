@@ -27,6 +27,21 @@ export interface Pin {
   restaurant: Restaurant;
 }
 
+// 식당별 핀 조회 시 작성자 정보 포함
+export interface RestaurantPin {
+  id: number;
+  userId: number;
+  restaurantId: number;
+  rating: number;
+  memo: string | null;
+  createdAt: string;
+  user: {
+    id: number;
+    nickname: string;
+    profileImage: string | null;
+  };
+}
+
 export interface CreateRestaurantDto {
   name: string;
   latitude: number;
@@ -85,6 +100,8 @@ export const restaurantsApi = {
 
 export const pinsApi = {
   getMyPins: () => request<Pin[]>("/pins/me"),
+  getForRestaurant: (restaurantId: number) =>
+    request<RestaurantPin[]>(`/pins/restaurant/${restaurantId}`),
   pin: (restaurantId: number, dto: CreatePinDto) =>
     request<Pin>(`/pins/${restaurantId}`, {
       method: "POST",

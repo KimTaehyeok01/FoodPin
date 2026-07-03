@@ -24,6 +24,11 @@ export class PinsController {
     return this.pinsService.getMyPins(req.user.id);
   }
 
+  @Get('restaurant/:restaurantId')
+  getRestaurantPins(@Param('restaurantId', ParseIntPipe) restaurantId: number) {
+    return this.pinsService.getRestaurantPins(restaurantId);
+  }
+
   @Post(':restaurantId')
   pin(
     @Req() req: any,

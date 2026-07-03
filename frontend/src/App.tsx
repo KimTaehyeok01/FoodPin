@@ -6,6 +6,7 @@ import AuthCallback from './pages/AuthCallback';
 import HomePage from './pages/HomePage';
 import MapPage from './pages/MapPage';
 import MyPage from './pages/MyPage';
+import RestaurantDetailPage from './pages/RestaurantDetailPage';
 import BottomNav from './components/BottomNav';
 import './App.css';
 
@@ -23,6 +24,7 @@ function AppLayout() {
         <Route path="/" element={<HomePage />} />
         <Route path="/map" element={<MapPage />} />
         <Route path="/mypage" element={<MyPage />} />
+        <Route path="/restaurants/:id" element={<RestaurantDetailPage />} />
       </Routes>
       <BottomNav />
     </div>

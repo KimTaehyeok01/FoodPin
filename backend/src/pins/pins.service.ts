@@ -19,6 +19,23 @@ export class PinsService {
     });
   }
 
+  async getRestaurantPins(restaurantId: number): Promise<Pin[]> {
+    return this.pinRepo.find({
+      where: { restaurantId },
+      relations: { user: true },
+      select: {
+        id: true,
+        userId: true,
+        restaurantId: true,
+        rating: true,
+        memo: true,
+        createdAt: true,
+        user: { id: true, nickname: true, profileImage: true },
+      },
+      order: { createdAt: 'DESC' },
+    });
+  }
+
   async pin(userId: number, restaurantId: number, dto: CreatePinDto): Promise<Pin> {
     const exists = await this.pinRepo.findOne({ where: { userId, restaurantId } });
     if (exists) throw new ConflictException('이미 핀한 식당입니다.');
