@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useImperativeHandle, useRef, useState } from 'react';
+import type { Ref } from 'react';
 import type { Restaurant, Pin } from '../api/restaurants';
 
 const APP_KEY = import.meta.env.VITE_KAKAO_MAP_KEY as string;
@@ -13,7 +14,7 @@ function loadKakaoScript(): Promise<void> {
     }
     const script = document.createElement('script');
     script.id = 'kakao-map-script';
-    script.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${APP_KEY}&autoload=false`;
+    script.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${APP_KEY}&autoload=false&libraries=services`;
     script.onload = () => window.kakao.maps.load(resolve);
     script.onerror = reject;
     document.head.appendChild(script);
@@ -69,12 +70,17 @@ function makeLabel(restaurant: Restaurant, isPinned: boolean, rating?: number): 
   return wrap;
 }
 
+export interface MapViewHandle {
+  moveTo: (lat: number, lng: number) => void;
+}
+
 interface Props {
   onMapClick?: (lat: number, lng: number, address: string) => void;
   onMarkerClick?: (restaurant: Restaurant) => void;
   restaurants?: Restaurant[];
   pinnedIds?: Set<number>;
   myPins?: Pin[];
+  ref?: Ref<MapViewHandle>;
 }
 
 export default function MapView({
@@ -83,11 +89,21 @@ export default function MapView({
   restaurants = [],
   pinnedIds = new Set(),
   myPins = [],
+  ref,
 }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<kakao.maps.Map | null>(null);
   const overlaysRef = useRef<kakao.maps.CustomOverlay[]>([]);
   const [mapReady, setMapReady] = useState(false);
+
+  useImperativeHandle(ref, () => ({
+    moveTo: (lat: number, lng: number) => {
+      const map = mapRef.current;
+      if (!map) return;
+      map.setLevel(4);
+      map.panTo(new kakao.maps.LatLng(lat, lng));
+    },
+  }), []);
 
   useEffect(() => {
     let destroyed = false;
@@ -101,8 +117,8 @@ export default function MapView({
       });
       mapRef.current = map;
 
-      kakao.maps.event.addListener(map, 'click', (e: kakao.maps.event.MouseEvent) => {
-        if (!onMapClick) return;
+      kakao.maps.event.addListener(map, 'click', (e?: kakao.maps.MouseEvent) => {
+        if (!onMapClick || !e) return;
         onMapClick(e.latLng.getLat(), e.latLng.getLng(), '');
       });
 

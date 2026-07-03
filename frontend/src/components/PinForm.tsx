@@ -1,8 +1,7 @@
 import { useState } from 'react';
+import { photoSrc } from '../api/restaurants';
 import type { Restaurant, Pin, CreatePinDto } from '../api/restaurants';
 import './PinForm.css';
-
-const API_URL = import.meta.env.VITE_API_URL;
 
 interface Props {
   restaurant: Restaurant;
@@ -29,7 +28,7 @@ export default function PinForm({ restaurant, existingPin, onSave, onUnpin, onCa
         <div className="pin-form__restaurant-info">
           {restaurant.photoUrl ? (
             <img
-              src={`${API_URL}${restaurant.photoUrl}`}
+              src={photoSrc(restaurant.photoUrl)}
               alt={restaurant.name}
               className="pin-form__restaurant-photo"
             />

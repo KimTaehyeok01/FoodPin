@@ -1,13 +1,11 @@
 import { useState, useEffect } from 'react';
 import { Bell, Search, MapPin } from 'lucide-react';
-import { restaurantsApi, pinsApi } from '../api/restaurants';
+import { restaurantsApi, pinsApi, photoSrc } from '../api/restaurants';
 import type { Restaurant, Pin } from '../api/restaurants';
 import RestaurantCard from '../components/RestaurantCard';
 import './HomePage.css';
 
 const CATEGORIES = ['전체', '한식', '중식', '일식', '양식', '분식', '카페/디저트', '치킨/피자', '고기/구이', '해산물'];
-
-const API_URL = import.meta.env.VITE_API_URL;
 
 export default function HomePage() {
   const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
@@ -86,7 +84,7 @@ export default function HomePage() {
               {hotRestaurants.map((r) => (
                 <div key={r.id} className="hot-card">
                   {r.photoUrl ? (
-                    <img src={`${API_URL}${r.photoUrl}`} alt={r.name} className="hot-card__img" />
+                    <img src={photoSrc(r.photoUrl)} alt={r.name} className="hot-card__img" />
                   ) : (
                     <div className="hot-card__no-img">🍽️</div>
                   )}

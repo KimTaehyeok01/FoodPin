@@ -3,13 +3,41 @@ interface Window {
 }
 
 declare namespace kakao.maps {
+  function load(callback: () => void): void;
+
   class Map {
     constructor(container: HTMLElement, options: MapOptions);
     getCenter(): LatLng;
     setCenter(latlng: LatLng): void;
+    panTo(latlng: LatLng): void;
     getLevel(): number;
     setLevel(level: number): void;
     addOverlayMapTypeId(type: MapTypeId): void;
+  }
+
+  class CustomOverlay {
+    constructor(options: CustomOverlayOptions);
+    setMap(map: Map | null): void;
+  }
+
+  interface CustomOverlayOptions {
+    position: LatLng;
+    content: HTMLElement | string;
+    xAnchor?: number;
+    yAnchor?: number;
+    map?: Map;
+  }
+
+  class Size {
+    constructor(width: number, height: number);
+  }
+
+  class Point {
+    constructor(x: number, y: number);
+  }
+
+  class MarkerImage {
+    constructor(src: string, size: Size, options?: { offset?: Point });
   }
 
   class LatLng {
@@ -41,6 +69,7 @@ declare namespace kakao.maps {
     map?: Map;
     position: LatLng;
     title?: string;
+    image?: MarkerImage;
   }
 
   interface InfoWindowOptions {
@@ -78,6 +107,20 @@ declare namespace kakao.maps {
         lat: number,
         callback: (result: Address[], status: Status) => void,
       ): void;
+    }
+
+    class Places {
+      keywordSearch(
+        keyword: string,
+        callback: (result: PlacesSearchResultItem[], status: Status) => void,
+      ): void;
+    }
+
+    interface PlacesSearchResultItem {
+      place_name: string;
+      address_name: string;
+      x: string;
+      y: string;
     }
 
     interface Address {

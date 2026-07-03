@@ -1,5 +1,10 @@
 const BASE_URL = import.meta.env.VITE_API_URL;
 
+// 외부 이미지(https://...)는 그대로, 업로드 이미지(/uploads/...)는 API 주소를 붙여서 반환
+export function photoSrc(photoUrl: string): string {
+  return photoUrl.startsWith('http') ? photoUrl : `${BASE_URL}${photoUrl}`;
+}
+
 export interface Restaurant {
   id: number;
   name: string;

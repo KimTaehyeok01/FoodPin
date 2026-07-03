@@ -1,8 +1,7 @@
 import { Bookmark } from 'lucide-react';
+import { photoSrc } from '../api/restaurants';
 import type { Restaurant, Pin } from '../api/restaurants';
 import './RestaurantCard.css';
-
-const API_URL = import.meta.env.VITE_API_URL;
 
 interface Props {
   restaurant: Restaurant;
@@ -18,7 +17,7 @@ export default function RestaurantCard({ restaurant, pinned, myPin, hot }: Props
     <div className="rc">
       <div className="rc__img-wrap">
         {restaurant.photoUrl ? (
-          <img src={`${API_URL}${restaurant.photoUrl}`} alt={restaurant.name} className="rc__img" />
+          <img src={photoSrc(restaurant.photoUrl)} alt={restaurant.name} className="rc__img" />
         ) : (
           <div className="rc__no-img">🍽️</div>
         )}

@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Navigation, Search } from 'lucide-react';
 import MapView from '../components/KakaoMap';
+import type { MapViewHandle } from '../components/KakaoMap';
 import AddRestaurantForm from '../components/AddPinForm';
 import PinForm from '../components/PinForm';
 import { restaurantsApi, pinsApi } from '../api/restaurants';
@@ -18,6 +19,8 @@ export default function MapPage() {
   const [myPins, setMyPins] = useState<Pin[]>([]);
   const [pendingLocation, setPendingLocation] = useState<PendingLocation | null>(null);
   const [selectedRestaurant, setSelectedRestaurant] = useState<Restaurant | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const mapViewRef = useRef<MapViewHandle>(null);
 
   useEffect(() => {
     Promise.all([restaurantsApi.getAll(), pinsApi.getMyPins()])
@@ -55,6 +58,31 @@ export default function MapPage() {
     }
   };
 
+  const handleSearch = () => {
+    const query = searchQuery.trim();
+    if (!query) return;
+
+    // 1순위: 등록된 식당에서 검색
+    const found = restaurants.find(
+      (r) => r.name.includes(query) || r.address?.includes(query),
+    );
+    if (found) {
+      mapViewRef.current?.moveTo(found.latitude, found.longitude);
+      return;
+    }
+
+    // 2순위: 카카오 장소 검색으로 지역/장소 이동
+    if (!window.kakao?.maps?.services) return;
+    const places = new kakao.maps.services.Places();
+    places.keywordSearch(query, (result, status) => {
+      if (status === kakao.maps.services.Status.OK && result.length > 0) {
+        mapViewRef.current?.moveTo(Number(result[0].y), Number(result[0].x));
+      } else {
+        alert('검색 결과가 없습니다.');
+      }
+    });
+  };
+
   const handleUnpin = async () => {
     if (!selectedRestaurant) return;
     try {
@@ -77,12 +105,21 @@ export default function MapPage() {
       </header>
       <div className="map-search-wrap">
         <div className="map-search-box">
-          <Search size={15} strokeWidth={2} className="map-search-icon" />
-          <input className="map-search" placeholder="지역이나 맛집 검색..." readOnly />
+          <button className="map-search-btn" onClick={handleSearch} aria-label="검색">
+            <Search size={15} strokeWidth={2} />
+          </button>
+          <input
+            className="map-search"
+            placeholder="지역이나 맛집 검색..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onKeyDown={(e) => { if (e.key === 'Enter') handleSearch(); }}
+          />
         </div>
       </div>
       <div className="map-view">
         <MapView
+          ref={mapViewRef}
           restaurants={restaurants}
           pinnedIds={pinnedIds}
           myPins={myPins}
