@@ -4,9 +4,12 @@ import { Bell, Search, MapPin } from 'lucide-react';
 import { restaurantsApi, pinsApi, photoSrc } from '../api/restaurants';
 import type { Restaurant, Pin } from '../api/restaurants';
 import RestaurantCard from '../components/RestaurantCard';
+import { haversineKm } from '../utils/distance';
 import './HomePage.css';
 
 const CATEGORIES = ['전체', '한식', '중식', '일식', '양식', '분식', '카페/디저트', '치킨/피자', '고기/구이', '해산물'];
+
+const NEARBY_RADIUS_KM = 20;
 
 export default function HomePage() {
   const navigate = useNavigate();
@@ -15,6 +18,7 @@ export default function HomePage() {
   const [selectedCategory, setSelectedCategory] = useState('전체');
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
+  const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
 
   useEffect(() => {
     Promise.all([restaurantsApi.getAll(), pinsApi.getMyPins()])
@@ -23,13 +27,31 @@ export default function HomePage() {
       .finally(() => setLoading(false));
   }, []);
 
+  // 현재 위치 획득 (거부/미지원 시 위치 필터 없이 전체 표시)
+  useEffect(() => {
+    if (!navigator.geolocation) return;
+    navigator.geolocation.getCurrentPosition(
+      (pos) => setUserLocation({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
+      () => {},
+    );
+  }, []);
+
   const pinnedIds = new Set(myPins.map((p) => p.restaurantId));
 
-  const filtered = restaurants
+  // 위치가 있으면 반경 20km 이내로 제한, 없으면 전체
+  const nearby = userLocation
+    ? restaurants.filter(
+        (r) =>
+          haversineKm(userLocation.lat, userLocation.lng, Number(r.latitude), Number(r.longitude)) <=
+          NEARBY_RADIUS_KM,
+      )
+    : restaurants;
+
+  const filtered = nearby
     .filter((r) => selectedCategory === '전체' || r.category === selectedCategory)
     .filter((r) => !searchQuery || r.name.includes(searchQuery) || r.address?.includes(searchQuery) || r.category?.includes(searchQuery));
 
-  const hotRestaurants = restaurants.slice(0, 5);
+  const hotRestaurants = nearby.slice(0, 5);
 
   return (
     <div className="home-page">
@@ -99,7 +121,7 @@ export default function HomePage() {
 
             <div className="home-section-header" style={{ marginTop: 24 }}>
               <span className="home-section-title">주변 맛집</span>
-              <span className="home-section-count">{restaurants.length}개</span>
+              <span className="home-section-count">{nearby.length}개</span>
             </div>
           </>
         )}
