@@ -273,23 +273,6 @@ INSERT INTO restaurant (name, latitude, longitude, address, category, createdAt,
 ('구로 신도림 양꼬치', 37.5090, 126.8910, '서울 구로구 새말로 100', '중식', NOW(), NOW()),
 ('금천 가산 부대찌개', 37.4770, 126.8830, '서울 금천구 가산디지털1로 100', '한식', NOW(), NOW()),
 ('송파 방이동 먹자골목', 37.5110, 127.1240, '서울 송파구 오금로 250', '술집/포차', NOW(), NOW());
-
--- 새 식당에 카테고리별 이미지 배정 (id 홀짝으로 2종 로테이션, 이미 검증된 URL 재사용)
-UPDATE restaurant SET photoUrl = CASE category
-  WHEN '한식'        THEN ELT((id % 2) + 1, 'https://images.unsplash.com/photo-1547592180-85f173990554?w=800&q=80', 'https://images.unsplash.com/photo-1590330297626-d7aff25a0431?w=800&q=80')
-  WHEN '중식'        THEN ELT((id % 2) + 1, 'https://images.unsplash.com/photo-1585238342024-78d387f4a707?w=800&q=80', 'https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?w=800&q=80')
-  WHEN '일식'        THEN ELT((id % 2) + 1, 'https://images.unsplash.com/photo-1579871494447-9811cf80d66c?w=800&q=80', 'https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=800&q=80')
-  WHEN '양식'        THEN ELT((id % 2) + 1, 'https://images.unsplash.com/photo-1473093295043-cdd812d0e601?w=800&q=80', 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&q=80')
-  WHEN '분식'        THEN ELT((id % 2) + 1, 'https://images.unsplash.com/photo-1476224203421-9ac39bcb3327?w=800&q=80', 'https://images.unsplash.com/photo-1559847844-5315695dadae?w=800&q=80')
-  WHEN '카페/디저트' THEN ELT((id % 2) + 1, 'https://images.unsplash.com/photo-1525351484163-7529414344d8?w=800&q=80', 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=800&q=80')
-  WHEN '치킨/피자'   THEN ELT((id % 2) + 1, 'https://images.unsplash.com/photo-1562967914-608f82629710?w=800&q=80', 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=800&q=80')
-  WHEN '고기/구이'   THEN ELT((id % 2) + 1, 'https://images.unsplash.com/photo-1544025162-d76694265947?w=800&q=80', 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=800&q=80')
-  WHEN '해산물'      THEN ELT((id % 2) + 1, 'https://images.unsplash.com/photo-1553621042-f6e147245754?w=800&q=80', 'https://images.unsplash.com/photo-1547928576-b822bc410bdf?w=800&q=80')
-  WHEN '패스트푸드'  THEN ELT((id % 2) + 1, 'https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=800&q=80', 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=800&q=80')
-  WHEN '술집/포차'   THEN ELT((id % 2) + 1, 'https://images.unsplash.com/photo-1436076863939-06870fe779c2?w=800&q=80', 'https://images.unsplash.com/photo-1534080564583-6be75777b70a?w=800&q=80')
-END
-WHERE photoUrl IS NULL;
-
 -- ── 식당 부가정보 시드 (전화 / 영업시간 / 소개글) ──
 UPDATE restaurant SET
   phone = CONCAT('0507-1234-', LPAD(id, 4, '0')),
@@ -430,3 +413,72 @@ INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
 SELECT id, '계란말이', 10000, 0, '🥚' FROM restaurant WHERE category = '술집/포차';
 INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
 SELECT id, '생맥주 (500cc)', 4500, 0, '🍺' FROM restaurant WHERE category = '술집/포차';
+
+-- 카테고리별 이미지 4~5종을 id 기준으로 순환 배정 (전체 식당 통일)
+UPDATE restaurant SET photoUrl = CASE category
+  WHEN '한식' THEN ELT((id % 5) + 1,
+    'https://images.unsplash.com/photo-1547592180-85f173990554?w=800&q=80',
+    'https://images.unsplash.com/photo-1590330297626-d7aff25a0431?w=800&q=80',
+    'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800&q=80',
+    'https://images.unsplash.com/photo-1476718406336-bb5a9690ee2a?w=800&q=80',
+    'https://images.unsplash.com/photo-1590301157890-4810ed352733?w=800&q=80')
+  WHEN '중식' THEN ELT((id % 4) + 1,
+    'https://images.unsplash.com/photo-1585238342024-78d387f4a707?w=800&q=80',
+    'https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?w=800&q=80',
+    'https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?w=800&q=80',
+    'https://images.unsplash.com/photo-1626645738196-c2a7c87a8f58?w=800&q=80')
+  WHEN '일식' THEN ELT((id % 5) + 1,
+    'https://images.unsplash.com/photo-1579871494447-9811cf80d66c?w=800&q=80',
+    'https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=800&q=80',
+    'https://images.unsplash.com/photo-1617196034796-73dfa7b1fd56?w=800&q=80',
+    'https://images.unsplash.com/photo-1611143669185-af224c5e3252?w=800&q=80',
+    'https://images.unsplash.com/photo-1580822184713-fc5400e7fe10?w=800&q=80')
+  WHEN '양식' THEN ELT((id % 5) + 1,
+    'https://images.unsplash.com/photo-1473093295043-cdd812d0e601?w=800&q=80',
+    'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&q=80',
+    'https://images.unsplash.com/photo-1563379926898-05f4575a45d8?w=800&q=80',
+    'https://images.unsplash.com/photo-1484723091739-30a097e8f929?w=800&q=80',
+    'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=800&q=80')
+  WHEN '분식' THEN ELT((id % 5) + 1,
+    'https://images.unsplash.com/photo-1476224203421-9ac39bcb3327?w=800&q=80',
+    'https://images.unsplash.com/photo-1559847844-5315695dadae?w=800&q=80',
+    'https://images.unsplash.com/photo-1532636875304-0c89119d9b4d?w=800&q=80',
+    'https://images.unsplash.com/photo-1580651214613-f4692d6d138f?w=800&q=80',
+    'https://images.unsplash.com/photo-1635363638580-c2809d049eee?w=800&q=80')
+  WHEN '카페/디저트' THEN ELT((id % 5) + 1,
+    'https://images.unsplash.com/photo-1525351484163-7529414344d8?w=800&q=80',
+    'https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=800&q=80',
+    'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=800&q=80',
+    'https://images.unsplash.com/photo-1488477181946-6428a0291777?w=800&q=80',
+    'https://images.unsplash.com/photo-1497034825429-c343d7c6a68f?w=800&q=80')
+  WHEN '치킨/피자' THEN ELT((id % 5) + 1,
+    'https://images.unsplash.com/photo-1562967914-608f82629710?w=800&q=80',
+    'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=800&q=80',
+    'https://images.unsplash.com/photo-1615887023544-3a566f29d822?w=800&q=80',
+    'https://images.unsplash.com/photo-1571407970349-bc81e7e96d47?w=800&q=80',
+    'https://images.unsplash.com/photo-1594007654729-407eedc4be65?w=800&q=80')
+  WHEN '고기/구이' THEN ELT((id % 5) + 1,
+    'https://images.unsplash.com/photo-1544025162-d76694265947?w=800&q=80',
+    'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=800&q=80',
+    'https://images.unsplash.com/photo-1552566626-52f8b828add9?w=800&q=80',
+    'https://images.unsplash.com/photo-1550317138-10000687a72b?w=800&q=80',
+    'https://images.unsplash.com/photo-1567337710282-00832b415979?w=800&q=80')
+  WHEN '해산물' THEN ELT((id % 5) + 1,
+    'https://images.unsplash.com/photo-1553621042-f6e147245754?w=800&q=80',
+    'https://images.unsplash.com/photo-1547928576-b822bc410bdf?w=800&q=80',
+    'https://images.unsplash.com/photo-1554679665-f5537f187268?w=800&q=80',
+    'https://images.unsplash.com/photo-1535399831218-d5bd36d1a6b3?w=800&q=80',
+    'https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=800&q=80')
+  WHEN '패스트푸드' THEN ELT((id % 4) + 1,
+    'https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=800&q=80',
+    'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=800&q=80',
+    'https://images.unsplash.com/photo-1550547660-d9450f859349?w=800&q=80',
+    'https://images.unsplash.com/photo-1586190848861-99aa4a171e90?w=800&q=80')
+  WHEN '술집/포차' THEN ELT((id % 5) + 1,
+    'https://images.unsplash.com/photo-1436076863939-06870fe779c2?w=800&q=80',
+    'https://images.unsplash.com/photo-1534080564583-6be75777b70a?w=800&q=80',
+    'https://images.unsplash.com/photo-1514933651103-005eec06c04b?w=800&q=80',
+    'https://images.unsplash.com/photo-1470337458703-46ad1756a187?w=800&q=80',
+    'https://images.unsplash.com/photo-1572116469696-31de0f17cc34?w=800&q=80')
+END
+WHERE category IS NOT NULL;
