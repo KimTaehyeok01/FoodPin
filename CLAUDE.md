@@ -21,7 +21,7 @@
 | 프론트엔드 | React (Vite + TypeScript), 포트 5173                 |
 | 백엔드     | NestJS (TypeScript), 포트 3000                       |
 | DB         | MySQL + TypeORM                                      |
-| 지도       | Leaflet + OpenStreetMap (카카오맵 심사 후 교체 예정) |
+| 지도       | 카카오맵 (Kakao Maps JavaScript SDK)                 |
 | 모바일     | Capacitor (iOS/Android)                              |
 | 인증       | 네이버/카카오 OAuth2 + JWT                           |
 | 배포       | AWS Lightsail (Ubuntu)                               |
@@ -33,14 +33,16 @@
 | 단계 | 내용                                   | 상태    |
 | ---- | -------------------------------------- | ------- |
 | 1    | 모노레포 세팅 (NestJS + Vite React TS) | ✅ 완료 |
-| 2    | 지도 연동 (Leaflet + OpenStreetMap)    | ✅ 완료 |
+| 2    | 지도 연동 (카카오맵)                   | ✅ 완료 |
 | 3    | 백엔드 CRUD API (restaurant)           | ✅ 완료 |
 | 4    | 지도 클릭 → 핀 추가 폼                 | ✅ 완료 |
-| 5    | 핀 목록 UI + 삭제/수정                 | 🔲      |
-| 6    | 네이버/카카오 OAuth2 + JWT             | 🔲      |
-| 7    | Capacitor 세팅 (iOS/Android)           | 🔲      |
-| 8    | 모바일 반응형 UI                       | 🔲      |
-| 9    | AWS Lightsail 배포                     | 🔲      |
+| 5    | 핀 CRUD (등록/수정/삭제) + 내 핀 조회  | ✅ 완료 |
+| 6    | 네이버/카카오 OAuth2 + 일반 로그인·JWT | ✅ 완료 |
+| 7    | 식당 상세 페이지 (메뉴·리뷰·부가정보)  | ✅ 완료 |
+| 8    | 이미지 업로드 (multer)                 | ✅ 완료 |
+| 9    | Capacitor 세팅 (iOS/Android)           | 🔲      |
+| 10   | 모바일 반응형 UI 마감                  | 🔲      |
+| 11   | AWS Lightsail 배포                     | 🔲      |
 
 ---
 
@@ -51,24 +53,31 @@
 ```
 FoodPin/
 ├── CLAUDE.md
+├── db.sql                    ← DB 스키마 + 시드 데이터
 ├── package.json              ← npm workspaces 루트
 ├── backend/                  ← NestJS
 │   ├── src/
 │   │   ├── main.ts
 │   │   ├── app.module.ts
-│   │   ├── restaurants/
-│   │   │   ├── restaurants.module.ts
-│   │   │   ├── restaurants.controller.ts
-│   │   │   ├── restaurants.service.ts
+│   │   ├── restaurants/      ← 식당 CRUD + 메뉴
 │   │   │   ├── restaurant.entity.ts
+│   │   │   ├── restaurant-menu.entity.ts
 │   │   │   └── dto/
-│   │   └── auth/             ← OAuth2 + JWT (예정)
+│   │   ├── pins/             ← 핀(별점·메모) CRUD
+│   │   │   └── pin.entity.ts
+│   │   ├── users/            ← 유저 + 즐겨찾는 카테고리
+│   │   │   ├── user.entity.ts
+│   │   │   └── user-favorite-category.entity.ts
+│   │   ├── auth/             ← OAuth2 + 일반 로그인 + JWT
+│   │   └── upload/           ← 이미지 업로드 (multer)
 │   └── .env
 └── frontend/                 ← React (Vite + TS)
     ├── src/
     │   ├── App.tsx
+    │   ├── pages/            ← Home / Map / My / 상세 / 로그인 등
     │   ├── components/
-    │   └── api/
+    │   ├── api/
+    │   └── types/           ← kakao.d.ts (카카오맵 타입 선언)
     └── .env
 ```
 
@@ -76,47 +85,98 @@ FoodPin/
 
 ## API 설계
 
-| Method | URL                  | 설명                |
-| ------ | -------------------- | ------------------- |
-| GET    | /restaurants         | 전체 식당 목록 조회 |
-| GET    | /restaurants/:id     | 식당 단건 조회      |
-| POST   | /restaurants         | 식당 등록           |
-| PATCH  | /restaurants/:id     | 식당 수정           |
-| DELETE | /restaurants/:id     | 식당 삭제           |
-| GET    | /auth/kakao          | 카카오 OAuth2 시작  |
-| GET    | /auth/kakao/callback | 카카오 OAuth2 콜백  |
-| GET    | /auth/naver          | 네이버 OAuth2 시작  |
-| GET    | /auth/naver/callback | 네이버 OAuth2 콜백  |
+| Method | URL                        | 설명                        | 인증 |
+| ------ | -------------------------- | --------------------------- | ---- |
+| GET    | /restaurants               | 전체 식당 목록 조회         |      |
+| GET    | /restaurants/:id           | 식당 단건 조회 (메뉴 포함)  |      |
+| POST   | /restaurants               | 식당 등록                   | JWT  |
+| PATCH  | /restaurants/:id           | 식당 수정                   | JWT  |
+| DELETE | /restaurants/:id           | 식당 삭제                   | JWT  |
+| GET    | /pins/me                   | 내 핀 목록 조회             | JWT  |
+| GET    | /pins/restaurant/:id       | 특정 식당의 핀(리뷰) 목록   | JWT  |
+| POST   | /pins/:restaurantId        | 핀 등록 (별점·메모)         | JWT  |
+| PATCH  | /pins/:restaurantId        | 핀 수정                     | JWT  |
+| DELETE | /pins/:restaurantId        | 핀 삭제                     | JWT  |
+| POST   | /upload/image              | 이미지 업로드               | JWT  |
+| POST   | /auth/register             | 일반 회원가입               |      |
+| POST   | /auth/login                | 일반 로그인                 |      |
+| GET    | /auth/kakao                | 카카오 OAuth2 시작          |      |
+| GET    | /auth/kakao/callback       | 카카오 OAuth2 콜백          |      |
+| GET    | /auth/naver                | 네이버 OAuth2 시작          |      |
+| GET    | /auth/naver/callback       | 네이버 OAuth2 콜백          |      |
 
 ---
 
 ## DB 스키마
 
 > 스키마는 개발 중 변경될 수 있다. TypeORM `synchronize: true` (개발 환경)로 자동 반영.
+> 전체 스키마와 시드 데이터는 루트 `db.sql` 참고. 정규화는 3NF 기준.
 
-**restaurant 테이블**
+**restaurant 테이블** — 식당 정보
 
-| 컬럼       | 타입          | 설명       |
-| ---------- | ------------- | ---------- |
-| id         | INT (PK, AI)  | 고유 ID    |
-| name       | VARCHAR(100)  | 식당 이름  |
-| latitude   | DECIMAL(10,7) | 위도       |
-| longitude  | DECIMAL(10,7) | 경도       |
-| rating     | TINYINT       | 별점 (1~5) |
-| memo       | TEXT          | 메모       |
-| address    | VARCHAR(255)  | 주소       |
-| created_at | DATETIME      | 등록일     |
-| updated_at | DATETIME      | 수정일     |
+| 컬럼         | 타입          | 설명                    |
+| ------------ | ------------- | ----------------------- |
+| id           | INT (PK, AI)  | 고유 ID                 |
+| userId       | INT (nullable)| 등록한 유저 (시드는 NULL) |
+| name         | VARCHAR(100)  | 식당 이름               |
+| latitude     | DECIMAL(10,7) | 위도                    |
+| longitude    | DECIMAL(10,7) | 경도                    |
+| address      | VARCHAR(255)  | 주소                    |
+| photoUrl     | VARCHAR(500)  | 사진 URL                |
+| category     | VARCHAR(50)   | 카테고리                |
+| phone        | VARCHAR(20)   | 전화번호                |
+| description  | TEXT          | 소개글                  |
+| hoursWeekday | VARCHAR(50)   | 평일 영업시간           |
+| hoursWeekend | VARCHAR(50)   | 주말 영업시간           |
+| breakTime    | VARCHAR(50)   | 브레이크타임            |
+| createdAt    | DATETIME      | 등록일                  |
+| updatedAt    | DATETIME      | 수정일                  |
 
-**user 테이블 (예정)**
+**restaurant_menu 테이블** — 식당 메뉴 (restaurant 1:N)
 
-| 컬럼        | 타입         | 설명          |
-| ----------- | ------------ | ------------- |
-| id          | INT (PK, AI) | 고유 ID       |
-| provider    | VARCHAR(20)  | kakao / naver |
-| provider_id | VARCHAR(100) | 소셜 고유 ID  |
-| nickname    | VARCHAR(50)  | 닉네임        |
-| created_at  | DATETIME     | 가입일        |
+| 컬럼         | 타입         | 설명            |
+| ------------ | ------------ | --------------- |
+| id           | INT (PK, AI) | 고유 ID         |
+| restaurantId | INT (FK)     | 식당 ID (CASCADE) |
+| name         | VARCHAR(100) | 메뉴명          |
+| price        | INT          | 가격            |
+| isPopular    | BOOLEAN      | 인기 메뉴 여부  |
+| emoji        | VARCHAR(8)   | 이모지          |
+
+**pin 테이블** — 유저가 식당에 남긴 별점·메모 (user·restaurant 1:N, `(userId, restaurantId)` UNIQUE)
+
+| 컬럼         | 타입         | 설명            |
+| ------------ | ------------ | --------------- |
+| id           | INT (PK, AI) | 고유 ID         |
+| userId       | INT (FK)     | 유저 ID (CASCADE) |
+| restaurantId | INT (FK)     | 식당 ID (CASCADE) |
+| rating       | TINYINT      | 별점 (1~5, 기본 3) |
+| memo         | TEXT         | 메모            |
+| createdAt    | DATETIME     | 등록일          |
+| updatedAt    | DATETIME     | 수정일          |
+
+**user 테이블** — 유저 (일반 + 소셜)
+
+| 컬럼         | 타입         | 설명                  |
+| ------------ | ------------ | --------------------- |
+| id           | INT (PK, AI) | 고유 ID               |
+| provider     | VARCHAR(20)  | kakao / naver (소셜)  |
+| providerId   | VARCHAR(100) | 소셜 고유 ID          |
+| email        | VARCHAR(255) | 이메일 (일반, UNIQUE) |
+| password     | VARCHAR(255) | 해시 비밀번호 (일반)  |
+| nickname     | VARCHAR(50)  | 닉네임                |
+| profileImage | VARCHAR(255) | 프로필 이미지         |
+| address      | VARCHAR(255) | 주소                  |
+| age          | TINYINT      | 나이                  |
+| createdAt    | DATETIME     | 가입일                |
+
+**user_favorite_category 테이블** — 즐겨찾는 카테고리 (user 1:N, 3NF 분리)
+
+| 컬럼     | 타입         | 설명            |
+| -------- | ------------ | --------------- |
+| id       | INT (PK, AI) | 고유 ID         |
+| userId   | INT (FK)     | 유저 ID (CASCADE) |
+| category | VARCHAR(50)  | 카테고리        |
 
 ---
 
@@ -132,6 +192,7 @@ DB_USERNAME=root
 DB_PASSWORD=
 DB_DATABASE=foodpin
 JWT_SECRET=
+FRONTEND_URL=http://localhost:5173
 KAKAO_CLIENT_ID=
 KAKAO_CLIENT_SECRET=
 KAKAO_CALLBACK_URL=http://localhost:3000/auth/kakao/callback
@@ -144,7 +205,7 @@ NAVER_CALLBACK_URL=http://localhost:3000/auth/naver/callback
 
 ```
 VITE_API_URL=http://localhost:3000
-VITE_KAKAO_MAP_KEY=3c968d8908eb81ac45ef8a39e7e3889f
+VITE_KAKAO_MAP_KEY=<카카오 JavaScript 키>
 ```
 
 ---
@@ -182,7 +243,8 @@ VITE_KAKAO_MAP_KEY=3c968d8908eb81ac45ef8a39e7e3889f
 - 키 종류: JavaScript 키
 - 플랫폼 등록: `http://localhost:5173` (개발) / 배포 도메인 (운영)
 - 키 입력 위치: `frontend/.env` → `VITE_KAKAO_MAP_KEY`
-- 현재 상태: 비즈 앱 심사 신청 완료 → 승인 후 Leaflet 교체 예정
+- 현재 상태: 비즈 앱 승인 완료 → 카카오맵 SDK 연동 완료 (개발 중 테스트 앱 키 사용)
+- SDK 로드: `dapi.kakao.com/v2/maps/sdk.js` + `libraries=services` (장소 검색용)
 
 ## Behavioral Guidelines
 
