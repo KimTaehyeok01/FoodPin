@@ -1,8 +1,36 @@
 /* 식당 상세 페이지 스타일 — 피그마 디자인 기반, 모바일 퍼스트 (375px) */
 
+/* 상세 페이지는 내비게이션 영역을 제외한 화면 전체를 덮는 독립 프레임으로 만들어
+   화면 자체가 옆에서 밀려 들어오고 나가는 네이티브 앱 같은 전환을 구현한다.
+   (내부에 있는 플로팅 버튼도 이 프레임을 기준으로 고정되어, 전환 중 위치가 틀어지지 않는다) */
 .rdx {
-  min-height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 68px; /* 모바일 하단 내비 높이만큼 제외 */
+  overflow-y: auto;
+  overflow-x: hidden;
   background: linear-gradient(180deg, #0e1628 0%, #131f3a 100%);
+  z-index: 10;
+  /* 항상 자체 좌표계를 갖게 하여(하위 fixed 버튼의 기준) 애니메이션 전후 기준이 바뀌지 않도록 함 */
+  transform: translateX(0);
+  animation: rdx-slide-in 0.36s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes rdx-slide-in {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+/* 뒤로가기 시 반대 방향(오른쪽)으로 화면 전체가 밀려나가는 효과 */
+.rdx--leaving {
+  animation: rdx-slide-out 0.3s cubic-bezier(0.4, 0, 1, 1) forwards;
+}
+
+@keyframes rdx-slide-out {
+  from { transform: translateX(0); }
+  to { transform: translateX(100%); }
 }
 
 /* ── 히어로 ── */
@@ -43,21 +71,6 @@
   justify-content: center;
   cursor: pointer;
   backdrop-filter: blur(4px);
-}
-
-.rdx-hero__badge {
-  position: absolute;
-  top: 56px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #ff6b35;
-  color: #fff;
-  font-size: 12px;
-  font-weight: 700;
-  padding: 6px 14px;
-  border-radius: 16px;
-  white-space: nowrap;
-  box-shadow: 0 2px 10px rgba(255,107,53,0.4);
 }
 
 .rdx-hero__actions {
@@ -468,7 +481,8 @@
   position: fixed;
   left: 16px;
   right: 16px;
-  bottom: 84px;
+  /* .rdx 자체가 하단 내비(68px)만큼 이미 안쪽으로 들어와 있으므로, 여기서는 나머지 여백(16px)만 더한다 */
+  bottom: 16px;
   height: 52px;
   border: none;
   border-radius: 26px;
@@ -527,8 +541,8 @@
 @media (min-width: 960px) {
   .rdx {
     background: #f1f3f8;
-    padding-top: 60px;
-    padding-bottom: 0;
+    top: 60px; /* 데스크탑 상단 내비 높이 */
+    bottom: 0;
   }
 
   .rdx-layout {
@@ -546,7 +560,6 @@
   }
 
   .rdx-hero__back { top: 20px; left: 20px; }
-  .rdx-hero__badge { top: 24px; }
   .rdx-hero__actions { top: 20px; right: 20px; }
 
   /* 시트 → 투명 그리드 컨테이너 */

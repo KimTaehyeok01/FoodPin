@@ -48,6 +48,10 @@ export default function RestaurantDetailPage() {
   const [showPinForm, setShowPinForm] = useState(false);
   const [activeTab, setActiveTab] = useState<Tab>('menu');
   const [distance, setDistance] = useState<number | null>(null);
+  const [isLeaving, setIsLeaving] = useState(false);
+
+  // 뒤로가기: 나가는 슬라이드 애니메이션 재생 후 실제 이동
+  const handleBack = () => setIsLeaving(true);
 
   useEffect(() => {
     if (!restaurantId) return;
@@ -155,7 +159,10 @@ export default function RestaurantDetailPage() {
   )},${restaurant.latitude},${restaurant.longitude}`;
 
   return (
-    <div className="rdx">
+    <div
+      className={`rdx${isLeaving ? ' rdx--leaving' : ''}`}
+      onAnimationEnd={() => { if (isLeaving) navigate(-1); }}
+    >
       <div className="rdx-layout">
         {/* 히어로 */}
         <div className="rdx-hero">
@@ -164,10 +171,9 @@ export default function RestaurantDetailPage() {
           ) : (
             <div className="rdx-hero__no-img">🍽️</div>
           )}
-          <button className="rdx-hero__back" onClick={() => navigate(-1)} aria-label="뒤로가기">
+          <button className="rdx-hero__back" onClick={handleBack} aria-label="뒤로가기">
             <ChevronLeft size={20} strokeWidth={2.5} />
           </button>
-          <span className="rdx-hero__badge">🔥 지금 핫한 맛집</span>
           <div className="rdx-hero__actions">
             <button onClick={handleShare} aria-label="공유">
               <Share2 size={17} strokeWidth={2} />
