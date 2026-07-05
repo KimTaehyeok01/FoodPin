@@ -102,7 +102,7 @@ export default function HomePage() {
           <>
             <div className="home-section-header">
               <span className="home-section-title">🔥 지금 핫한 맛집</span>
-              <button className="home-section-more">전체보기 &gt;</button>
+              <button className="home-section-more" onClick={() => navigate('/restaurants')}>전체보기 &gt;</button>
             </div>
             <div className="hot-scroll">
               {hotRestaurants.map((r) => (
