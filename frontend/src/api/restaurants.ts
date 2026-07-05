@@ -114,6 +114,21 @@ export const restaurantsApi = {
     }),
 };
 
+export interface NotificationItem {
+  type: 'new_restaurant' | 'new_review';
+  restaurantId: number;
+  restaurantName: string;
+  message: string;
+  createdAt: string;
+}
+
+export const notificationsApi = {
+  get: (lat?: number, lng?: number) => {
+    const q = lat != null && lng != null ? `?lat=${lat}&lng=${lng}` : '';
+    return request<NotificationItem[]>(`/notifications${q}`);
+  },
+};
+
 export const pinsApi = {
   getMyPins: () => request<Pin[]>("/pins/me"),
   getForRestaurant: (restaurantId: number) =>

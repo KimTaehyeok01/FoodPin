@@ -52,6 +52,7 @@
 }
 
 .home-icon-btn {
+  position: relative;
   width: 36px;
   height: 36px;
   border-radius: 50%;
@@ -62,6 +63,17 @@
   justify-content: center;
   cursor: pointer;
   color: rgba(255,255,255,0.8);
+}
+
+.home-noti-dot {
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ff3b30;
+  border: 1.5px solid #131f3a;
 }
 
 .home-avatar {

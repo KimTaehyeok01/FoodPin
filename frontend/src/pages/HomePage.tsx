@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Bell, Search, MapPin } from 'lucide-react';
-import { restaurantsApi, pinsApi, photoSrc } from '../api/restaurants';
+import { restaurantsApi, pinsApi, photoSrc, notificationsApi } from '../api/restaurants';
 import type { Restaurant, Pin } from '../api/restaurants';
 import RestaurantCard from '../components/RestaurantCard';
 import { haversineKm } from '../utils/distance';
+import { NOTI_LAST_SEEN_KEY } from './NotificationsPage';
 import './HomePage.css';
 
 const CATEGORIES = ['전체', '한식', '중식', '일식', '양식', '분식', '카페/디저트', '치킨/피자', '고기/구이', '해산물'];
@@ -19,6 +20,7 @@ export default function HomePage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
+  const [hasUnreadNoti, setHasUnreadNoti] = useState(false);
 
   useEffect(() => {
     Promise.all([restaurantsApi.getAll(), pinsApi.getMyPins()])
@@ -35,6 +37,19 @@ export default function HomePage() {
       () => {},
     );
   }, []);
+
+  // 안 읽은 알림 여부 확인 (벨 아이콘 빨간 점)
+  useEffect(() => {
+    notificationsApi.get(userLocation?.lat, userLocation?.lng)
+      .then((items) => {
+        const lastSeen = localStorage.getItem(NOTI_LAST_SEEN_KEY);
+        const unread = items.some(
+          (n) => !lastSeen || new Date(n.createdAt) > new Date(lastSeen),
+        );
+        setHasUnreadNoti(unread);
+      })
+      .catch(() => {});
+  }, [userLocation]);
 
   const pinnedIds = new Set(myPins.map((p) => p.restaurantId));
 
@@ -66,8 +81,9 @@ export default function HomePage() {
           </div>
         </div>
         <div className="home-header__right">
-          <button className="home-icon-btn" aria-label="알림">
+          <button className="home-icon-btn" aria-label="알림" onClick={() => navigate('/notifications')}>
             <Bell size={18} strokeWidth={1.8} />
+            {hasUnreadNoti && <span className="home-noti-dot" />}
           </button>
           <div className="home-avatar">👤</div>
         </div>

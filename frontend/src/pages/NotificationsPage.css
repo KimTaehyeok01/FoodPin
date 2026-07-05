@@ -1,0 +1,141 @@
+/* 알림 페이지 스타일 — 모바일 퍼스트 (375px) */
+
+.noti-page {
+  min-height: 100vh;
+  background: #f5f5f7;
+  padding-bottom: 88px;
+}
+
+.noti-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: linear-gradient(135deg, #0e1628 0%, #131f3a 100%);
+  padding: 52px 20px 20px;
+}
+
+.noti-back {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255,255,255,0.12);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.noti-title {
+  font-size: 20px;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -0.4px;
+}
+
+.noti-body {
+  background: #f5f5f7;
+  border-radius: 20px 20px 0 0;
+  margin-top: -12px;
+  padding: 20px 16px;
+  min-height: 60vh;
+}
+
+.noti-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.noti-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  background: #fff;
+  border: none;
+  border-radius: 16px;
+  padding: 14px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  cursor: pointer;
+  text-align: left;
+}
+
+.noti-item__icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.noti-item__icon--new_review {
+  background: #fff7e0;
+  color: #f0a500;
+}
+
+.noti-item__icon--new_restaurant {
+  background: #ffece3;
+  color: #ff6b35;
+}
+
+.noti-item__body {
+  flex: 1;
+  min-width: 0;
+}
+
+.noti-item__msg {
+  font-size: 14px;
+  font-weight: 600;
+  color: #222;
+  line-height: 1.4;
+}
+
+.noti-item__date {
+  display: block;
+  margin-top: 4px;
+  font-size: 12px;
+  color: #aaa;
+}
+
+/* 스켈레톤 / 빈 상태 */
+.noti-skeleton {
+  height: 68px;
+  border-radius: 16px;
+  background: linear-gradient(90deg, #e8e8ec 25%, #f2f2f5 50%, #e8e8ec 75%);
+  background-size: 200% 100%;
+  animation: noti-shimmer 1.4s infinite;
+}
+
+@keyframes noti-shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.noti-empty {
+  text-align: center;
+  padding: 80px 0;
+  color: #bbb;
+  font-size: 15px;
+  line-height: 2;
+}
+
+.noti-empty p:first-child { font-size: 40px; }
+
+/* 태블릿/PC */
+@media (min-width: 960px) {
+  .noti-page {
+    padding-top: 60px;
+    padding-bottom: 40px;
+  }
+  .noti-header { padding: 28px 40px; }
+  .noti-body {
+    max-width: 760px;
+    margin: -12px auto 0;
+    padding: 28px 40px;
+  }
+}
