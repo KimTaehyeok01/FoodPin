@@ -73,412 +73,966 @@ CREATE TABLE IF NOT EXISTS `restaurant_menu` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ── 기존 데이터 초기화 ──
-TRUNCATE TABLE pin;
+DELETE FROM restaurant_menu;
+DELETE FROM pin;
 DELETE FROM restaurant;
 ALTER TABLE restaurant AUTO_INCREMENT = 1;
 
--- ── 식당 샘플 데이터 ──
-INSERT INTO restaurant (name, latitude, longitude, address, photoUrl, category, createdAt, updatedAt) VALUES
-('광화문 국밥', 37.5720, 126.9769, '서울 종로구 세종대로 175', 'https://images.unsplash.com/photo-1547592180-85f173990554?w=800&q=80', '한식', NOW(), NOW()),
-('을지로 노가리골목', 37.5658, 126.9833, '서울 중구 을지로 119', 'https://images.unsplash.com/photo-1436076863939-06870fe779c2?w=800&q=80', '술집/포차', NOW(), NOW()),
-('신사동 가로수길 파스타', 37.5227, 127.0226, '서울 강남구 압구정로 12길 18', 'https://images.unsplash.com/photo-1473093295043-cdd812d0e601?w=800&q=80', '양식', NOW(), NOW()),
-('합정 돼지갈비', 37.5494, 126.9137, '서울 마포구 양화로 61', 'https://images.unsplash.com/photo-1544025162-d76694265947?w=800&q=80', '고기/구이', NOW(), NOW()),
-('홍대 떡볶이 천국', 37.5573, 126.9245, '서울 마포구 와우산로 29길 5', 'https://images.unsplash.com/photo-1476224203421-9ac39bcb3327?w=800&q=80', '분식', NOW(), NOW()),
-('이태원 수제버거', 37.5345, 126.9940, '서울 용산구 이태원로 177', 'https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=800&q=80', '패스트푸드', NOW(), NOW()),
-('강남 스시 오마카세', 37.4979, 127.0276, '서울 강남구 테헤란로 152', 'https://images.unsplash.com/photo-1579871494447-9811cf80d66c?w=800&q=80', '일식', NOW(), NOW()),
-('삼청동 수제비', 37.5823, 126.9811, '서울 종로구 삼청로 78', 'https://images.unsplash.com/photo-1555126634-323283e090fa?w=800&q=80', '한식', NOW(), NOW()),
-('연남동 베이글', 37.5627, 126.9248, '서울 마포구 연남로 42', 'https://images.unsplash.com/photo-1525351484163-7529414344d8?w=800&q=80', '카페/디저트', NOW(), NOW()),
-('성수동 카페 어니언', 37.5444, 127.0556, '서울 성동구 아차산로9길 8', 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=800&q=80', '카페/디저트', NOW(), NOW()),
-('부암동 자하손만두', 37.5947, 126.9617, '서울 종로구 창의문로 5길 2', 'https://images.unsplash.com/photo-1512058564366-18510be2db19?w=800&q=80', '한식', NOW(), NOW()),
-('망원동 쭈꾸미볶음', 37.5553, 126.9073, '서울 마포구 망원로 68', 'https://images.unsplash.com/photo-1559339352-11d035aa65de?w=800&q=80', '한식', NOW(), NOW()),
-('북촌 바지락 칼국수', 37.5816, 126.9791, '서울 종로구 북촌로 24', 'https://images.unsplash.com/photo-1585032226651-759b368d7246?w=800&q=80', '한식', NOW(), NOW()),
-('압구정 돈코츠라멘', 37.5273, 127.0290, '서울 강남구 압구정로 46길 55', 'https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=800&q=80', '일식', NOW(), NOW()),
-('서촌 경양식', 37.5786, 126.9699, '서울 종로구 자하문로 10', 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&q=80', '양식', NOW(), NOW()),
-('마포 양꼬치', 37.5442, 126.9511, '서울 마포구 마포대로 51', 'https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?w=800&q=80', '중식', NOW(), NOW()),
-('건대 치킨집', 37.5401, 127.0695, '서울 광진구 능동로 209', 'https://images.unsplash.com/photo-1562967914-608f82629710?w=800&q=80', '치킨/피자', NOW(), NOW()),
-('종각 한식 점심 맛집', 37.5700, 126.9825, '서울 종로구 종로 19', 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800&q=80', '한식', NOW(), NOW()),
-('한남동 수제맥주', 37.5365, 126.9994, '서울 용산구 이태원로 55나길 11', 'https://images.unsplash.com/photo-1534080564583-6be75777b70a?w=800&q=80', '술집/포차', NOW(), NOW()),
-('익선동 한옥카페', 37.5744, 126.9937, '서울 종로구 수표로 28길 17', 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=800&q=80', '카페/디저트', NOW(), NOW()),
-('을지로 대창구이', 37.5660, 126.9857, '서울 중구 을지로 130', 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=800&q=80', '고기/구이', NOW(), NOW()),
-('신림 순대타운', 37.4847, 126.9290, '서울 관악구 신림로 309', 'https://images.unsplash.com/photo-1600093463592-8e36ae95ef56?w=800&q=80', '한식', NOW(), NOW()),
-('상수동 화덕피자', 37.5489, 126.9221, '서울 마포구 와우산로 17길 9', 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=800&q=80', '치킨/피자', NOW(), NOW()),
-('충무로 짬뽕 중화요리', 37.5613, 126.9934, '서울 중구 충무로 29', 'https://images.unsplash.com/photo-1626645738196-c2a7c87a8f58?w=800&q=80', '중식', NOW(), NOW()),
-('낙원동 콩나물해장국', 37.5744, 126.9893, '서울 종로구 낙원동 283', 'https://images.unsplash.com/photo-1590301157890-4810ed352733?w=800&q=80', '한식', NOW(), NOW()),
-('연희동 이탈리안', 37.5714, 126.9300, '서울 서대문구 연희로 91', 'https://images.unsplash.com/photo-1563379926898-05f4575a45d8?w=800&q=80', '양식', NOW(), NOW()),
-('서래마을 브런치카페', 37.5040, 126.9966, '서울 서초구 반포대로 59', 'https://images.unsplash.com/photo-1484723091739-30a097e8f929?w=800&q=80', '카페/디저트', NOW(), NOW()),
-('강동 삼겹살 마당', 37.5304, 127.1238, '서울 강동구 천호대로 175', 'https://images.unsplash.com/photo-1552566626-52f8b828add9?w=800&q=80', '고기/구이', NOW(), NOW()),
-('노량진 해산물', 37.5138, 126.9420, '서울 동작구 노량진로 7', 'https://images.unsplash.com/photo-1553621042-f6e147245754?w=800&q=80', '해산물', NOW(), NOW()),
-('광장시장 빈대떡', 37.5699, 126.9993, '서울 종로구 창경궁로 88', 'https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=800&q=80', '한식', NOW(), NOW());
+-- ── 식당 데이터 (172개, 데스크탑 DB 스냅샷) ──
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (1,'광화문 국밥',37.5720000,126.9769000,'서울 종로구 세종대로 175','https://images.unsplash.com/photo-1590330297626-d7aff25a0431?w=800&q=80','한식','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0001','신선한 재료와 정성스러운 손맛으로 만든 가정식 한식을 선보입니다. 동네 주민들의 오랜 단골집.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (2,'을지로 노가리골목',37.5658000,126.9833000,'서울 중구 을지로 119','https://images.unsplash.com/photo-1514933651103-005eec06c04b?w=800&q=80','술집/포차','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0002','푸짐한 안주와 시원한 술 한잔, 하루의 피로를 풀기 좋은 곳입니다.','17:00 – 01:00','17:00 – 02:00',NULL);
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (3,'신사동 가로수길 파스타',37.5227000,127.0226000,'서울 강남구 압구정로 12길 18','https://images.unsplash.com/photo-1484723091739-30a097e8f929?w=800&q=80','양식','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0003','엄선한 재료로 만드는 캐주얼 다이닝. 데이트 코스로도 인기가 많습니다.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (4,'합정 돼지갈비',37.5494000,126.9137000,'서울 마포구 양화로 61','https://images.unsplash.com/photo-1567337710282-00832b415979?w=800&q=80','고기/구이','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0004','엄선된 국내산 고기를 합리적인 가격에 즐길 수 있는 구이 전문점입니다.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (5,'홍대 떡볶이 천국',37.5573000,126.9245000,'서울 마포구 와우산로 29길 5','https://images.unsplash.com/photo-1476224203421-9ac39bcb3327?w=800&q=80','분식','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.857917',NULL,'0507-1234-0005','추억의 맛 그대로, 언제 와도 부담 없는 분식 맛집입니다.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (6,'이태원 수제버거',37.5345000,126.9940000,'서울 용산구 이태원로 177','https://images.unsplash.com/photo-1550547660-d9450f859349?w=800&q=80','패스트푸드','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0006','수제 패티와 신선한 야채로 만드는 프리미엄 버거 하우스입니다.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (7,'강남 스시 오마카세',37.4979000,127.0276000,'서울 강남구 테헤란로 152','https://images.unsplash.com/photo-1617196034796-73dfa7b1fd56?w=800&q=80','일식','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0007','매일 아침 공수한 신선한 재료로 정성껏 준비하는 일식 전문점입니다.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (8,'삼청동 수제비',37.5823000,126.9811000,'서울 종로구 삼청로 78','https://images.unsplash.com/photo-1476718406336-bb5a9690ee2a?w=800&q=80','한식','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0008','신선한 재료와 정성스러운 손맛으로 만든 가정식 한식을 선보입니다. 동네 주민들의 오랜 단골집.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (9,'연남동 베이글',37.5627000,126.9248000,'서울 마포구 연남로 42','https://images.unsplash.com/photo-1497034825429-c343d7c6a68f?w=800&q=80','카페/디저트','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0009','직접 로스팅한 원두와 매일 굽는 디저트를 즐길 수 있는 공간입니다.','10:00 – 22:00','10:00 – 23:00',NULL);
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (10,'성수동 카페 어니언',37.5444000,127.0556000,'서울 성동구 아차산로9길 8','https://images.unsplash.com/photo-1525351484163-7529414344d8?w=800&q=80','카페/디저트','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0010','직접 로스팅한 원두와 매일 굽는 디저트를 즐길 수 있는 공간입니다.','10:00 – 22:00','10:00 – 23:00',NULL);
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (11,'부암동 자하손만두',37.5947000,126.9617000,'서울 종로구 창의문로 5길 2','https://images.unsplash.com/photo-1590330297626-d7aff25a0431?w=800&q=80','한식','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0011','신선한 재료와 정성스러운 손맛으로 만든 가정식 한식을 선보입니다. 동네 주민들의 오랜 단골집.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (12,'망원동 쭈꾸미볶음',37.5553000,126.9073000,'서울 마포구 망원로 68','https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800&q=80','한식','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0012','신선한 재료와 정성스러운 손맛으로 만든 가정식 한식을 선보입니다. 동네 주민들의 오랜 단골집.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (13,'북촌 바지락 칼국수',37.5816000,126.9791000,'서울 종로구 북촌로 24','https://images.unsplash.com/photo-1476718406336-bb5a9690ee2a?w=800&q=80','한식','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0013','신선한 재료와 정성스러운 손맛으로 만든 가정식 한식을 선보입니다. 동네 주민들의 오랜 단골집.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (14,'압구정 돈코츠라멘',37.5273000,127.0290000,'서울 강남구 압구정로 46길 55','https://images.unsplash.com/photo-1580822184713-fc5400e7fe10?w=800&q=80','일식','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0014','매일 아침 공수한 신선한 재료로 정성껏 준비하는 일식 전문점입니다.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (15,'서촌 경양식',37.5786000,126.9699000,'서울 종로구 자하문로 10','https://images.unsplash.com/photo-1473093295043-cdd812d0e601?w=800&q=80','양식','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0015','엄선한 재료로 만드는 캐주얼 다이닝. 데이트 코스로도 인기가 많습니다.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (16,'마포 양꼬치',37.5442000,126.9511000,'서울 마포구 마포대로 51','https://images.unsplash.com/photo-1585238342024-78d387f4a707?w=800&q=80','중식','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0016','불맛 가득한 정통 중화요리를 합리적인 가격에 즐길 수 있는 곳입니다.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (17,'건대 치킨집',37.5401000,127.0695000,'서울 광진구 능동로 209','https://images.unsplash.com/photo-1615887023544-3a566f29d822?w=800&q=80','치킨/피자','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0017','주문 즉시 조리하는 바삭한 치킨과 화덕 피자 전문점입니다.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (18,'종각 한식 점심 맛집',37.5700000,126.9825000,'서울 종로구 종로 19','https://images.unsplash.com/photo-1476718406336-bb5a9690ee2a?w=800&q=80','한식','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0018','신선한 재료와 정성스러운 손맛으로 만든 가정식 한식을 선보입니다. 동네 주민들의 오랜 단골집.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (19,'한남동 수제맥주',37.5365000,126.9994000,'서울 용산구 이태원로 55나길 11','https://images.unsplash.com/photo-1572116469696-31de0f17cc34?w=800&q=80','술집/포차','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0019','푸짐한 안주와 시원한 술 한잔, 하루의 피로를 풀기 좋은 곳입니다.','17:00 – 01:00','17:00 – 02:00',NULL);
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (20,'익선동 한옥카페',37.5744000,126.9937000,'서울 종로구 수표로 28길 17','https://images.unsplash.com/photo-1525351484163-7529414344d8?w=800&q=80','카페/디저트','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0020','직접 로스팅한 원두와 매일 굽는 디저트를 즐길 수 있는 공간입니다.','10:00 – 22:00','10:00 – 23:00',NULL);
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (21,'을지로 대창구이',37.5660000,126.9857000,'서울 중구 을지로 130','https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=800&q=80','고기/구이','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.857917',NULL,'0507-1234-0021','엄선된 국내산 고기를 합리적인 가격에 즐길 수 있는 구이 전문점입니다.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (22,'신림 순대타운',37.4847000,126.9290000,'서울 관악구 신림로 309','https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800&q=80','한식','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0022','신선한 재료와 정성스러운 손맛으로 만든 가정식 한식을 선보입니다. 동네 주민들의 오랜 단골집.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (23,'상수동 화덕피자',37.5489000,126.9221000,'서울 마포구 와우산로 17길 9','https://images.unsplash.com/photo-1571407970349-bc81e7e96d47?w=800&q=80','치킨/피자','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0023','주문 즉시 조리하는 바삭한 치킨과 화덕 피자 전문점입니다.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (24,'충무로 짬뽕 중화요리',37.5613000,126.9934000,'서울 중구 충무로 29','https://images.unsplash.com/photo-1585238342024-78d387f4a707?w=800&q=80','중식','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0024','불맛 가득한 정통 중화요리를 합리적인 가격에 즐길 수 있는 곳입니다.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (25,'낙원동 콩나물해장국',37.5744000,126.9893000,'서울 종로구 낙원동 283','https://images.unsplash.com/photo-1547592180-85f173990554?w=800&q=80','한식','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0025','신선한 재료와 정성스러운 손맛으로 만든 가정식 한식을 선보입니다. 동네 주민들의 오랜 단골집.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (26,'연희동 이탈리안',37.5714000,126.9300000,'서울 서대문구 연희로 91','https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&q=80','양식','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0026','엄선한 재료로 만드는 캐주얼 다이닝. 데이트 코스로도 인기가 많습니다.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (27,'서래마을 브런치카페',37.5040000,126.9966000,'서울 서초구 반포대로 59','https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=800&q=80','카페/디저트','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0027','직접 로스팅한 원두와 매일 굽는 디저트를 즐길 수 있는 공간입니다.','10:00 – 22:00','10:00 – 23:00',NULL);
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (28,'강동 삼겹살 마당',37.5304000,127.1238000,'서울 강동구 천호대로 175','https://images.unsplash.com/photo-1550317138-10000687a72b?w=800&q=80','고기/구이','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0028','엄선된 국내산 고기를 합리적인 가격에 즐길 수 있는 구이 전문점입니다.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (29,'노량진 해산물',37.5138000,126.9420000,'서울 동작구 노량진로 7','https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=800&q=80','해산물','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0029','산지 직송 싱싱한 해산물을 그날그날 들여와 최상의 맛을 냅니다.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (30,'광장시장 빈대떡',37.5699000,126.9993000,'서울 종로구 창경궁로 88','https://images.unsplash.com/photo-1547592180-85f173990554?w=800&q=80','한식','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0030','신선한 재료와 정성스러운 손맛으로 만든 가정식 한식을 선보입니다. 동네 주민들의 오랜 단골집.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (31,'해운대 밀면',35.1631000,129.1635000,'부산 해운대구 구남로 21','https://images.unsplash.com/photo-1590330297626-d7aff25a0431?w=800&q=80','한식','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0031','신선한 재료와 정성스러운 손맛으로 만든 가정식 한식을 선보입니다. 동네 주민들의 오랜 단골집.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (32,'광안리 조개구이',35.1532000,129.1183000,'부산 수영구 광안해변로 219','https://images.unsplash.com/photo-1554679665-f5537f187268?w=800&q=80','해산물','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0032','산지 직송 싱싱한 해산물을 그날그날 들여와 최상의 맛을 냅니다.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (33,'서면 돼지국밥',35.1579000,129.0594000,'부산 부산진구 서면로 39','https://images.unsplash.com/photo-1476718406336-bb5a9690ee2a?w=800&q=80','한식','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0033','신선한 재료와 정성스러운 손맛으로 만든 가정식 한식을 선보입니다. 동네 주민들의 오랜 단골집.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (34,'자갈치 회센터',35.0966000,129.0306000,'부산 중구 자갈치해안로 52','https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=800&q=80','해산물','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0034','산지 직송 싱싱한 해산물을 그날그날 들여와 최상의 맛을 냅니다.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (35,'동성로 막창골목',35.8690000,128.5936000,'대구 중구 동성로 30','https://images.unsplash.com/photo-1544025162-d76694265947?w=800&q=80','고기/구이','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0035','엄선된 국내산 고기를 합리적인 가격에 즐길 수 있는 구이 전문점입니다.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (36,'서문시장 납작만두',35.8686000,128.5828000,'대구 중구 큰장로26길 45','https://images.unsplash.com/photo-1559847844-5315695dadae?w=800&q=80','분식','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.857917',NULL,'0507-1234-0036','추억의 맛 그대로, 언제 와도 부담 없는 분식 맛집입니다.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (37,'차이나타운 짜장면',37.4738000,126.6176000,'인천 중구 차이나타운로 43','https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?w=800&q=80','중식','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0037','불맛 가득한 정통 중화요리를 합리적인 가격에 즐길 수 있는 곳입니다.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (38,'송도 브런치카페',37.3891000,126.6392000,'인천 연수구 송도과학로 32','https://images.unsplash.com/photo-1488477181946-6428a0291777?w=800&q=80','카페/디저트','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0038','직접 로스팅한 원두와 매일 굽는 디저트를 즐길 수 있는 공간입니다.','10:00 – 22:00','10:00 – 23:00',NULL);
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (39,'송정 떡갈비',35.1380000,126.7935000,'광주 광산구 광산로29번길 1','https://images.unsplash.com/photo-1567337710282-00832b415979?w=800&q=80','고기/구이','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0039','엄선된 국내산 고기를 합리적인 가격에 즐길 수 있는 구이 전문점입니다.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (40,'충장로 상추튀김',35.1468000,126.9182000,'광주 동구 충장로 94','https://images.unsplash.com/photo-1476224203421-9ac39bcb3327?w=800&q=80','분식','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0040','추억의 맛 그대로, 언제 와도 부담 없는 분식 맛집입니다.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (41,'은행동 베이커리',36.3277000,127.4272000,'대전 중구 대종로480번길 15','https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=800&q=80','카페/디저트','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0041','직접 로스팅한 원두와 매일 굽는 디저트를 즐길 수 있는 공간입니다.','10:00 – 22:00','10:00 – 23:00',NULL);
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (42,'유성 손칼국수',36.3541000,127.3413000,'대전 유성구 온천로 45','https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800&q=80','한식','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0042','신선한 재료와 정성스러운 손맛으로 만든 가정식 한식을 선보입니다. 동네 주민들의 오랜 단골집.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (43,'언양 불고기',35.5665000,129.1244000,'울산 울주군 언양읍 헌양길 1','https://images.unsplash.com/photo-1550317138-10000687a72b?w=800&q=80','고기/구이','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0043','엄선된 국내산 고기를 합리적인 가격에 즐길 수 있는 구이 전문점입니다.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (44,'제주 흑돼지 명가',33.5141000,126.5253000,'제주 제주시 관덕로15길 25','https://images.unsplash.com/photo-1567337710282-00832b415979?w=800&q=80','고기/구이','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0044','엄선된 국내산 고기를 합리적인 가격에 즐길 수 있는 구이 전문점입니다.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (45,'애월 바다뷰 카페',33.4630000,126.3109000,'제주 제주시 애월읍 애월로 27','https://images.unsplash.com/photo-1525351484163-7529414344d8?w=800&q=80','카페/디저트','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0045','직접 로스팅한 원두와 매일 굽는 디저트를 즐길 수 있는 공간입니다.','10:00 – 22:00','10:00 – 23:00',NULL);
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (46,'성산 해물뚝배기',33.4587000,126.9425000,'제주 서귀포시 성산읍 일출로 74','https://images.unsplash.com/photo-1547928576-b822bc410bdf?w=800&q=80','해산물','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0046','산지 직송 싱싱한 해산물을 그날그날 들여와 최상의 맛을 냅니다.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (47,'제주 고기국수',33.4996000,126.5312000,'제주 제주시 중앙로 63','https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800&q=80','한식','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0047','신선한 재료와 정성스러운 손맛으로 만든 가정식 한식을 선보입니다. 동네 주민들의 오랜 단골집.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (48,'초당 순두부',37.7910000,128.9179000,'강원 강릉시 초당순두부길 77','https://images.unsplash.com/photo-1476718406336-bb5a9690ee2a?w=800&q=80','한식','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.857917',NULL,'0507-1234-0048','신선한 재료와 정성스러운 손맛으로 만든 가정식 한식을 선보입니다. 동네 주민들의 오랜 단골집.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (49,'안목해변 커피거리',37.7719000,128.9470000,'강원 강릉시 창해로14번길 20-1','https://images.unsplash.com/photo-1497034825429-c343d7c6a68f?w=800&q=80','카페/디저트','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.857917',NULL,'0507-1234-0049','직접 로스팅한 원두와 매일 굽는 디저트를 즐길 수 있는 공간입니다.','10:00 – 22:00','10:00 – 23:00',NULL);
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (50,'속초 닭강정',38.2070000,128.5918000,'강원 속초시 중앙로147번길 16','https://images.unsplash.com/photo-1562967914-608f82629710?w=800&q=80','치킨/피자','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0050','주문 즉시 조리하는 바삭한 치킨과 화덕 피자 전문점입니다.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (51,'대포항 물회',38.1911000,128.6015000,'강원 속초시 대포항길 24','https://images.unsplash.com/photo-1547928576-b822bc410bdf?w=800&q=80','해산물','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0051','산지 직송 싱싱한 해산물을 그날그날 들여와 최상의 맛을 냅니다.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (52,'춘천 닭갈비 골목',37.8813000,127.7300000,'강원 춘천시 금강로62번길 6','https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800&q=80','한식','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0052','신선한 재료와 정성스러운 손맛으로 만든 가정식 한식을 선보입니다. 동네 주민들의 오랜 단골집.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (53,'한옥마을 비빔밥',35.8150000,127.1530000,'전북 전주시 완산구 태조로 44','https://images.unsplash.com/photo-1476718406336-bb5a9690ee2a?w=800&q=80','한식','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0053','신선한 재료와 정성스러운 손맛으로 만든 가정식 한식을 선보입니다. 동네 주민들의 오랜 단골집.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (54,'남부시장 콩나물국밥',35.8123000,127.1470000,'전북 전주시 완산구 풍남문2길 63','https://images.unsplash.com/photo-1590301157890-4810ed352733?w=800&q=80','한식','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0054','신선한 재료와 정성스러운 손맛으로 만든 가정식 한식을 선보입니다. 동네 주민들의 오랜 단골집.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (55,'군산 중화짬뽕',35.9678000,126.7366000,'전북 군산시 대학로 86','https://images.unsplash.com/photo-1626645738196-c2a7c87a8f58?w=800&q=80','중식','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0055','불맛 가득한 정통 중화요리를 합리적인 가격에 즐길 수 있는 곳입니다.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (56,'여수 게장백반',34.7365000,127.7460000,'전남 여수시 봉산남3길 17','https://images.unsplash.com/photo-1590330297626-d7aff25a0431?w=800&q=80','한식','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0056','신선한 재료와 정성스러운 손맛으로 만든 가정식 한식을 선보입니다. 동네 주민들의 오랜 단골집.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (57,'목포 낙지초무침',34.7936000,126.3886000,'전남 목포시 해안로 249','https://images.unsplash.com/photo-1554679665-f5537f187268?w=800&q=80','해산물','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0057','산지 직송 싱싱한 해산물을 그날그날 들여와 최상의 맛을 냅니다.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (58,'담양 떡갈비 정식',35.3213000,126.9880000,'전남 담양군 담양읍 죽향대로 1121','https://images.unsplash.com/photo-1550317138-10000687a72b?w=800&q=80','고기/구이','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0058','엄선된 국내산 고기를 합리적인 가격에 즐길 수 있는 구이 전문점입니다.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (59,'황리단길 파스타',35.8375000,129.2100000,'경북 경주시 포석로 1080','https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=800&q=80','양식','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.857917',NULL,'0507-1234-0059','엄선한 재료로 만드는 캐주얼 다이닝. 데이트 코스로도 인기가 많습니다.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (60,'황남 김밥',35.8384000,129.2115000,'경북 경주시 탑리3길 2','https://images.unsplash.com/photo-1476224203421-9ac39bcb3327?w=800&q=80','분식','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0060','추억의 맛 그대로, 언제 와도 부담 없는 분식 맛집입니다.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (61,'안동 찜닭 골목',36.5684000,128.7294000,'경북 안동시 번영1길 47','https://images.unsplash.com/photo-1590330297626-d7aff25a0431?w=800&q=80','한식','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0061','신선한 재료와 정성스러운 손맛으로 만든 가정식 한식을 선보입니다. 동네 주민들의 오랜 단골집.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (62,'죽도시장 물회',36.0190000,129.3435000,'경북 포항시 북구 죽도시장13길 13-1','https://images.unsplash.com/photo-1554679665-f5537f187268?w=800&q=80','해산물','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0062','산지 직송 싱싱한 해산물을 그날그날 들여와 최상의 맛을 냅니다.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (63,'통영 굴 전문점',34.8544000,128.4331000,'경남 통영시 통영해안로 205','https://images.unsplash.com/photo-1535399831218-d5bd36d1a6b3?w=800&q=80','해산물','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0063','산지 직송 싱싱한 해산물을 그날그날 들여와 최상의 맛을 냅니다.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (64,'마산 아구찜 거리',35.2281000,128.6811000,'경남 창원시 마산합포구 오동동10길 6','https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=800&q=80','해산물','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0064','산지 직송 싱싱한 해산물을 그날그날 들여와 최상의 맛을 냅니다.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (65,'수원 왕갈비',37.2812000,127.0139000,'경기 수원시 팔달구 정조로 800','https://images.unsplash.com/photo-1544025162-d76694265947?w=800&q=80','고기/구이','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0065','엄선된 국내산 고기를 합리적인 가격에 즐길 수 있는 구이 전문점입니다.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (66,'의정부 부대찌개 거리',37.7381000,127.0337000,'경기 의정부시 태평로73번길 20','https://images.unsplash.com/photo-1590330297626-d7aff25a0431?w=800&q=80','한식','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0066','신선한 재료와 정성스러운 손맛으로 만든 가정식 한식을 선보입니다. 동네 주민들의 오랜 단골집.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (67,'판교 수제버거',37.3947000,127.1112000,'경기 성남시 분당구 판교역로146번길 20','https://images.unsplash.com/photo-1586190848861-99aa4a171e90?w=800&q=80','패스트푸드','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0067','수제 패티와 신선한 야채로 만드는 프리미엄 버거 하우스입니다.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (68,'일산 화덕피자',37.6584000,126.7699000,'경기 고양시 일산동구 중앙로1275번길 38-10','https://images.unsplash.com/photo-1571407970349-bc81e7e96d47?w=800&q=80','치킨/피자','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.857917',NULL,'0507-1234-0068','주문 즉시 조리하는 바삭한 치킨과 화덕 피자 전문점입니다.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (69,'천안 호두과자 명가',36.8151000,127.1139000,'충남 천안시 동남구 중앙로 92','https://images.unsplash.com/photo-1497034825429-c343d7c6a68f?w=800&q=80','카페/디저트','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0069','직접 로스팅한 원두와 매일 굽는 디저트를 즐길 수 있는 공간입니다.','10:00 – 22:00','10:00 – 23:00',NULL);
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (70,'청주 삼겹살 거리',36.6424000,127.4890000,'충북 청주시 상당구 서문시장길 20','https://images.unsplash.com/photo-1544025162-d76694265947?w=800&q=80','고기/구이','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0070','엄선된 국내산 고기를 합리적인 가격에 즐길 수 있는 구이 전문점입니다.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (71,'성남 정자동 순대국',37.3670000,127.1080000,'경기 성남시 분당구 정자일로 121','https://images.unsplash.com/photo-1590330297626-d7aff25a0431?w=800&q=80','한식','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0071','신선한 재료와 정성스러운 손맛으로 만든 가정식 한식을 선보입니다. 동네 주민들의 오랜 단골집.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (72,'부천 역곡 떡볶이',37.4840000,126.8110000,'경기 부천시 소사로 758','https://images.unsplash.com/photo-1532636875304-0c89119d9b4d?w=800&q=80','분식','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0072','추억의 맛 그대로, 언제 와도 부담 없는 분식 맛집입니다.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (73,'안양 일번가 파스타',37.3940000,126.9560000,'경기 안양시 만안구 안양로 289','https://images.unsplash.com/photo-1484723091739-30a097e8f929?w=800&q=80','양식','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0073','엄선한 재료로 만드는 캐주얼 다이닝. 데이트 코스로도 인기가 많습니다.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (74,'안산 대부도 조개구이',37.2620000,126.6180000,'경기 안산시 단원구 대부황금로 0','https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=800&q=80','해산물','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0074','산지 직송 싱싱한 해산물을 그날그날 들여와 최상의 맛을 냅니다.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (75,'평택 국제대 갈비탕',36.9920000,127.1120000,'경기 평택시 평택로 51','https://images.unsplash.com/photo-1547592180-85f173990554?w=800&q=80','한식','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0075','신선한 재료와 정성스러운 손맛으로 만든 가정식 한식을 선보입니다. 동네 주민들의 오랜 단골집.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (76,'시흥 오이도 회센터',37.3450000,126.6870000,'경기 시흥시 오이도로 175','https://images.unsplash.com/photo-1547928576-b822bc410bdf?w=800&q=80','해산물','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0076','산지 직송 싱싱한 해산물을 그날그날 들여와 최상의 맛을 냅니다.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (77,'김포 장기동 브런치',37.6420000,126.6680000,'경기 김포시 김포한강8로 111','https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=800&q=80','카페/디저트','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0077','직접 로스팅한 원두와 매일 굽는 디저트를 즐길 수 있는 공간입니다.','10:00 – 22:00','10:00 – 23:00',NULL);
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (78,'광명 철산 짜장면',37.4790000,126.8660000,'경기 광명시 철산로 20','https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?w=800&q=80','중식','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0078','불맛 가득한 정통 중화요리를 합리적인 가격에 즐길 수 있는 곳입니다.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (79,'남양주 다산 곱창',37.6110000,127.1560000,'경기 남양주시 다산중앙로 20','https://images.unsplash.com/photo-1567337710282-00832b415979?w=800&q=80','고기/구이','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0079','엄선된 국내산 고기를 합리적인 가격에 즐길 수 있는 구이 전문점입니다.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (80,'파주 장단콩 두부',37.7600000,126.7800000,'경기 파주시 문산읍 방촌로 1364','https://images.unsplash.com/photo-1547592180-85f173990554?w=800&q=80','한식','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0080','신선한 재료와 정성스러운 손맛으로 만든 가정식 한식을 선보입니다. 동네 주민들의 오랜 단골집.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (81,'화성 궁평항 물회',37.1150000,126.7050000,'경기 화성시 서신면 궁평항로 1049','https://images.unsplash.com/photo-1547928576-b822bc410bdf?w=800&q=80','해산물','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0081','산지 직송 싱싱한 해산물을 그날그날 들여와 최상의 맛을 냅니다.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (82,'이천 쌀밥 정식',37.2720000,127.4350000,'경기 이천시 경충대로 2993','https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800&q=80','한식','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0082','신선한 재료와 정성스러운 손맛으로 만든 가정식 한식을 선보입니다. 동네 주민들의 오랜 단골집.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (83,'양평 옥천 냉면',37.4920000,127.4880000,'경기 양평군 옥천면 경강로 화계길 10','https://images.unsplash.com/photo-1476718406336-bb5a9690ee2a?w=800&q=80','한식','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0083','신선한 재료와 정성스러운 손맛으로 만든 가정식 한식을 선보입니다. 동네 주민들의 오랜 단골집.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (84,'가평 잣두부 마을',37.8310000,127.5100000,'경기 가평군 가평읍 자라섬로 60','https://images.unsplash.com/photo-1590301157890-4810ed352733?w=800&q=80','한식','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0084','신선한 재료와 정성스러운 손맛으로 만든 가정식 한식을 선보입니다. 동네 주민들의 오랜 단골집.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (85,'포천 이동 갈비',37.8940000,127.2000000,'경기 포천시 이동면 화동로 2270','https://images.unsplash.com/photo-1544025162-d76694265947?w=800&q=80','고기/구이','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0085','엄선된 국내산 고기를 합리적인 가격에 즐길 수 있는 구이 전문점입니다.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (86,'안성 서일농원 된장',37.0080000,127.2700000,'경기 안성시 일죽면 금일로 332-17','https://images.unsplash.com/photo-1590330297626-d7aff25a0431?w=800&q=80','한식','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0086','신선한 재료와 정성스러운 손맛으로 만든 가정식 한식을 선보입니다. 동네 주민들의 오랜 단골집.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (87,'용인 백암 순대',37.1620000,127.3480000,'경기 용인시 처인구 백암면 백암로 1','https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800&q=80','한식','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0087','신선한 재료와 정성스러운 손맛으로 만든 가정식 한식을 선보입니다. 동네 주민들의 오랜 단골집.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (88,'의왕 왕송호수 카페',37.3210000,126.9420000,'경기 의왕시 왕송못동로 209','https://images.unsplash.com/photo-1488477181946-6428a0291777?w=800&q=80','카페/디저트','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0088','직접 로스팅한 원두와 매일 굽는 디저트를 즐길 수 있는 공간입니다.','10:00 – 22:00','10:00 – 23:00',NULL);
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (89,'부평 문화의거리 치킨',37.4930000,126.7230000,'인천 부평구 부평문화로 42','https://images.unsplash.com/photo-1594007654729-407eedc4be65?w=800&q=80','치킨/피자','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0089','주문 즉시 조리하는 바삭한 치킨과 화덕 피자 전문점입니다.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (90,'계양 계산 백반',37.5420000,126.7380000,'인천 계양구 계산새로 88','https://images.unsplash.com/photo-1547592180-85f173990554?w=800&q=80','한식','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0090','신선한 재료와 정성스러운 손맛으로 만든 가정식 한식을 선보입니다. 동네 주민들의 오랜 단골집.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (91,'강화 젓국갈비',37.7470000,126.4880000,'인천 강화군 강화읍 강화대로 405','https://images.unsplash.com/photo-1590330297626-d7aff25a0431?w=800&q=80','한식','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0091','신선한 재료와 정성스러운 손맛으로 만든 가정식 한식을 선보입니다. 동네 주민들의 오랜 단골집.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (92,'영종도 을왕리 조개',37.4470000,126.3720000,'인천 중구 을왕동 을왕해안로 30','https://images.unsplash.com/photo-1554679665-f5537f187268?w=800&q=80','해산물','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0092','산지 직송 싱싱한 해산물을 그날그날 들여와 최상의 맛을 냅니다.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (93,'원주 미로시장 만두',37.3420000,127.9200000,'강원 원주시 원일로 33','https://images.unsplash.com/photo-1476718406336-bb5a9690ee2a?w=800&q=80','한식','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0093','신선한 재료와 정성스러운 손맛으로 만든 가정식 한식을 선보입니다. 동네 주민들의 오랜 단골집.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (94,'동해 묵호항 물회',37.5510000,129.1150000,'강원 동해시 일출로 22','https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=800&q=80','해산물','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0094','산지 직송 싱싱한 해산물을 그날그날 들여와 최상의 맛을 냅니다.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (95,'삼척 곰치국 식당',37.4450000,129.1700000,'강원 삼척시 새천년도로 456','https://images.unsplash.com/photo-1553621042-f6e147245754?w=800&q=80','해산물','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0095','산지 직송 싱싱한 해산물을 그날그날 들여와 최상의 맛을 냅니다.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (96,'태백 물닭갈비',37.1640000,128.9860000,'강원 태백시 시장남1길 5','https://images.unsplash.com/photo-1590330297626-d7aff25a0431?w=800&q=80','한식','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0096','신선한 재료와 정성스러운 손맛으로 만든 가정식 한식을 선보입니다. 동네 주민들의 오랜 단골집.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (97,'정선 곤드레밥',37.3800000,128.6600000,'강원 정선군 정선읍 봉양리 7','https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800&q=80','한식','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0097','신선한 재료와 정성스러운 손맛으로 만든 가정식 한식을 선보입니다. 동네 주민들의 오랜 단골집.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (98,'평창 메밀 막국수',37.3700000,128.3900000,'강원 평창군 봉평면 창동리 214','https://images.unsplash.com/photo-1476718406336-bb5a9690ee2a?w=800&q=80','한식','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0098','신선한 재료와 정성스러운 손맛으로 만든 가정식 한식을 선보입니다. 동네 주민들의 오랜 단골집.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (99,'홍천 화로구이 한우',37.6970000,127.8890000,'강원 홍천군 홍천읍 상오안리 456','https://images.unsplash.com/photo-1567337710282-00832b415979?w=800&q=80','고기/구이','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0099','엄선된 국내산 고기를 합리적인 가격에 즐길 수 있는 구이 전문점입니다.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (100,'횡성 안흥찐빵 카페',37.4920000,127.9860000,'강원 횡성군 안흥면 안흥로 55','https://images.unsplash.com/photo-1525351484163-7529414344d8?w=800&q=80','카페/디저트','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0100','직접 로스팅한 원두와 매일 굽는 디저트를 즐길 수 있는 공간입니다.','10:00 – 22:00','10:00 – 23:00',NULL);
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (101,'양양 송이버섯 백반',38.0750000,128.6190000,'강원 양양군 양양읍 남문로 34','https://images.unsplash.com/photo-1590330297626-d7aff25a0431?w=800&q=80','한식','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0101','신선한 재료와 정성스러운 손맛으로 만든 가정식 한식을 선보입니다. 동네 주민들의 오랜 단골집.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (102,'충주 중앙탑 매운탕',36.9910000,127.9300000,'충북 충주시 중앙탑면 탑평리 12','https://images.unsplash.com/photo-1554679665-f5537f187268?w=800&q=80','해산물','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0102','산지 직송 싱싱한 해산물을 그날그날 들여와 최상의 맛을 냅니다.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (103,'제천 약채락 정식',37.1320000,128.1900000,'충북 제천시 의림대로 242','https://images.unsplash.com/photo-1476718406336-bb5a9690ee2a?w=800&q=80','한식','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0103','신선한 재료와 정성스러운 손맛으로 만든 가정식 한식을 선보입니다. 동네 주민들의 오랜 단골집.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (104,'단양 마늘 떡갈비',36.9840000,128.3650000,'충북 단양군 단양읍 도전5길 31','https://images.unsplash.com/photo-1567337710282-00832b415979?w=800&q=80','고기/구이','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0104','엄선된 국내산 고기를 합리적인 가격에 즐길 수 있는 구이 전문점입니다.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (105,'음성 설성 한우',36.9400000,127.6900000,'충북 음성군 음성읍 중앙로 15','https://images.unsplash.com/photo-1544025162-d76694265947?w=800&q=80','고기/구이','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0105','엄선된 국내산 고기를 합리적인 가격에 즐길 수 있는 구이 전문점입니다.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (106,'옥천 생선국수',36.3060000,127.5710000,'충북 옥천군 옥천읍 향수길 61','https://images.unsplash.com/photo-1590330297626-d7aff25a0431?w=800&q=80','한식','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0106','신선한 재료와 정성스러운 손맛으로 만든 가정식 한식을 선보입니다. 동네 주민들의 오랜 단골집.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (107,'아산 온양 곰탕',36.7900000,127.0040000,'충남 아산시 온천대로 1440','https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800&q=80','한식','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0107','신선한 재료와 정성스러운 손맛으로 만든 가정식 한식을 선보입니다. 동네 주민들의 오랜 단골집.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (108,'서산 게국지 백반',36.7820000,126.4500000,'충남 서산시 호수공원9로 20','https://images.unsplash.com/photo-1535399831218-d5bd36d1a6b3?w=800&q=80','해산물','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0108','산지 직송 싱싱한 해산물을 그날그날 들여와 최상의 맛을 냅니다.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (109,'당진 왜목마을 대하',36.9350000,126.5340000,'충남 당진시 석문면 왜목길 15','https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=800&q=80','해산물','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0109','산지 직송 싱싱한 해산물을 그날그날 들여와 최상의 맛을 냅니다.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (110,'공주 밤막걸리 포차',36.4550000,127.1240000,'충남 공주시 봉황로 55','https://images.unsplash.com/photo-1436076863939-06870fe779c2?w=800&q=80','술집/포차','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0110','푸짐한 안주와 시원한 술 한잔, 하루의 피로를 풀기 좋은 곳입니다.','17:00 – 01:00','17:00 – 02:00',NULL);
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (111,'논산 강경 젓갈백반',36.1560000,127.0130000,'충남 논산시 강경읍 옥녀봉로 27','https://images.unsplash.com/photo-1590330297626-d7aff25a0431?w=800&q=80','한식','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0111','신선한 재료와 정성스러운 손맛으로 만든 가정식 한식을 선보입니다. 동네 주민들의 오랜 단골집.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (112,'보령 대천항 회',36.3200000,126.5100000,'충남 보령시 신흑동 대천항중앙길 20','https://images.unsplash.com/photo-1554679665-f5537f187268?w=800&q=80','해산물','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0112','산지 직송 싱싱한 해산물을 그날그날 들여와 최상의 맛을 냅니다.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (113,'홍성 광천 새우젓국밥',36.6010000,126.6600000,'충남 홍성군 광천읍 광천리 555','https://images.unsplash.com/photo-1476718406336-bb5a9690ee2a?w=800&q=80','한식','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0113','신선한 재료와 정성스러운 손맛으로 만든 가정식 한식을 선보입니다. 동네 주민들의 오랜 단골집.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (114,'예산 국밥거리',36.6800000,126.8440000,'충남 예산군 예산읍 형제고개로 966','https://images.unsplash.com/photo-1590301157890-4810ed352733?w=800&q=80','한식','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0114','신선한 재료와 정성스러운 손맛으로 만든 가정식 한식을 선보입니다. 동네 주민들의 오랜 단골집.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (115,'태안 안면도 바지락',36.5100000,126.3300000,'충남 태안군 안면읍 안면대로 5','https://images.unsplash.com/photo-1553621042-f6e147245754?w=800&q=80','해산물','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0115','산지 직송 싱싱한 해산물을 그날그날 들여와 최상의 맛을 냅니다.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (116,'세종 조치원 이탈리안',36.6010000,127.2960000,'세종 조치원읍 새내로 14','https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&q=80','양식','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0116','엄선한 재료로 만드는 캐주얼 다이닝. 데이트 코스로도 인기가 많습니다.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (117,'대전 둔산 삼겹살',36.3510000,127.3780000,'대전 서구 둔산로 100','https://images.unsplash.com/photo-1552566626-52f8b828add9?w=800&q=80','고기/구이','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0117','엄선된 국내산 고기를 합리적인 가격에 즐길 수 있는 구이 전문점입니다.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (118,'대전 신탄진 칼국수',36.4700000,127.4300000,'대전 대덕구 신탄진로 800','https://images.unsplash.com/photo-1476718406336-bb5a9690ee2a?w=800&q=80','한식','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0118','신선한 재료와 정성스러운 손맛으로 만든 가정식 한식을 선보입니다. 동네 주민들의 오랜 단골집.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (119,'익산 황등 비빔밥',35.9500000,126.9600000,'전북 익산시 황등면 황등로 123','https://images.unsplash.com/photo-1590301157890-4810ed352733?w=800&q=80','한식','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0119','신선한 재료와 정성스러운 손맛으로 만든 가정식 한식을 선보입니다. 동네 주민들의 오랜 단골집.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (120,'정읍 내장산 산채정식',35.5700000,126.8600000,'전북 정읍시 내장호반로 71','https://images.unsplash.com/photo-1547592180-85f173990554?w=800&q=80','한식','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0120','신선한 재료와 정성스러운 손맛으로 만든 가정식 한식을 선보입니다. 동네 주민들의 오랜 단골집.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (121,'남원 광한루 추어탕',35.4160000,127.3900000,'전북 남원시 요천로 1379','https://images.unsplash.com/photo-1590330297626-d7aff25a0431?w=800&q=80','한식','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0121','신선한 재료와 정성스러운 손맛으로 만든 가정식 한식을 선보입니다. 동네 주민들의 오랜 단골집.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (122,'김제 지평선 한정식',35.8030000,126.8800000,'전북 김제시 요촌동 성산길 5','https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800&q=80','한식','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0122','신선한 재료와 정성스러운 손맛으로 만든 가정식 한식을 선보입니다. 동네 주민들의 오랜 단골집.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (123,'부안 곰소 젓갈백반',35.6300000,126.6100000,'전북 부안군 진서면 곰소염전길 7','https://images.unsplash.com/photo-1535399831218-d5bd36d1a6b3?w=800&q=80','해산물','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0123','산지 직송 싱싱한 해산물을 그날그날 들여와 최상의 맛을 냅니다.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (124,'순천 웃장 국밥',34.9600000,127.4870000,'전남 순천시 북문길 33','https://images.unsplash.com/photo-1590301157890-4810ed352733?w=800&q=80','한식','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0124','신선한 재료와 정성스러운 손맛으로 만든 가정식 한식을 선보입니다. 동네 주민들의 오랜 단골집.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (125,'광양 불고기 명가',34.9400000,127.7000000,'전남 광양시 광양읍 서천1길 6','https://images.unsplash.com/photo-1544025162-d76694265947?w=800&q=80','고기/구이','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0125','엄선된 국내산 고기를 합리적인 가격에 즐길 수 있는 구이 전문점입니다.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (126,'나주 곰탕 본점',35.0160000,126.7180000,'전남 나주시 금성관길 6','https://images.unsplash.com/photo-1590330297626-d7aff25a0431?w=800&q=80','한식','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0126','신선한 재료와 정성스러운 손맛으로 만든 가정식 한식을 선보입니다. 동네 주민들의 오랜 단골집.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (127,'무안 낙지 골목',34.9900000,126.4800000,'전남 무안군 무안읍 몽탄로 65','https://images.unsplash.com/photo-1554679665-f5537f187268?w=800&q=80','해산물','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0127','산지 직송 싱싱한 해산물을 그날그날 들여와 최상의 맛을 냅니다.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (128,'보성 벌교 꼬막정식',34.8400000,127.3400000,'전남 보성군 벌교읍 채동선로 208','https://images.unsplash.com/photo-1535399831218-d5bd36d1a6b3?w=800&q=80','해산물','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0128','산지 직송 싱싱한 해산물을 그날그날 들여와 최상의 맛을 냅니다.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (129,'해남 땅끝 한정식',34.5700000,126.6000000,'전남 해남군 해남읍 중앙1로 330','https://images.unsplash.com/photo-1590301157890-4810ed352733?w=800&q=80','한식','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0129','신선한 재료와 정성스러운 손맛으로 만든 가정식 한식을 선보입니다. 동네 주민들의 오랜 단골집.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (130,'강진 남도 한정식',34.6420000,126.7670000,'전남 강진군 강진읍 탐진로 111','https://images.unsplash.com/photo-1547592180-85f173990554?w=800&q=80','한식','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0130','신선한 재료와 정성스러운 손맛으로 만든 가정식 한식을 선보입니다. 동네 주민들의 오랜 단골집.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (131,'광주 상무지구 스시',35.1520000,126.8480000,'광주 서구 상무중앙로 100','https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=800&q=80','일식','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0131','매일 아침 공수한 신선한 재료로 정성껏 준비하는 일식 전문점입니다.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (132,'광주 백운동 김치찌개',35.1300000,126.9030000,'광주 남구 백운로 200','https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800&q=80','한식','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0132','신선한 재료와 정성스러운 손맛으로 만든 가정식 한식을 선보입니다. 동네 주민들의 오랜 단골집.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (133,'광주 첨단 화덕피자',35.2260000,126.8480000,'광주 광산구 첨단중앙로 88','https://images.unsplash.com/photo-1571407970349-bc81e7e96d47?w=800&q=80','치킨/피자','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0133','주문 즉시 조리하는 바삭한 치킨과 화덕 피자 전문점입니다.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (134,'구미 인동 돼지국밥',36.1080000,128.4180000,'경북 구미시 인동중앙로 21','https://images.unsplash.com/photo-1590301157890-4810ed352733?w=800&q=80','한식','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0134','신선한 재료와 정성스러운 손맛으로 만든 가정식 한식을 선보입니다. 동네 주민들의 오랜 단골집.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (135,'김천 김밥 골목',36.1400000,128.1130000,'경북 김천시 자산로 12','https://images.unsplash.com/photo-1476224203421-9ac39bcb3327?w=800&q=80','분식','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0135','추억의 맛 그대로, 언제 와도 부담 없는 분식 맛집입니다.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (136,'영주 풍기 인삼갈비',36.8700000,128.5300000,'경북 영주시 풍기읍 인삼로 20','https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=800&q=80','고기/구이','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0136','엄선된 국내산 고기를 합리적인 가격에 즐길 수 있는 구이 전문점입니다.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (137,'상주 곶감 카페',36.4100000,128.1600000,'경북 상주시 남성동 왕산로 45','https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=800&q=80','카페/디저트','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0137','직접 로스팅한 원두와 매일 굽는 디저트를 즐길 수 있는 공간입니다.','10:00 – 22:00','10:00 – 23:00',NULL);
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (138,'문경 약돌돼지 구이',36.5860000,128.1870000,'경북 문경시 문경읍 새재로 555','https://images.unsplash.com/photo-1550317138-10000687a72b?w=800&q=80','고기/구이','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0138','엄선된 국내산 고기를 합리적인 가격에 즐길 수 있는 구이 전문점입니다.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (139,'경산 하양 곱창',35.9130000,128.8170000,'경북 경산시 하양읍 하양로 108','https://images.unsplash.com/photo-1567337710282-00832b415979?w=800&q=80','고기/구이','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0139','엄선된 국내산 고기를 합리적인 가격에 즐길 수 있는 구이 전문점입니다.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (140,'영덕 강구항 대게',36.4050000,129.3700000,'경북 영덕군 강구면 강구대게길 5','https://images.unsplash.com/photo-1553621042-f6e147245754?w=800&q=80','해산물','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0140','산지 직송 싱싱한 해산물을 그날그날 들여와 최상의 맛을 냅니다.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (141,'울진 후포 대게',36.6800000,129.4500000,'경북 울진군 후포면 후포리 5','https://images.unsplash.com/photo-1547928576-b822bc410bdf?w=800&q=80','해산물','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0141','산지 직송 싱싱한 해산물을 그날그날 들여와 최상의 맛을 냅니다.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (142,'청도 추어탕 마을',35.6470000,128.7340000,'경북 청도군 화양읍 청화로 100','https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800&q=80','한식','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0142','신선한 재료와 정성스러운 손맛으로 만든 가정식 한식을 선보입니다. 동네 주민들의 오랜 단골집.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (143,'진주 중앙시장 비빔밥',35.1900000,128.0850000,'경남 진주시 진주대로 1214','https://images.unsplash.com/photo-1476718406336-bb5a9690ee2a?w=800&q=80','한식','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0143','신선한 재료와 정성스러운 손맛으로 만든 가정식 한식을 선보입니다. 동네 주민들의 오랜 단골집.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (144,'김해 내외동 갈비',35.2340000,128.8790000,'경남 김해시 김해대로 2385','https://images.unsplash.com/photo-1567337710282-00832b415979?w=800&q=80','고기/구이','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0144','엄선된 국내산 고기를 합리적인 가격에 즐길 수 있는 구이 전문점입니다.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (145,'양산 통도사 산채',35.4870000,129.0650000,'경남 양산시 하북면 통도사로 108','https://images.unsplash.com/photo-1547592180-85f173990554?w=800&q=80','한식','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0145','신선한 재료와 정성스러운 손맛으로 만든 가정식 한식을 선보입니다. 동네 주민들의 오랜 단골집.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (146,'거제 외포 대구탕',34.9200000,128.7100000,'경남 거제시 장목면 외포5길 10','https://images.unsplash.com/photo-1547928576-b822bc410bdf?w=800&q=80','해산물','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0146','산지 직송 싱싱한 해산물을 그날그날 들여와 최상의 맛을 냅니다.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (147,'사천 삼천포 회',34.9280000,128.0700000,'경남 사천시 어시장길 60','https://images.unsplash.com/photo-1554679665-f5537f187268?w=800&q=80','해산물','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0147','산지 직송 싱싱한 해산물을 그날그날 들여와 최상의 맛을 냅니다.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (148,'밀양 무안 돼지국밥',35.5030000,128.7460000,'경남 밀양시 무안면 무안리 200','https://images.unsplash.com/photo-1476718406336-bb5a9690ee2a?w=800&q=80','한식','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0148','신선한 재료와 정성스러운 손맛으로 만든 가정식 한식을 선보입니다. 동네 주민들의 오랜 단골집.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (149,'남해 멸치쌈밥',34.8380000,127.8920000,'경남 남해군 남해읍 화전로 78','https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=800&q=80','해산물','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0149','산지 직송 싱싱한 해산물을 그날그날 들여와 최상의 맛을 냅니다.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (150,'하동 화개장터 재첩국',35.1600000,127.6100000,'경남 하동군 화개면 쌍계로 15','https://images.unsplash.com/photo-1547592180-85f173990554?w=800&q=80','한식','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0150','신선한 재료와 정성스러운 손맛으로 만든 가정식 한식을 선보입니다. 동네 주민들의 오랜 단골집.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (151,'부산 동래 파전',35.2040000,129.0840000,'부산 동래구 명륜로 94','https://images.unsplash.com/photo-1590330297626-d7aff25a0431?w=800&q=80','한식','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0151','신선한 재료와 정성스러운 손맛으로 만든 가정식 한식을 선보입니다. 동네 주민들의 오랜 단골집.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (152,'부산 기장 대게',35.2440000,129.2130000,'부산 기장군 기장읍 차성로 291','https://images.unsplash.com/photo-1554679665-f5537f187268?w=800&q=80','해산물','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0152','산지 직송 싱싱한 해산물을 그날그날 들여와 최상의 맛을 냅니다.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (153,'부산 대연 밀면',35.1360000,129.0840000,'부산 남구 유엔평화로 45','https://images.unsplash.com/photo-1476718406336-bb5a9690ee2a?w=800&q=80','한식','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0153','신선한 재료와 정성스러운 손맛으로 만든 가정식 한식을 선보입니다. 동네 주민들의 오랜 단골집.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (154,'부산 하단 곱창',35.1060000,128.9660000,'부산 사하구 낙동남로 1400','https://images.unsplash.com/photo-1567337710282-00832b415979?w=800&q=80','고기/구이','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0154','엄선된 국내산 고기를 합리적인 가격에 즐길 수 있는 구이 전문점입니다.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (155,'대구 수성못 브런치',35.8280000,128.6210000,'대구 수성구 두산동 512','https://images.unsplash.com/photo-1525351484163-7529414344d8?w=800&q=80','카페/디저트','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0155','직접 로스팅한 원두와 매일 굽는 디저트를 즐길 수 있는 공간입니다.','10:00 – 22:00','10:00 – 23:00',NULL);
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (156,'대구 상인동 막창',35.8180000,128.5320000,'대구 달서구 월배로 200','https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=800&q=80','고기/구이','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0156','엄선된 국내산 고기를 합리적인 가격에 즐길 수 있는 구이 전문점입니다.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (157,'대구 칠성시장 국수',35.8830000,128.5960000,'대구 북구 칠성시장로 28','https://images.unsplash.com/photo-1532636875304-0c89119d9b4d?w=800&q=80','분식','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0157','추억의 맛 그대로, 언제 와도 부담 없는 분식 맛집입니다.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (158,'울산 삼산 한우',35.5390000,129.3350000,'울산 남구 삼산로 300','https://images.unsplash.com/photo-1550317138-10000687a72b?w=800&q=80','고기/구이','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0158','엄선된 국내산 고기를 합리적인 가격에 즐길 수 있는 구이 전문점입니다.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (159,'울산 방어진 회센터',35.4960000,129.4280000,'울산 동구 방어진순환도로 1000','https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=800&q=80','해산물','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0159','산지 직송 싱싱한 해산물을 그날그날 들여와 최상의 맛을 냅니다.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (160,'서귀포 매일올레시장 회',33.2500000,126.5620000,'제주 서귀포시 중정로 62','https://images.unsplash.com/photo-1553621042-f6e147245754?w=800&q=80','해산물','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0160','산지 직송 싱싱한 해산물을 그날그날 들여와 최상의 맛을 냅니다.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (161,'중문 흑돼지 마을',33.2440000,126.4200000,'제주 서귀포시 중문동 천제연로 100','https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=800&q=80','고기/구이','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0161','엄선된 국내산 고기를 합리적인 가격에 즐길 수 있는 구이 전문점입니다.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (162,'한림 옹포 해물칼국수',33.4100000,126.2700000,'제주 제주시 한림읍 한림해안로 20','https://images.unsplash.com/photo-1554679665-f5537f187268?w=800&q=80','해산물','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0162','산지 직송 싱싱한 해산물을 그날그날 들여와 최상의 맛을 냅니다.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (163,'노원 공릉동 경양식',37.6250000,127.0730000,'서울 노원구 공릉로 195','https://images.unsplash.com/photo-1484723091739-30a097e8f929?w=800&q=80','양식','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0163','엄선한 재료로 만드는 캐주얼 다이닝. 데이트 코스로도 인기가 많습니다.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (164,'강서 마곡 파스타',37.5590000,126.8320000,'서울 강서구 마곡중앙로 60','https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=800&q=80','양식','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0164','엄선한 재료로 만드는 캐주얼 다이닝. 데이트 코스로도 인기가 많습니다.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (165,'은평 연신내 닭갈비',37.6190000,126.9210000,'서울 은평구 연서로 200','https://images.unsplash.com/photo-1547592180-85f173990554?w=800&q=80','한식','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0165','신선한 재료와 정성스러운 손맛으로 만든 가정식 한식을 선보입니다. 동네 주민들의 오랜 단골집.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (166,'성북 성신여대 카페',37.5920000,127.0160000,'서울 성북구 동소문로 100','https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=800&q=80','카페/디저트','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0166','직접 로스팅한 원두와 매일 굽는 디저트를 즐길 수 있는 공간입니다.','10:00 – 22:00','10:00 – 23:00',NULL);
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (167,'동대문 신설동 곱창',37.5760000,127.0250000,'서울 동대문구 왕산로 100','https://images.unsplash.com/photo-1552566626-52f8b828add9?w=800&q=80','고기/구이','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0167','엄선된 국내산 고기를 합리적인 가격에 즐길 수 있는 구이 전문점입니다.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (168,'영등포 문래동 수제버거',37.5170000,126.8950000,'서울 영등포구 도림로 400','https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=800&q=80','패스트푸드','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0168','수제 패티와 신선한 야채로 만드는 프리미엄 버거 하우스입니다.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (169,'강북 수유리 순대국',37.6380000,127.0250000,'서울 강북구 도봉로 300','https://images.unsplash.com/photo-1590301157890-4810ed352733?w=800&q=80','한식','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0169','신선한 재료와 정성스러운 손맛으로 만든 가정식 한식을 선보입니다. 동네 주민들의 오랜 단골집.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (170,'구로 신도림 양꼬치',37.5090000,126.8910000,'서울 구로구 새말로 100','https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?w=800&q=80','중식','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0170','불맛 가득한 정통 중화요리를 합리적인 가격에 즐길 수 있는 곳입니다.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (171,'금천 가산 부대찌개',37.4770000,126.8830000,'서울 금천구 가산디지털1로 100','https://images.unsplash.com/photo-1590330297626-d7aff25a0431?w=800&q=80','한식','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0171','신선한 재료와 정성스러운 손맛으로 만든 가정식 한식을 선보입니다. 동네 주민들의 오랜 단골집.','11:00 – 21:00','11:00 – 22:00','15:00 – 17:00');
+INSERT INTO `restaurant` (`id`, `name`, `latitude`, `longitude`, `address`, `photoUrl`, `category`, `createdAt`, `updatedAt`, `userId`, `phone`, `description`, `hoursWeekday`, `hoursWeekend`, `breakTime`) VALUES (172,'송파 방이동 먹자골목',37.5110000,127.1240000,'서울 송파구 오금로 250','https://images.unsplash.com/photo-1514933651103-005eec06c04b?w=800&q=80','술집/포차','2026-07-05 23:39:25.000000','2026-07-05 23:39:25.950673',NULL,'0507-1234-0172','푸짐한 안주와 시원한 술 한잔, 하루의 피로를 풀기 좋은 곳입니다.','17:00 – 01:00','17:00 – 02:00',NULL);
 
--- ── 전국 맛집 샘플 데이터 ──
-INSERT INTO restaurant (name, latitude, longitude, address, photoUrl, category, createdAt, updatedAt) VALUES
-('해운대 밀면', 35.1631, 129.1635, '부산 해운대구 구남로 21', 'https://images.unsplash.com/photo-1526318472351-c75fcf070305?w=800&q=80', '한식', NOW(), NOW()),
-('광안리 조개구이', 35.1532, 129.1183, '부산 수영구 광안해변로 219', 'https://images.unsplash.com/photo-1547928576-b822bc410bdf?w=800&q=80', '해산물', NOW(), NOW()),
-('서면 돼지국밥', 35.1579, 129.0594, '부산 부산진구 서면로 39', 'https://images.unsplash.com/photo-1590330297626-d7aff25a0431?w=800&q=80', '한식', NOW(), NOW()),
-('자갈치 회센터', 35.0966, 129.0306, '부산 중구 자갈치해안로 52', 'https://images.unsplash.com/photo-1554679665-f5537f187268?w=800&q=80', '해산물', NOW(), NOW()),
-('동성로 막창골목', 35.8690, 128.5936, '대구 중구 동성로 30', 'https://images.unsplash.com/photo-1550317138-10000687a72b?w=800&q=80', '고기/구이', NOW(), NOW()),
-('서문시장 납작만두', 35.8686, 128.5828, '대구 중구 큰장로26길 45', 'https://images.unsplash.com/photo-1559847844-5315695dadae?w=800&q=80', '분식', NOW(), NOW()),
-('차이나타운 짜장면', 37.4738, 126.6176, '인천 중구 차이나타운로 43', 'https://images.unsplash.com/photo-1585238342024-78d387f4a707?w=800&q=80', '중식', NOW(), NOW()),
-('송도 브런치카페', 37.3891, 126.6392, '인천 연수구 송도과학로 32', 'https://images.unsplash.com/photo-1541544741938-0af808871cc0?w=800&q=80', '카페/디저트', NOW(), NOW()),
-('송정 떡갈비', 35.1380, 126.7935, '광주 광산구 광산로29번길 1', 'https://images.unsplash.com/photo-1583835746434-cf1534674b41?w=800&q=80', '고기/구이', NOW(), NOW()),
-('충장로 상추튀김', 35.1468, 126.9182, '광주 동구 충장로 94', 'https://images.unsplash.com/photo-1532636875304-0c89119d9b4d?w=800&q=80', '분식', NOW(), NOW()),
-('은행동 베이커리', 36.3277, 127.4272, '대전 중구 대종로480번길 15', 'https://images.unsplash.com/photo-1488477181946-6428a0291777?w=800&q=80', '카페/디저트', NOW(), NOW()),
-('유성 손칼국수', 36.3541, 127.3413, '대전 유성구 온천로 45', 'https://images.unsplash.com/photo-1455619452474-d2be8b1e70cd?w=800&q=80', '한식', NOW(), NOW()),
-('언양 불고기', 35.5665, 129.1244, '울산 울주군 언양읍 헌양길 1', 'https://images.unsplash.com/photo-1567337710282-00832b415979?w=800&q=80', '고기/구이', NOW(), NOW()),
-('제주 흑돼지 명가', 33.5141, 126.5253, '제주 제주시 관덕로15길 25', 'https://images.unsplash.com/photo-1529006557810-274b9b2fc783?w=800&q=80', '고기/구이', NOW(), NOW()),
-('애월 바다뷰 카페', 33.4630, 126.3109, '제주 제주시 애월읍 애월로 27', 'https://images.unsplash.com/photo-1541014741259-de529411b96a?w=800&q=80', '카페/디저트', NOW(), NOW()),
-('성산 해물뚝배기', 33.4587, 126.9425, '제주 서귀포시 성산읍 일출로 74', 'https://images.unsplash.com/photo-1535399831218-d5bd36d1a6b3?w=800&q=80', '해산물', NOW(), NOW()),
-('제주 고기국수', 33.4996, 126.5312, '제주 제주시 중앙로 63', 'https://images.unsplash.com/photo-1432139555190-58524dae6a55?w=800&q=80', '한식', NOW(), NOW()),
-('초당 순두부', 37.7910, 128.9179, '강원 강릉시 초당순두부길 77', 'https://images.unsplash.com/photo-1476718406336-bb5a9690ee2a?w=800&q=80', '한식', NOW(), NOW()),
-('안목해변 커피거리', 37.7719, 128.9470, '강원 강릉시 창해로14번길 20-1', 'https://images.unsplash.com/photo-1497034825429-c343d7c6a68f?w=800&q=80', '카페/디저트', NOW(), NOW()),
-('속초 닭강정', 38.2070, 128.5918, '강원 속초시 중앙로147번길 16', 'https://images.unsplash.com/photo-1615887023544-3a566f29d822?w=800&q=80', '치킨/피자', NOW(), NOW()),
-('대포항 물회', 38.1911, 128.6015, '강원 속초시 대포항길 24', 'https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=800&q=80', '해산물', NOW(), NOW()),
-('춘천 닭갈비 골목', 37.8813, 127.7300, '강원 춘천시 금강로62번길 6', 'https://images.unsplash.com/photo-1617093727343-374698b1b08d?w=800&q=80', '한식', NOW(), NOW()),
-('한옥마을 비빔밥', 35.8150, 127.1530, '전북 전주시 완산구 태조로 44', 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800&q=80', '한식', NOW(), NOW()),
-('남부시장 콩나물국밥', 35.8123, 127.1470, '전북 전주시 완산구 풍남문2길 63', 'https://images.unsplash.com/photo-1493770348161-369560ae357d?w=800&q=80', '한식', NOW(), NOW()),
-('군산 중화짬뽕', 35.9678, 126.7366, '전북 군산시 대학로 86', 'https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?w=800&q=80', '중식', NOW(), NOW()),
-('여수 게장백반', 34.7365, 127.7460, '전남 여수시 봉산남3길 17', 'https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?w=800&q=80', '한식', NOW(), NOW()),
-('목포 낙지초무침', 34.7936, 126.3886, '전남 목포시 해안로 249', 'https://images.unsplash.com/photo-1553163147-622ab57be1c7?w=800&q=80', '해산물', NOW(), NOW()),
-('담양 떡갈비 정식', 35.3213, 126.9880, '전남 담양군 담양읍 죽향대로 1121', 'https://images.unsplash.com/photo-1544510808-91bcbee1df55?w=800&q=80', '고기/구이', NOW(), NOW()),
-('황리단길 파스타', 35.8375, 129.2100, '경북 경주시 포석로 1080', 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=800&q=80', '양식', NOW(), NOW()),
-('황남 김밥', 35.8384, 129.2115, '경북 경주시 탑리3길 2', 'https://images.unsplash.com/photo-1580651214613-f4692d6d138f?w=800&q=80', '분식', NOW(), NOW()),
-('안동 찜닭 골목', 36.5684, 128.7294, '경북 안동시 번영1길 47', 'https://images.unsplash.com/photo-1598866594230-a7c12756260f?w=800&q=80', '한식', NOW(), NOW()),
-('죽도시장 물회', 36.0190, 129.3435, '경북 포항시 북구 죽도시장13길 13-1', 'https://images.unsplash.com/photo-1582878826629-29b7ad1cdc43?w=800&q=80', '해산물', NOW(), NOW()),
-('통영 굴 전문점', 34.8544, 128.4331, '경남 통영시 통영해안로 205', 'https://images.unsplash.com/photo-1484980972926-edee96e0960d?w=800&q=80', '해산물', NOW(), NOW()),
-('마산 아구찜 거리', 35.2281, 128.6811, '경남 창원시 마산합포구 오동동10길 6', 'https://images.unsplash.com/photo-1506354666786-959d6d497f1a?w=800&q=80', '해산물', NOW(), NOW()),
-('수원 왕갈비', 37.2812, 127.0139, '경기 수원시 팔달구 정조로 800', 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&q=80', '고기/구이', NOW(), NOW()),
-('의정부 부대찌개 거리', 37.7381, 127.0337, '경기 의정부시 태평로73번길 20', 'https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=800&q=80', '한식', NOW(), NOW()),
-('판교 수제버거', 37.3947, 127.1112, '경기 성남시 분당구 판교역로146번길 20', 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=800&q=80', '패스트푸드', NOW(), NOW()),
-('일산 화덕피자', 37.6584, 126.7699, '경기 고양시 일산동구 중앙로1275번길 38-10', 'https://images.unsplash.com/photo-1571407970349-bc81e7e96d47?w=800&q=80', '치킨/피자', NOW(), NOW()),
-('천안 호두과자 명가', 36.8151, 127.1139, '충남 천안시 동남구 중앙로 92', 'https://images.unsplash.com/photo-1543826173-70651703c5a4?w=800&q=80', '카페/디저트', NOW(), NOW()),
-('청주 삼겹살 거리', 36.6424, 127.4890, '충북 청주시 상당구 서문시장길 20', 'https://images.unsplash.com/photo-1498654896293-37aacf113fd9?w=800&q=80', '고기/구이', NOW(), NOW());
-
--- ── 전국 시·군 맛집 100개 추가 ──
-INSERT INTO restaurant (name, latitude, longitude, address, category, createdAt, updatedAt) VALUES
--- 경기
-('성남 정자동 순대국', 37.3670, 127.1080, '경기 성남시 분당구 정자일로 121', '한식', NOW(), NOW()),
-('부천 역곡 떡볶이', 37.4840, 126.8110, '경기 부천시 소사로 758', '분식', NOW(), NOW()),
-('안양 일번가 파스타', 37.3940, 126.9560, '경기 안양시 만안구 안양로 289', '양식', NOW(), NOW()),
-('안산 대부도 조개구이', 37.2620, 126.6180, '경기 안산시 단원구 대부황금로 0', '해산물', NOW(), NOW()),
-('평택 국제대 갈비탕', 36.9920, 127.1120, '경기 평택시 평택로 51', '한식', NOW(), NOW()),
-('시흥 오이도 회센터', 37.3450, 126.6870, '경기 시흥시 오이도로 175', '해산물', NOW(), NOW()),
-('김포 장기동 브런치', 37.6420, 126.6680, '경기 김포시 김포한강8로 111', '카페/디저트', NOW(), NOW()),
-('광명 철산 짜장면', 37.4790, 126.8660, '경기 광명시 철산로 20', '중식', NOW(), NOW()),
-('남양주 다산 곱창', 37.6110, 127.1560, '경기 남양주시 다산중앙로 20', '고기/구이', NOW(), NOW()),
-('파주 장단콩 두부', 37.7600, 126.7800, '경기 파주시 문산읍 방촌로 1364', '한식', NOW(), NOW()),
-('화성 궁평항 물회', 37.1150, 126.7050, '경기 화성시 서신면 궁평항로 1049', '해산물', NOW(), NOW()),
-('이천 쌀밥 정식', 37.2720, 127.4350, '경기 이천시 경충대로 2993', '한식', NOW(), NOW()),
-('양평 옥천 냉면', 37.4920, 127.4880, '경기 양평군 옥천면 경강로 화계길 10', '한식', NOW(), NOW()),
-('가평 잣두부 마을', 37.8310, 127.5100, '경기 가평군 가평읍 자라섬로 60', '한식', NOW(), NOW()),
-('포천 이동 갈비', 37.8940, 127.2000, '경기 포천시 이동면 화동로 2270', '고기/구이', NOW(), NOW()),
-('안성 서일농원 된장', 37.0080, 127.2700, '경기 안성시 일죽면 금일로 332-17', '한식', NOW(), NOW()),
-('용인 백암 순대', 37.1620, 127.3480, '경기 용인시 처인구 백암면 백암로 1', '한식', NOW(), NOW()),
-('의왕 왕송호수 카페', 37.3210, 126.9420, '경기 의왕시 왕송못동로 209', '카페/디저트', NOW(), NOW()),
--- 인천
-('부평 문화의거리 치킨', 37.4930, 126.7230, '인천 부평구 부평문화로 42', '치킨/피자', NOW(), NOW()),
-('계양 계산 백반', 37.5420, 126.7380, '인천 계양구 계산새로 88', '한식', NOW(), NOW()),
-('강화 젓국갈비', 37.7470, 126.4880, '인천 강화군 강화읍 강화대로 405', '한식', NOW(), NOW()),
-('영종도 을왕리 조개', 37.4470, 126.3720, '인천 중구 을왕동 을왕해안로 30', '해산물', NOW(), NOW()),
--- 강원
-('원주 미로시장 만두', 37.3420, 127.9200, '강원 원주시 원일로 33', '한식', NOW(), NOW()),
-('동해 묵호항 물회', 37.5510, 129.1150, '강원 동해시 일출로 22', '해산물', NOW(), NOW()),
-('삼척 곰치국 식당', 37.4450, 129.1700, '강원 삼척시 새천년도로 456', '해산물', NOW(), NOW()),
-('태백 물닭갈비', 37.1640, 128.9860, '강원 태백시 시장남1길 5', '한식', NOW(), NOW()),
-('정선 곤드레밥', 37.3800, 128.6600, '강원 정선군 정선읍 봉양리 7', '한식', NOW(), NOW()),
-('평창 메밀 막국수', 37.3700, 128.3900, '강원 평창군 봉평면 창동리 214', '한식', NOW(), NOW()),
-('홍천 화로구이 한우', 37.6970, 127.8890, '강원 홍천군 홍천읍 상오안리 456', '고기/구이', NOW(), NOW()),
-('횡성 안흥찐빵 카페', 37.4920, 127.9860, '강원 횡성군 안흥면 안흥로 55', '카페/디저트', NOW(), NOW()),
-('양양 송이버섯 백반', 38.0750, 128.6190, '강원 양양군 양양읍 남문로 34', '한식', NOW(), NOW()),
--- 충북
-('충주 중앙탑 매운탕', 36.9910, 127.9300, '충북 충주시 중앙탑면 탑평리 12', '해산물', NOW(), NOW()),
-('제천 약채락 정식', 37.1320, 128.1900, '충북 제천시 의림대로 242', '한식', NOW(), NOW()),
-('단양 마늘 떡갈비', 36.9840, 128.3650, '충북 단양군 단양읍 도전5길 31', '고기/구이', NOW(), NOW()),
-('음성 설성 한우', 36.9400, 127.6900, '충북 음성군 음성읍 중앙로 15', '고기/구이', NOW(), NOW()),
-('옥천 생선국수', 36.3060, 127.5710, '충북 옥천군 옥천읍 향수길 61', '한식', NOW(), NOW()),
--- 충남
-('아산 온양 곰탕', 36.7900, 127.0040, '충남 아산시 온천대로 1440', '한식', NOW(), NOW()),
-('서산 게국지 백반', 36.7820, 126.4500, '충남 서산시 호수공원9로 20', '해산물', NOW(), NOW()),
-('당진 왜목마을 대하', 36.9350, 126.5340, '충남 당진시 석문면 왜목길 15', '해산물', NOW(), NOW()),
-('공주 밤막걸리 포차', 36.4550, 127.1240, '충남 공주시 봉황로 55', '술집/포차', NOW(), NOW()),
-('논산 강경 젓갈백반', 36.1560, 127.0130, '충남 논산시 강경읍 옥녀봉로 27', '한식', NOW(), NOW()),
-('보령 대천항 회', 36.3200, 126.5100, '충남 보령시 신흑동 대천항중앙길 20', '해산물', NOW(), NOW()),
-('홍성 광천 새우젓국밥', 36.6010, 126.6600, '충남 홍성군 광천읍 광천리 555', '한식', NOW(), NOW()),
-('예산 국밥거리', 36.6800, 126.8440, '충남 예산군 예산읍 형제고개로 966', '한식', NOW(), NOW()),
-('태안 안면도 바지락', 36.5100, 126.3300, '충남 태안군 안면읍 안면대로 5', '해산물', NOW(), NOW()),
--- 세종·대전
-('세종 조치원 이탈리안', 36.6010, 127.2960, '세종 조치원읍 새내로 14', '양식', NOW(), NOW()),
-('대전 둔산 삼겹살', 36.3510, 127.3780, '대전 서구 둔산로 100', '고기/구이', NOW(), NOW()),
-('대전 신탄진 칼국수', 36.4700, 127.4300, '대전 대덕구 신탄진로 800', '한식', NOW(), NOW()),
--- 전북
-('익산 황등 비빔밥', 35.9500, 126.9600, '전북 익산시 황등면 황등로 123', '한식', NOW(), NOW()),
-('정읍 내장산 산채정식', 35.5700, 126.8600, '전북 정읍시 내장호반로 71', '한식', NOW(), NOW()),
-('남원 광한루 추어탕', 35.4160, 127.3900, '전북 남원시 요천로 1379', '한식', NOW(), NOW()),
-('김제 지평선 한정식', 35.8030, 126.8800, '전북 김제시 요촌동 성산길 5', '한식', NOW(), NOW()),
-('부안 곰소 젓갈백반', 35.6300, 126.6100, '전북 부안군 진서면 곰소염전길 7', '해산물', NOW(), NOW()),
--- 전남
-('순천 웃장 국밥', 34.9600, 127.4870, '전남 순천시 북문길 33', '한식', NOW(), NOW()),
-('광양 불고기 명가', 34.9400, 127.7000, '전남 광양시 광양읍 서천1길 6', '고기/구이', NOW(), NOW()),
-('나주 곰탕 본점', 35.0160, 126.7180, '전남 나주시 금성관길 6', '한식', NOW(), NOW()),
-('무안 낙지 골목', 34.9900, 126.4800, '전남 무안군 무안읍 몽탄로 65', '해산물', NOW(), NOW()),
-('보성 벌교 꼬막정식', 34.8400, 127.3400, '전남 보성군 벌교읍 채동선로 208', '해산물', NOW(), NOW()),
-('해남 땅끝 한정식', 34.5700, 126.6000, '전남 해남군 해남읍 중앙1로 330', '한식', NOW(), NOW()),
-('강진 남도 한정식', 34.6420, 126.7670, '전남 강진군 강진읍 탐진로 111', '한식', NOW(), NOW()),
--- 광주
-('광주 상무지구 스시', 35.1520, 126.8480, '광주 서구 상무중앙로 100', '일식', NOW(), NOW()),
-('광주 백운동 김치찌개', 35.1300, 126.9030, '광주 남구 백운로 200', '한식', NOW(), NOW()),
-('광주 첨단 화덕피자', 35.2260, 126.8480, '광주 광산구 첨단중앙로 88', '치킨/피자', NOW(), NOW()),
--- 경북
-('구미 인동 돼지국밥', 36.1080, 128.4180, '경북 구미시 인동중앙로 21', '한식', NOW(), NOW()),
-('김천 김밥 골목', 36.1400, 128.1130, '경북 김천시 자산로 12', '분식', NOW(), NOW()),
-('영주 풍기 인삼갈비', 36.8700, 128.5300, '경북 영주시 풍기읍 인삼로 20', '고기/구이', NOW(), NOW()),
-('상주 곶감 카페', 36.4100, 128.1600, '경북 상주시 남성동 왕산로 45', '카페/디저트', NOW(), NOW()),
-('문경 약돌돼지 구이', 36.5860, 128.1870, '경북 문경시 문경읍 새재로 555', '고기/구이', NOW(), NOW()),
-('경산 하양 곱창', 35.9130, 128.8170, '경북 경산시 하양읍 하양로 108', '고기/구이', NOW(), NOW()),
-('영덕 강구항 대게', 36.4050, 129.3700, '경북 영덕군 강구면 강구대게길 5', '해산물', NOW(), NOW()),
-('울진 후포 대게', 36.6800, 129.4500, '경북 울진군 후포면 후포리 5', '해산물', NOW(), NOW()),
-('청도 추어탕 마을', 35.6470, 128.7340, '경북 청도군 화양읍 청화로 100', '한식', NOW(), NOW()),
--- 경남
-('진주 중앙시장 비빔밥', 35.1900, 128.0850, '경남 진주시 진주대로 1214', '한식', NOW(), NOW()),
-('김해 내외동 갈비', 35.2340, 128.8790, '경남 김해시 김해대로 2385', '고기/구이', NOW(), NOW()),
-('양산 통도사 산채', 35.4870, 129.0650, '경남 양산시 하북면 통도사로 108', '한식', NOW(), NOW()),
-('거제 외포 대구탕', 34.9200, 128.7100, '경남 거제시 장목면 외포5길 10', '해산물', NOW(), NOW()),
-('사천 삼천포 회', 34.9280, 128.0700, '경남 사천시 어시장길 60', '해산물', NOW(), NOW()),
-('밀양 무안 돼지국밥', 35.5030, 128.7460, '경남 밀양시 무안면 무안리 200', '한식', NOW(), NOW()),
-('남해 멸치쌈밥', 34.8380, 127.8920, '경남 남해군 남해읍 화전로 78', '해산물', NOW(), NOW()),
-('하동 화개장터 재첩국', 35.1600, 127.6100, '경남 하동군 화개면 쌍계로 15', '한식', NOW(), NOW()),
--- 부산
-('부산 동래 파전', 35.2040, 129.0840, '부산 동래구 명륜로 94', '한식', NOW(), NOW()),
-('부산 기장 대게', 35.2440, 129.2130, '부산 기장군 기장읍 차성로 291', '해산물', NOW(), NOW()),
-('부산 대연 밀면', 35.1360, 129.0840, '부산 남구 유엔평화로 45', '한식', NOW(), NOW()),
-('부산 하단 곱창', 35.1060, 128.9660, '부산 사하구 낙동남로 1400', '고기/구이', NOW(), NOW()),
--- 대구
-('대구 수성못 브런치', 35.8280, 128.6210, '대구 수성구 두산동 512', '카페/디저트', NOW(), NOW()),
-('대구 상인동 막창', 35.8180, 128.5320, '대구 달서구 월배로 200', '고기/구이', NOW(), NOW()),
-('대구 칠성시장 국수', 35.8830, 128.5960, '대구 북구 칠성시장로 28', '분식', NOW(), NOW()),
--- 울산
-('울산 삼산 한우', 35.5390, 129.3350, '울산 남구 삼산로 300', '고기/구이', NOW(), NOW()),
-('울산 방어진 회센터', 35.4960, 129.4280, '울산 동구 방어진순환도로 1000', '해산물', NOW(), NOW()),
--- 제주
-('서귀포 매일올레시장 회', 33.2500, 126.5620, '제주 서귀포시 중정로 62', '해산물', NOW(), NOW()),
-('중문 흑돼지 마을', 33.2440, 126.4200, '제주 서귀포시 중문동 천제연로 100', '고기/구이', NOW(), NOW()),
-('한림 옹포 해물칼국수', 33.4100, 126.2700, '제주 제주시 한림읍 한림해안로 20', '해산물', NOW(), NOW()),
--- 서울 추가
-('노원 공릉동 경양식', 37.6250, 127.0730, '서울 노원구 공릉로 195', '양식', NOW(), NOW()),
-('강서 마곡 파스타', 37.5590, 126.8320, '서울 강서구 마곡중앙로 60', '양식', NOW(), NOW()),
-('은평 연신내 닭갈비', 37.6190, 126.9210, '서울 은평구 연서로 200', '한식', NOW(), NOW()),
-('성북 성신여대 카페', 37.5920, 127.0160, '서울 성북구 동소문로 100', '카페/디저트', NOW(), NOW()),
-('동대문 신설동 곱창', 37.5760, 127.0250, '서울 동대문구 왕산로 100', '고기/구이', NOW(), NOW()),
-('영등포 문래동 수제버거', 37.5170, 126.8950, '서울 영등포구 도림로 400', '패스트푸드', NOW(), NOW()),
-('강북 수유리 순대국', 37.6380, 127.0250, '서울 강북구 도봉로 300', '한식', NOW(), NOW()),
-('구로 신도림 양꼬치', 37.5090, 126.8910, '서울 구로구 새말로 100', '중식', NOW(), NOW()),
-('금천 가산 부대찌개', 37.4770, 126.8830, '서울 금천구 가산디지털1로 100', '한식', NOW(), NOW()),
-('송파 방이동 먹자골목', 37.5110, 127.1240, '서울 송파구 오금로 250', '술집/포차', NOW(), NOW());
--- ── 식당 부가정보 시드 (전화 / 영업시간 / 소개글) ──
-UPDATE restaurant SET
-  phone = CONCAT('0507-1234-', LPAD(id, 4, '0')),
-  hoursWeekday = CASE
-    WHEN category = '술집/포차' THEN '17:00 – 01:00'
-    WHEN category = '카페/디저트' THEN '10:00 – 22:00'
-    ELSE '11:00 – 21:00'
-  END,
-  hoursWeekend = CASE
-    WHEN category = '술집/포차' THEN '17:00 – 02:00'
-    WHEN category = '카페/디저트' THEN '10:00 – 23:00'
-    ELSE '11:00 – 22:00'
-  END,
-  breakTime = CASE
-    WHEN category IN ('카페/디저트', '술집/포차') THEN NULL
-    ELSE '15:00 – 17:00'
-  END,
-  description = CASE category
-    WHEN '한식' THEN '신선한 재료와 정성스러운 손맛으로 만든 가정식 한식을 선보입니다. 동네 주민들의 오랜 단골집.'
-    WHEN '중식' THEN '불맛 가득한 정통 중화요리를 합리적인 가격에 즐길 수 있는 곳입니다.'
-    WHEN '일식' THEN '매일 아침 공수한 신선한 재료로 정성껏 준비하는 일식 전문점입니다.'
-    WHEN '양식' THEN '엄선한 재료로 만드는 캐주얼 다이닝. 데이트 코스로도 인기가 많습니다.'
-    WHEN '분식' THEN '추억의 맛 그대로, 언제 와도 부담 없는 분식 맛집입니다.'
-    WHEN '카페/디저트' THEN '직접 로스팅한 원두와 매일 굽는 디저트를 즐길 수 있는 공간입니다.'
-    WHEN '치킨/피자' THEN '주문 즉시 조리하는 바삭한 치킨과 화덕 피자 전문점입니다.'
-    WHEN '고기/구이' THEN '엄선된 국내산 고기를 합리적인 가격에 즐길 수 있는 구이 전문점입니다.'
-    WHEN '해산물' THEN '산지 직송 싱싱한 해산물을 그날그날 들여와 최상의 맛을 냅니다.'
-    WHEN '패스트푸드' THEN '수제 패티와 신선한 야채로 만드는 프리미엄 버거 하우스입니다.'
-    WHEN '술집/포차' THEN '푸짐한 안주와 시원한 술 한잔, 하루의 피로를 풀기 좋은 곳입니다.'
-    ELSE '정성을 다해 준비하는 동네 맛집입니다.'
-  END
-WHERE description IS NULL;
-
--- ── 카테고리별 메뉴 시드 ──
-DELETE FROM restaurant_menu;
-
-INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
-SELECT id, '된장찌개 정식', 9500, 1, '🍲' FROM restaurant WHERE category = '한식';
-INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
-SELECT id, '제육볶음 정식', 10000, 0, '🍚' FROM restaurant WHERE category = '한식';
-INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
-SELECT id, '순두부찌개', 8500, 0, '🥘' FROM restaurant WHERE category = '한식';
-INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
-SELECT id, '비빔밥', 9000, 0, '🥗' FROM restaurant WHERE category = '한식';
-INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
-SELECT id, '갈비탕', 14000, 0, '🍖' FROM restaurant WHERE category = '한식';
-
-INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
-SELECT id, '짜장면', 7000, 1, '🍜' FROM restaurant WHERE category = '중식';
-INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
-SELECT id, '짬뽕', 8000, 0, '🍲' FROM restaurant WHERE category = '중식';
-INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
-SELECT id, '탕수육 (소)', 18000, 0, '🍖' FROM restaurant WHERE category = '중식';
-INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
-SELECT id, '볶음밥', 8000, 0, '🍚' FROM restaurant WHERE category = '중식';
-
-INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
-SELECT id, '모둠초밥', 16000, 1, '🍣' FROM restaurant WHERE category = '일식';
-INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
-SELECT id, '사케동', 15000, 0, '🍱' FROM restaurant WHERE category = '일식';
-INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
-SELECT id, '우동', 8000, 0, '🍜' FROM restaurant WHERE category = '일식';
-INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
-SELECT id, '가라아게', 12000, 0, '🍗' FROM restaurant WHERE category = '일식';
-
-INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
-SELECT id, '크림 파스타', 15000, 1, '🍝' FROM restaurant WHERE category = '양식';
-INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
-SELECT id, '토마토 파스타', 14000, 0, '🍝' FROM restaurant WHERE category = '양식';
-INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
-SELECT id, '마르게리타 피자', 16000, 0, '🍕' FROM restaurant WHERE category = '양식';
-INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
-SELECT id, '안심 스테이크', 29000, 0, '🥩' FROM restaurant WHERE category = '양식';
-
-INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
-SELECT id, '떡볶이', 5000, 1, '🌶️' FROM restaurant WHERE category = '분식';
-INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
-SELECT id, '김밥', 4000, 0, '🍙' FROM restaurant WHERE category = '분식';
-INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
-SELECT id, '순대', 6000, 0, '🥟' FROM restaurant WHERE category = '분식';
-INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
-SELECT id, '모둠튀김', 5000, 0, '🍤' FROM restaurant WHERE category = '분식';
-INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
-SELECT id, '라볶이', 7000, 0, '🍜' FROM restaurant WHERE category = '분식';
-
-INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
-SELECT id, '아메리카노', 4500, 1, '☕' FROM restaurant WHERE category = '카페/디저트';
-INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
-SELECT id, '카페라떼', 5000, 0, '🥛' FROM restaurant WHERE category = '카페/디저트';
-INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
-SELECT id, '크루아상', 4800, 0, '🥐' FROM restaurant WHERE category = '카페/디저트';
-INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
-SELECT id, '치즈케이크', 6500, 0, '🍰' FROM restaurant WHERE category = '카페/디저트';
-
-INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
-SELECT id, '후라이드 치킨', 19000, 1, '🍗' FROM restaurant WHERE category = '치킨/피자';
-INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
-SELECT id, '양념치킨', 20000, 0, '🍗' FROM restaurant WHERE category = '치킨/피자';
-INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
-SELECT id, '페퍼로니 피자', 21000, 0, '🍕' FROM restaurant WHERE category = '치킨/피자';
-INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
-SELECT id, '치즈볼', 6000, 0, '🧀' FROM restaurant WHERE category = '치킨/피자';
-
-INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
-SELECT id, '삼겹살 (150g)', 15000, 1, '🥓' FROM restaurant WHERE category = '고기/구이';
-INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
-SELECT id, '목살 (150g)', 14000, 0, '🥩' FROM restaurant WHERE category = '고기/구이';
-INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
-SELECT id, '양념갈비 (200g)', 22000, 0, '🍖' FROM restaurant WHERE category = '고기/구이';
-INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
-SELECT id, '된장찌개', 7000, 0, '🍲' FROM restaurant WHERE category = '고기/구이';
-INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
-SELECT id, '물냉면', 9000, 0, '🍜' FROM restaurant WHERE category = '고기/구이';
-
-INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
-SELECT id, '모둠회 (소)', 35000, 1, '🐟' FROM restaurant WHERE category = '해산물';
-INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
-SELECT id, '물회', 15000, 0, '🥣' FROM restaurant WHERE category = '해산물';
-INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
-SELECT id, '해물탕 (중)', 40000, 0, '🦐' FROM restaurant WHERE category = '해산물';
-INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
-SELECT id, '새우구이', 25000, 0, '🦞' FROM restaurant WHERE category = '해산물';
-
-INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
-SELECT id, '치즈버거 세트', 9500, 1, '🍔' FROM restaurant WHERE category = '패스트푸드';
-INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
-SELECT id, '더블버거 세트', 11500, 0, '🍔' FROM restaurant WHERE category = '패스트푸드';
-INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
-SELECT id, '감자튀김', 4000, 0, '🍟' FROM restaurant WHERE category = '패스트푸드';
-INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
-SELECT id, '콜라', 2500, 0, '🥤' FROM restaurant WHERE category = '패스트푸드';
-
-INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
-SELECT id, '노가리', 8000, 1, '🐟' FROM restaurant WHERE category = '술집/포차';
-INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
-SELECT id, '골뱅이무침', 15000, 0, '🐚' FROM restaurant WHERE category = '술집/포차';
-INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
-SELECT id, '계란말이', 10000, 0, '🥚' FROM restaurant WHERE category = '술집/포차';
-INSERT INTO restaurant_menu (restaurantId, name, price, isPopular, emoji)
-SELECT id, '생맥주 (500cc)', 4500, 0, '🍺' FROM restaurant WHERE category = '술집/포차';
-
--- 카테고리별 이미지 4~5종을 id 기준으로 순환 배정 (전체 식당 통일)
-UPDATE restaurant SET photoUrl = CASE category
-  WHEN '한식' THEN ELT((id % 5) + 1,
-    'https://images.unsplash.com/photo-1547592180-85f173990554?w=800&q=80',
-    'https://images.unsplash.com/photo-1590330297626-d7aff25a0431?w=800&q=80',
-    'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800&q=80',
-    'https://images.unsplash.com/photo-1476718406336-bb5a9690ee2a?w=800&q=80',
-    'https://images.unsplash.com/photo-1590301157890-4810ed352733?w=800&q=80')
-  WHEN '중식' THEN ELT((id % 4) + 1,
-    'https://images.unsplash.com/photo-1585238342024-78d387f4a707?w=800&q=80',
-    'https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?w=800&q=80',
-    'https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?w=800&q=80',
-    'https://images.unsplash.com/photo-1626645738196-c2a7c87a8f58?w=800&q=80')
-  WHEN '일식' THEN ELT((id % 5) + 1,
-    'https://images.unsplash.com/photo-1579871494447-9811cf80d66c?w=800&q=80',
-    'https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=800&q=80',
-    'https://images.unsplash.com/photo-1617196034796-73dfa7b1fd56?w=800&q=80',
-    'https://images.unsplash.com/photo-1611143669185-af224c5e3252?w=800&q=80',
-    'https://images.unsplash.com/photo-1580822184713-fc5400e7fe10?w=800&q=80')
-  WHEN '양식' THEN ELT((id % 5) + 1,
-    'https://images.unsplash.com/photo-1473093295043-cdd812d0e601?w=800&q=80',
-    'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&q=80',
-    'https://images.unsplash.com/photo-1563379926898-05f4575a45d8?w=800&q=80',
-    'https://images.unsplash.com/photo-1484723091739-30a097e8f929?w=800&q=80',
-    'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=800&q=80')
-  WHEN '분식' THEN ELT((id % 5) + 1,
-    'https://images.unsplash.com/photo-1476224203421-9ac39bcb3327?w=800&q=80',
-    'https://images.unsplash.com/photo-1559847844-5315695dadae?w=800&q=80',
-    'https://images.unsplash.com/photo-1532636875304-0c89119d9b4d?w=800&q=80',
-    'https://images.unsplash.com/photo-1580651214613-f4692d6d138f?w=800&q=80',
-    'https://images.unsplash.com/photo-1635363638580-c2809d049eee?w=800&q=80')
-  WHEN '카페/디저트' THEN ELT((id % 5) + 1,
-    'https://images.unsplash.com/photo-1525351484163-7529414344d8?w=800&q=80',
-    'https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=800&q=80',
-    'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=800&q=80',
-    'https://images.unsplash.com/photo-1488477181946-6428a0291777?w=800&q=80',
-    'https://images.unsplash.com/photo-1497034825429-c343d7c6a68f?w=800&q=80')
-  WHEN '치킨/피자' THEN ELT((id % 5) + 1,
-    'https://images.unsplash.com/photo-1562967914-608f82629710?w=800&q=80',
-    'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=800&q=80',
-    'https://images.unsplash.com/photo-1615887023544-3a566f29d822?w=800&q=80',
-    'https://images.unsplash.com/photo-1571407970349-bc81e7e96d47?w=800&q=80',
-    'https://images.unsplash.com/photo-1594007654729-407eedc4be65?w=800&q=80')
-  WHEN '고기/구이' THEN ELT((id % 5) + 1,
-    'https://images.unsplash.com/photo-1544025162-d76694265947?w=800&q=80',
-    'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=800&q=80',
-    'https://images.unsplash.com/photo-1552566626-52f8b828add9?w=800&q=80',
-    'https://images.unsplash.com/photo-1550317138-10000687a72b?w=800&q=80',
-    'https://images.unsplash.com/photo-1567337710282-00832b415979?w=800&q=80')
-  WHEN '해산물' THEN ELT((id % 5) + 1,
-    'https://images.unsplash.com/photo-1553621042-f6e147245754?w=800&q=80',
-    'https://images.unsplash.com/photo-1547928576-b822bc410bdf?w=800&q=80',
-    'https://images.unsplash.com/photo-1554679665-f5537f187268?w=800&q=80',
-    'https://images.unsplash.com/photo-1535399831218-d5bd36d1a6b3?w=800&q=80',
-    'https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=800&q=80')
-  WHEN '패스트푸드' THEN ELT((id % 4) + 1,
-    'https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=800&q=80',
-    'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=800&q=80',
-    'https://images.unsplash.com/photo-1550547660-d9450f859349?w=800&q=80',
-    'https://images.unsplash.com/photo-1586190848861-99aa4a171e90?w=800&q=80')
-  WHEN '술집/포차' THEN ELT((id % 5) + 1,
-    'https://images.unsplash.com/photo-1436076863939-06870fe779c2?w=800&q=80',
-    'https://images.unsplash.com/photo-1534080564583-6be75777b70a?w=800&q=80',
-    'https://images.unsplash.com/photo-1514933651103-005eec06c04b?w=800&q=80',
-    'https://images.unsplash.com/photo-1470337458703-46ad1756a187?w=800&q=80',
-    'https://images.unsplash.com/photo-1572116469696-31de0f17cc34?w=800&q=80')
-END
-WHERE category IS NOT NULL;
+-- ── 메뉴 데이터 (783개) ──
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (505,1,'된장찌개 정식',9500,1,'🍲');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (506,8,'된장찌개 정식',9500,1,'🍲');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (507,11,'된장찌개 정식',9500,1,'🍲');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (508,12,'된장찌개 정식',9500,1,'🍲');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (509,13,'된장찌개 정식',9500,1,'🍲');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (510,18,'된장찌개 정식',9500,1,'🍲');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (511,22,'된장찌개 정식',9500,1,'🍲');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (512,25,'된장찌개 정식',9500,1,'🍲');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (513,30,'된장찌개 정식',9500,1,'🍲');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (514,31,'된장찌개 정식',9500,1,'🍲');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (515,33,'된장찌개 정식',9500,1,'🍲');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (516,42,'된장찌개 정식',9500,1,'🍲');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (517,47,'된장찌개 정식',9500,1,'🍲');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (518,48,'된장찌개 정식',9500,1,'🍲');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (519,52,'된장찌개 정식',9500,1,'🍲');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (520,53,'된장찌개 정식',9500,1,'🍲');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (521,54,'된장찌개 정식',9500,1,'🍲');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (522,56,'된장찌개 정식',9500,1,'🍲');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (523,61,'된장찌개 정식',9500,1,'🍲');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (524,66,'된장찌개 정식',9500,1,'🍲');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (525,71,'된장찌개 정식',9500,1,'🍲');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (526,75,'된장찌개 정식',9500,1,'🍲');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (527,80,'된장찌개 정식',9500,1,'🍲');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (528,82,'된장찌개 정식',9500,1,'🍲');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (529,83,'된장찌개 정식',9500,1,'🍲');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (530,84,'된장찌개 정식',9500,1,'🍲');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (531,86,'된장찌개 정식',9500,1,'🍲');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (532,87,'된장찌개 정식',9500,1,'🍲');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (533,90,'된장찌개 정식',9500,1,'🍲');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (534,91,'된장찌개 정식',9500,1,'🍲');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (535,93,'된장찌개 정식',9500,1,'🍲');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (536,96,'된장찌개 정식',9500,1,'🍲');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (537,97,'된장찌개 정식',9500,1,'🍲');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (538,98,'된장찌개 정식',9500,1,'🍲');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (539,101,'된장찌개 정식',9500,1,'🍲');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (540,103,'된장찌개 정식',9500,1,'🍲');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (541,106,'된장찌개 정식',9500,1,'🍲');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (542,107,'된장찌개 정식',9500,1,'🍲');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (543,111,'된장찌개 정식',9500,1,'🍲');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (544,113,'된장찌개 정식',9500,1,'🍲');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (545,114,'된장찌개 정식',9500,1,'🍲');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (546,118,'된장찌개 정식',9500,1,'🍲');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (547,119,'된장찌개 정식',9500,1,'🍲');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (548,120,'된장찌개 정식',9500,1,'🍲');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (549,121,'된장찌개 정식',9500,1,'🍲');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (550,122,'된장찌개 정식',9500,1,'🍲');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (551,124,'된장찌개 정식',9500,1,'🍲');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (552,126,'된장찌개 정식',9500,1,'🍲');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (553,129,'된장찌개 정식',9500,1,'🍲');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (554,130,'된장찌개 정식',9500,1,'🍲');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (555,132,'된장찌개 정식',9500,1,'🍲');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (556,134,'된장찌개 정식',9500,1,'🍲');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (557,142,'된장찌개 정식',9500,1,'🍲');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (558,143,'된장찌개 정식',9500,1,'🍲');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (559,145,'된장찌개 정식',9500,1,'🍲');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (560,148,'된장찌개 정식',9500,1,'🍲');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (561,150,'된장찌개 정식',9500,1,'🍲');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (562,151,'된장찌개 정식',9500,1,'🍲');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (563,153,'된장찌개 정식',9500,1,'🍲');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (564,165,'된장찌개 정식',9500,1,'🍲');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (565,169,'된장찌개 정식',9500,1,'🍲');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (566,171,'된장찌개 정식',9500,1,'🍲');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (568,1,'제육볶음 정식',10000,0,'🍚');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (569,8,'제육볶음 정식',10000,0,'🍚');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (570,11,'제육볶음 정식',10000,0,'🍚');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (571,12,'제육볶음 정식',10000,0,'🍚');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (572,13,'제육볶음 정식',10000,0,'🍚');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (573,18,'제육볶음 정식',10000,0,'🍚');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (574,22,'제육볶음 정식',10000,0,'🍚');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (575,25,'제육볶음 정식',10000,0,'🍚');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (576,30,'제육볶음 정식',10000,0,'🍚');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (577,31,'제육볶음 정식',10000,0,'🍚');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (578,33,'제육볶음 정식',10000,0,'🍚');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (579,42,'제육볶음 정식',10000,0,'🍚');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (580,47,'제육볶음 정식',10000,0,'🍚');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (581,48,'제육볶음 정식',10000,0,'🍚');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (582,52,'제육볶음 정식',10000,0,'🍚');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (583,53,'제육볶음 정식',10000,0,'🍚');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (584,54,'제육볶음 정식',10000,0,'🍚');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (585,56,'제육볶음 정식',10000,0,'🍚');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (586,61,'제육볶음 정식',10000,0,'🍚');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (587,66,'제육볶음 정식',10000,0,'🍚');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (588,71,'제육볶음 정식',10000,0,'🍚');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (589,75,'제육볶음 정식',10000,0,'🍚');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (590,80,'제육볶음 정식',10000,0,'🍚');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (591,82,'제육볶음 정식',10000,0,'🍚');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (592,83,'제육볶음 정식',10000,0,'🍚');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (593,84,'제육볶음 정식',10000,0,'🍚');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (594,86,'제육볶음 정식',10000,0,'🍚');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (595,87,'제육볶음 정식',10000,0,'🍚');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (596,90,'제육볶음 정식',10000,0,'🍚');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (597,91,'제육볶음 정식',10000,0,'🍚');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (598,93,'제육볶음 정식',10000,0,'🍚');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (599,96,'제육볶음 정식',10000,0,'🍚');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (600,97,'제육볶음 정식',10000,0,'🍚');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (601,98,'제육볶음 정식',10000,0,'🍚');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (602,101,'제육볶음 정식',10000,0,'🍚');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (603,103,'제육볶음 정식',10000,0,'🍚');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (604,106,'제육볶음 정식',10000,0,'🍚');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (605,107,'제육볶음 정식',10000,0,'🍚');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (606,111,'제육볶음 정식',10000,0,'🍚');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (607,113,'제육볶음 정식',10000,0,'🍚');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (608,114,'제육볶음 정식',10000,0,'🍚');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (609,118,'제육볶음 정식',10000,0,'🍚');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (610,119,'제육볶음 정식',10000,0,'🍚');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (611,120,'제육볶음 정식',10000,0,'🍚');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (612,121,'제육볶음 정식',10000,0,'🍚');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (613,122,'제육볶음 정식',10000,0,'🍚');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (614,124,'제육볶음 정식',10000,0,'🍚');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (615,126,'제육볶음 정식',10000,0,'🍚');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (616,129,'제육볶음 정식',10000,0,'🍚');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (617,130,'제육볶음 정식',10000,0,'🍚');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (618,132,'제육볶음 정식',10000,0,'🍚');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (619,134,'제육볶음 정식',10000,0,'🍚');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (620,142,'제육볶음 정식',10000,0,'🍚');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (621,143,'제육볶음 정식',10000,0,'🍚');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (622,145,'제육볶음 정식',10000,0,'🍚');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (623,148,'제육볶음 정식',10000,0,'🍚');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (624,150,'제육볶음 정식',10000,0,'🍚');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (625,151,'제육볶음 정식',10000,0,'🍚');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (626,153,'제육볶음 정식',10000,0,'🍚');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (627,165,'제육볶음 정식',10000,0,'🍚');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (628,169,'제육볶음 정식',10000,0,'🍚');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (629,171,'제육볶음 정식',10000,0,'🍚');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (631,1,'순두부찌개',8500,0,'🥘');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (632,8,'순두부찌개',8500,0,'🥘');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (633,11,'순두부찌개',8500,0,'🥘');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (634,12,'순두부찌개',8500,0,'🥘');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (635,13,'순두부찌개',8500,0,'🥘');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (636,18,'순두부찌개',8500,0,'🥘');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (637,22,'순두부찌개',8500,0,'🥘');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (638,25,'순두부찌개',8500,0,'🥘');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (639,30,'순두부찌개',8500,0,'🥘');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (640,31,'순두부찌개',8500,0,'🥘');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (641,33,'순두부찌개',8500,0,'🥘');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (642,42,'순두부찌개',8500,0,'🥘');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (643,47,'순두부찌개',8500,0,'🥘');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (644,48,'순두부찌개',8500,0,'🥘');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (645,52,'순두부찌개',8500,0,'🥘');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (646,53,'순두부찌개',8500,0,'🥘');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (647,54,'순두부찌개',8500,0,'🥘');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (648,56,'순두부찌개',8500,0,'🥘');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (649,61,'순두부찌개',8500,0,'🥘');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (650,66,'순두부찌개',8500,0,'🥘');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (651,71,'순두부찌개',8500,0,'🥘');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (652,75,'순두부찌개',8500,0,'🥘');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (653,80,'순두부찌개',8500,0,'🥘');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (654,82,'순두부찌개',8500,0,'🥘');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (655,83,'순두부찌개',8500,0,'🥘');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (656,84,'순두부찌개',8500,0,'🥘');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (657,86,'순두부찌개',8500,0,'🥘');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (658,87,'순두부찌개',8500,0,'🥘');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (659,90,'순두부찌개',8500,0,'🥘');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (660,91,'순두부찌개',8500,0,'🥘');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (661,93,'순두부찌개',8500,0,'🥘');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (662,96,'순두부찌개',8500,0,'🥘');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (663,97,'순두부찌개',8500,0,'🥘');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (664,98,'순두부찌개',8500,0,'🥘');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (665,101,'순두부찌개',8500,0,'🥘');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (666,103,'순두부찌개',8500,0,'🥘');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (667,106,'순두부찌개',8500,0,'🥘');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (668,107,'순두부찌개',8500,0,'🥘');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (669,111,'순두부찌개',8500,0,'🥘');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (670,113,'순두부찌개',8500,0,'🥘');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (671,114,'순두부찌개',8500,0,'🥘');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (672,118,'순두부찌개',8500,0,'🥘');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (673,119,'순두부찌개',8500,0,'🥘');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (674,120,'순두부찌개',8500,0,'🥘');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (675,121,'순두부찌개',8500,0,'🥘');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (676,122,'순두부찌개',8500,0,'🥘');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (677,124,'순두부찌개',8500,0,'🥘');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (678,126,'순두부찌개',8500,0,'🥘');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (679,129,'순두부찌개',8500,0,'🥘');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (680,130,'순두부찌개',8500,0,'🥘');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (681,132,'순두부찌개',8500,0,'🥘');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (682,134,'순두부찌개',8500,0,'🥘');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (683,142,'순두부찌개',8500,0,'🥘');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (684,143,'순두부찌개',8500,0,'🥘');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (685,145,'순두부찌개',8500,0,'🥘');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (686,148,'순두부찌개',8500,0,'🥘');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (687,150,'순두부찌개',8500,0,'🥘');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (688,151,'순두부찌개',8500,0,'🥘');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (689,153,'순두부찌개',8500,0,'🥘');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (690,165,'순두부찌개',8500,0,'🥘');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (691,169,'순두부찌개',8500,0,'🥘');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (692,171,'순두부찌개',8500,0,'🥘');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (694,1,'비빔밥',9000,0,'🥗');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (695,8,'비빔밥',9000,0,'🥗');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (696,11,'비빔밥',9000,0,'🥗');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (697,12,'비빔밥',9000,0,'🥗');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (698,13,'비빔밥',9000,0,'🥗');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (699,18,'비빔밥',9000,0,'🥗');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (700,22,'비빔밥',9000,0,'🥗');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (701,25,'비빔밥',9000,0,'🥗');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (702,30,'비빔밥',9000,0,'🥗');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (703,31,'비빔밥',9000,0,'🥗');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (704,33,'비빔밥',9000,0,'🥗');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (705,42,'비빔밥',9000,0,'🥗');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (706,47,'비빔밥',9000,0,'🥗');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (707,48,'비빔밥',9000,0,'🥗');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (708,52,'비빔밥',9000,0,'🥗');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (709,53,'비빔밥',9000,0,'🥗');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (710,54,'비빔밥',9000,0,'🥗');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (711,56,'비빔밥',9000,0,'🥗');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (712,61,'비빔밥',9000,0,'🥗');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (713,66,'비빔밥',9000,0,'🥗');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (714,71,'비빔밥',9000,0,'🥗');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (715,75,'비빔밥',9000,0,'🥗');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (716,80,'비빔밥',9000,0,'🥗');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (717,82,'비빔밥',9000,0,'🥗');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (718,83,'비빔밥',9000,0,'🥗');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (719,84,'비빔밥',9000,0,'🥗');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (720,86,'비빔밥',9000,0,'🥗');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (721,87,'비빔밥',9000,0,'🥗');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (722,90,'비빔밥',9000,0,'🥗');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (723,91,'비빔밥',9000,0,'🥗');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (724,93,'비빔밥',9000,0,'🥗');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (725,96,'비빔밥',9000,0,'🥗');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (726,97,'비빔밥',9000,0,'🥗');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (727,98,'비빔밥',9000,0,'🥗');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (728,101,'비빔밥',9000,0,'🥗');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (729,103,'비빔밥',9000,0,'🥗');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (730,106,'비빔밥',9000,0,'🥗');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (731,107,'비빔밥',9000,0,'🥗');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (732,111,'비빔밥',9000,0,'🥗');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (733,113,'비빔밥',9000,0,'🥗');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (734,114,'비빔밥',9000,0,'🥗');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (735,118,'비빔밥',9000,0,'🥗');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (736,119,'비빔밥',9000,0,'🥗');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (737,120,'비빔밥',9000,0,'🥗');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (738,121,'비빔밥',9000,0,'🥗');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (739,122,'비빔밥',9000,0,'🥗');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (740,124,'비빔밥',9000,0,'🥗');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (741,126,'비빔밥',9000,0,'🥗');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (742,129,'비빔밥',9000,0,'🥗');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (743,130,'비빔밥',9000,0,'🥗');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (744,132,'비빔밥',9000,0,'🥗');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (745,134,'비빔밥',9000,0,'🥗');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (746,142,'비빔밥',9000,0,'🥗');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (747,143,'비빔밥',9000,0,'🥗');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (748,145,'비빔밥',9000,0,'🥗');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (749,148,'비빔밥',9000,0,'🥗');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (750,150,'비빔밥',9000,0,'🥗');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (751,151,'비빔밥',9000,0,'🥗');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (752,153,'비빔밥',9000,0,'🥗');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (753,165,'비빔밥',9000,0,'🥗');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (754,169,'비빔밥',9000,0,'🥗');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (755,171,'비빔밥',9000,0,'🥗');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (757,1,'갈비탕',14000,0,'🍖');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (758,8,'갈비탕',14000,0,'🍖');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (759,11,'갈비탕',14000,0,'🍖');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (760,12,'갈비탕',14000,0,'🍖');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (761,13,'갈비탕',14000,0,'🍖');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (762,18,'갈비탕',14000,0,'🍖');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (763,22,'갈비탕',14000,0,'🍖');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (764,25,'갈비탕',14000,0,'🍖');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (765,30,'갈비탕',14000,0,'🍖');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (766,31,'갈비탕',14000,0,'🍖');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (767,33,'갈비탕',14000,0,'🍖');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (768,42,'갈비탕',14000,0,'🍖');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (769,47,'갈비탕',14000,0,'🍖');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (770,48,'갈비탕',14000,0,'🍖');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (771,52,'갈비탕',14000,0,'🍖');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (772,53,'갈비탕',14000,0,'🍖');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (773,54,'갈비탕',14000,0,'🍖');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (774,56,'갈비탕',14000,0,'🍖');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (775,61,'갈비탕',14000,0,'🍖');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (776,66,'갈비탕',14000,0,'🍖');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (777,71,'갈비탕',14000,0,'🍖');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (778,75,'갈비탕',14000,0,'🍖');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (779,80,'갈비탕',14000,0,'🍖');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (780,82,'갈비탕',14000,0,'🍖');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (781,83,'갈비탕',14000,0,'🍖');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (782,84,'갈비탕',14000,0,'🍖');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (783,86,'갈비탕',14000,0,'🍖');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (784,87,'갈비탕',14000,0,'🍖');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (785,90,'갈비탕',14000,0,'🍖');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (786,91,'갈비탕',14000,0,'🍖');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (787,93,'갈비탕',14000,0,'🍖');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (788,96,'갈비탕',14000,0,'🍖');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (789,97,'갈비탕',14000,0,'🍖');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (790,98,'갈비탕',14000,0,'🍖');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (791,101,'갈비탕',14000,0,'🍖');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (792,103,'갈비탕',14000,0,'🍖');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (793,106,'갈비탕',14000,0,'🍖');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (794,107,'갈비탕',14000,0,'🍖');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (795,111,'갈비탕',14000,0,'🍖');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (796,113,'갈비탕',14000,0,'🍖');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (797,114,'갈비탕',14000,0,'🍖');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (798,118,'갈비탕',14000,0,'🍖');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (799,119,'갈비탕',14000,0,'🍖');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (800,120,'갈비탕',14000,0,'🍖');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (801,121,'갈비탕',14000,0,'🍖');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (802,122,'갈비탕',14000,0,'🍖');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (803,124,'갈비탕',14000,0,'🍖');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (804,126,'갈비탕',14000,0,'🍖');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (805,129,'갈비탕',14000,0,'🍖');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (806,130,'갈비탕',14000,0,'🍖');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (807,132,'갈비탕',14000,0,'🍖');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (808,134,'갈비탕',14000,0,'🍖');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (809,142,'갈비탕',14000,0,'🍖');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (810,143,'갈비탕',14000,0,'🍖');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (811,145,'갈비탕',14000,0,'🍖');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (812,148,'갈비탕',14000,0,'🍖');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (813,150,'갈비탕',14000,0,'🍖');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (814,151,'갈비탕',14000,0,'🍖');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (815,153,'갈비탕',14000,0,'🍖');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (816,165,'갈비탕',14000,0,'🍖');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (817,169,'갈비탕',14000,0,'🍖');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (818,171,'갈비탕',14000,0,'🍖');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (820,16,'짜장면',7000,1,'🍜');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (821,24,'짜장면',7000,1,'🍜');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (822,37,'짜장면',7000,1,'🍜');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (823,55,'짜장면',7000,1,'🍜');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (824,78,'짜장면',7000,1,'🍜');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (825,170,'짜장면',7000,1,'🍜');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (827,16,'짬뽕',8000,0,'🍲');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (828,24,'짬뽕',8000,0,'🍲');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (829,37,'짬뽕',8000,0,'🍲');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (830,55,'짬뽕',8000,0,'🍲');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (831,78,'짬뽕',8000,0,'🍲');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (832,170,'짬뽕',8000,0,'🍲');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (834,16,'탕수육 (소)',18000,0,'🍖');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (835,24,'탕수육 (소)',18000,0,'🍖');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (836,37,'탕수육 (소)',18000,0,'🍖');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (837,55,'탕수육 (소)',18000,0,'🍖');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (838,78,'탕수육 (소)',18000,0,'🍖');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (839,170,'탕수육 (소)',18000,0,'🍖');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (841,16,'볶음밥',8000,0,'🍚');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (842,24,'볶음밥',8000,0,'🍚');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (843,37,'볶음밥',8000,0,'🍚');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (844,55,'볶음밥',8000,0,'🍚');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (845,78,'볶음밥',8000,0,'🍚');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (846,170,'볶음밥',8000,0,'🍚');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (848,7,'모둠초밥',16000,1,'🍣');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (849,14,'모둠초밥',16000,1,'🍣');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (850,131,'모둠초밥',16000,1,'🍣');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (851,7,'사케동',15000,0,'🍱');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (852,14,'사케동',15000,0,'🍱');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (853,131,'사케동',15000,0,'🍱');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (854,7,'우동',8000,0,'🍜');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (855,14,'우동',8000,0,'🍜');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (856,131,'우동',8000,0,'🍜');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (857,7,'가라아게',12000,0,'🍗');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (858,14,'가라아게',12000,0,'🍗');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (859,131,'가라아게',12000,0,'🍗');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (860,3,'크림 파스타',15000,1,'🍝');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (861,15,'크림 파스타',15000,1,'🍝');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (862,26,'크림 파스타',15000,1,'🍝');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (863,59,'크림 파스타',15000,1,'🍝');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (864,73,'크림 파스타',15000,1,'🍝');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (865,116,'크림 파스타',15000,1,'🍝');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (866,163,'크림 파스타',15000,1,'🍝');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (867,164,'크림 파스타',15000,1,'🍝');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (875,3,'토마토 파스타',14000,0,'🍝');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (876,15,'토마토 파스타',14000,0,'🍝');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (877,26,'토마토 파스타',14000,0,'🍝');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (878,59,'토마토 파스타',14000,0,'🍝');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (879,73,'토마토 파스타',14000,0,'🍝');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (880,116,'토마토 파스타',14000,0,'🍝');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (881,163,'토마토 파스타',14000,0,'🍝');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (882,164,'토마토 파스타',14000,0,'🍝');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (890,3,'마르게리타 피자',16000,0,'🍕');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (891,15,'마르게리타 피자',16000,0,'🍕');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (892,26,'마르게리타 피자',16000,0,'🍕');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (893,59,'마르게리타 피자',16000,0,'🍕');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (894,73,'마르게리타 피자',16000,0,'🍕');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (895,116,'마르게리타 피자',16000,0,'🍕');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (896,163,'마르게리타 피자',16000,0,'🍕');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (897,164,'마르게리타 피자',16000,0,'🍕');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (905,3,'안심 스테이크',29000,0,'🥩');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (906,15,'안심 스테이크',29000,0,'🥩');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (907,26,'안심 스테이크',29000,0,'🥩');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (908,59,'안심 스테이크',29000,0,'🥩');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (909,73,'안심 스테이크',29000,0,'🥩');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (910,116,'안심 스테이크',29000,0,'🥩');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (911,163,'안심 스테이크',29000,0,'🥩');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (912,164,'안심 스테이크',29000,0,'🥩');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (920,5,'떡볶이',5000,1,'🌶️');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (921,36,'떡볶이',5000,1,'🌶️');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (922,40,'떡볶이',5000,1,'🌶️');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (923,60,'떡볶이',5000,1,'🌶️');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (924,72,'떡볶이',5000,1,'🌶️');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (925,135,'떡볶이',5000,1,'🌶️');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (926,157,'떡볶이',5000,1,'🌶️');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (927,5,'김밥',4000,0,'🍙');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (928,36,'김밥',4000,0,'🍙');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (929,40,'김밥',4000,0,'🍙');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (930,60,'김밥',4000,0,'🍙');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (931,72,'김밥',4000,0,'🍙');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (932,135,'김밥',4000,0,'🍙');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (933,157,'김밥',4000,0,'🍙');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (934,5,'순대',6000,0,'🥟');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (935,36,'순대',6000,0,'🥟');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (936,40,'순대',6000,0,'🥟');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (937,60,'순대',6000,0,'🥟');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (938,72,'순대',6000,0,'🥟');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (939,135,'순대',6000,0,'🥟');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (940,157,'순대',6000,0,'🥟');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (941,5,'모둠튀김',5000,0,'🍤');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (942,36,'모둠튀김',5000,0,'🍤');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (943,40,'모둠튀김',5000,0,'🍤');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (944,60,'모둠튀김',5000,0,'🍤');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (945,72,'모둠튀김',5000,0,'🍤');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (946,135,'모둠튀김',5000,0,'🍤');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (947,157,'모둠튀김',5000,0,'🍤');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (948,5,'라볶이',7000,0,'🍜');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (949,36,'라볶이',7000,0,'🍜');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (950,40,'라볶이',7000,0,'🍜');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (951,60,'라볶이',7000,0,'🍜');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (952,72,'라볶이',7000,0,'🍜');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (953,135,'라볶이',7000,0,'🍜');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (954,157,'라볶이',7000,0,'🍜');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (955,9,'아메리카노',4500,1,'☕');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (956,10,'아메리카노',4500,1,'☕');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (957,20,'아메리카노',4500,1,'☕');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (958,27,'아메리카노',4500,1,'☕');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (959,38,'아메리카노',4500,1,'☕');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (960,41,'아메리카노',4500,1,'☕');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (961,45,'아메리카노',4500,1,'☕');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (962,49,'아메리카노',4500,1,'☕');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (963,69,'아메리카노',4500,1,'☕');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (964,77,'아메리카노',4500,1,'☕');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (965,88,'아메리카노',4500,1,'☕');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (966,100,'아메리카노',4500,1,'☕');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (967,137,'아메리카노',4500,1,'☕');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (968,155,'아메리카노',4500,1,'☕');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (969,166,'아메리카노',4500,1,'☕');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (970,9,'카페라떼',5000,0,'🥛');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (971,10,'카페라떼',5000,0,'🥛');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (972,20,'카페라떼',5000,0,'🥛');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (973,27,'카페라떼',5000,0,'🥛');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (974,38,'카페라떼',5000,0,'🥛');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (975,41,'카페라떼',5000,0,'🥛');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (976,45,'카페라떼',5000,0,'🥛');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (977,49,'카페라떼',5000,0,'🥛');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (978,69,'카페라떼',5000,0,'🥛');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (979,77,'카페라떼',5000,0,'🥛');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (980,88,'카페라떼',5000,0,'🥛');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (981,100,'카페라떼',5000,0,'🥛');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (982,137,'카페라떼',5000,0,'🥛');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (983,155,'카페라떼',5000,0,'🥛');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (984,166,'카페라떼',5000,0,'🥛');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (985,9,'크루아상',4800,0,'🥐');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (986,10,'크루아상',4800,0,'🥐');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (987,20,'크루아상',4800,0,'🥐');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (988,27,'크루아상',4800,0,'🥐');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (989,38,'크루아상',4800,0,'🥐');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (990,41,'크루아상',4800,0,'🥐');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (991,45,'크루아상',4800,0,'🥐');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (992,49,'크루아상',4800,0,'🥐');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (993,69,'크루아상',4800,0,'🥐');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (994,77,'크루아상',4800,0,'🥐');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (995,88,'크루아상',4800,0,'🥐');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (996,100,'크루아상',4800,0,'🥐');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (997,137,'크루아상',4800,0,'🥐');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (998,155,'크루아상',4800,0,'🥐');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (999,166,'크루아상',4800,0,'🥐');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1000,9,'치즈케이크',6500,0,'🍰');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1001,10,'치즈케이크',6500,0,'🍰');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1002,20,'치즈케이크',6500,0,'🍰');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1003,27,'치즈케이크',6500,0,'🍰');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1004,38,'치즈케이크',6500,0,'🍰');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1005,41,'치즈케이크',6500,0,'🍰');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1006,45,'치즈케이크',6500,0,'🍰');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1007,49,'치즈케이크',6500,0,'🍰');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1008,69,'치즈케이크',6500,0,'🍰');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1009,77,'치즈케이크',6500,0,'🍰');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1010,88,'치즈케이크',6500,0,'🍰');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1011,100,'치즈케이크',6500,0,'🍰');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1012,137,'치즈케이크',6500,0,'🍰');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1013,155,'치즈케이크',6500,0,'🍰');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1014,166,'치즈케이크',6500,0,'🍰');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1015,17,'후라이드 치킨',19000,1,'🍗');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1016,23,'후라이드 치킨',19000,1,'🍗');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1017,50,'후라이드 치킨',19000,1,'🍗');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1018,68,'후라이드 치킨',19000,1,'🍗');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1019,89,'후라이드 치킨',19000,1,'🍗');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1020,133,'후라이드 치킨',19000,1,'🍗');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1022,17,'양념치킨',20000,0,'🍗');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1023,23,'양념치킨',20000,0,'🍗');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1024,50,'양념치킨',20000,0,'🍗');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1025,68,'양념치킨',20000,0,'🍗');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1026,89,'양념치킨',20000,0,'🍗');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1027,133,'양념치킨',20000,0,'🍗');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1029,17,'페퍼로니 피자',21000,0,'🍕');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1030,23,'페퍼로니 피자',21000,0,'🍕');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1031,50,'페퍼로니 피자',21000,0,'🍕');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1032,68,'페퍼로니 피자',21000,0,'🍕');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1033,89,'페퍼로니 피자',21000,0,'🍕');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1034,133,'페퍼로니 피자',21000,0,'🍕');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1036,17,'치즈볼',6000,0,'🧀');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1037,23,'치즈볼',6000,0,'🧀');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1038,50,'치즈볼',6000,0,'🧀');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1039,68,'치즈볼',6000,0,'🧀');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1040,89,'치즈볼',6000,0,'🧀');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1041,133,'치즈볼',6000,0,'🧀');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1043,4,'삼겹살 (150g)',15000,1,'🥓');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1044,21,'삼겹살 (150g)',15000,1,'🥓');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1045,28,'삼겹살 (150g)',15000,1,'🥓');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1046,35,'삼겹살 (150g)',15000,1,'🥓');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1047,39,'삼겹살 (150g)',15000,1,'🥓');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1048,43,'삼겹살 (150g)',15000,1,'🥓');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1049,44,'삼겹살 (150g)',15000,1,'🥓');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1050,58,'삼겹살 (150g)',15000,1,'🥓');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1051,65,'삼겹살 (150g)',15000,1,'🥓');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1052,70,'삼겹살 (150g)',15000,1,'🥓');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1053,79,'삼겹살 (150g)',15000,1,'🥓');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1054,85,'삼겹살 (150g)',15000,1,'🥓');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1055,99,'삼겹살 (150g)',15000,1,'🥓');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1056,104,'삼겹살 (150g)',15000,1,'🥓');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1057,105,'삼겹살 (150g)',15000,1,'🥓');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1058,117,'삼겹살 (150g)',15000,1,'🥓');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1059,125,'삼겹살 (150g)',15000,1,'🥓');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1060,136,'삼겹살 (150g)',15000,1,'🥓');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1061,138,'삼겹살 (150g)',15000,1,'🥓');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1062,139,'삼겹살 (150g)',15000,1,'🥓');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1063,144,'삼겹살 (150g)',15000,1,'🥓');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1064,154,'삼겹살 (150g)',15000,1,'🥓');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1065,156,'삼겹살 (150g)',15000,1,'🥓');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1066,158,'삼겹살 (150g)',15000,1,'🥓');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1067,161,'삼겹살 (150g)',15000,1,'🥓');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1068,167,'삼겹살 (150g)',15000,1,'🥓');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1074,4,'목살 (150g)',14000,0,'🥩');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1075,21,'목살 (150g)',14000,0,'🥩');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1076,28,'목살 (150g)',14000,0,'🥩');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1077,35,'목살 (150g)',14000,0,'🥩');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1078,39,'목살 (150g)',14000,0,'🥩');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1079,43,'목살 (150g)',14000,0,'🥩');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1080,44,'목살 (150g)',14000,0,'🥩');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1081,58,'목살 (150g)',14000,0,'🥩');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1082,65,'목살 (150g)',14000,0,'🥩');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1083,70,'목살 (150g)',14000,0,'🥩');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1084,79,'목살 (150g)',14000,0,'🥩');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1085,85,'목살 (150g)',14000,0,'🥩');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1086,99,'목살 (150g)',14000,0,'🥩');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1087,104,'목살 (150g)',14000,0,'🥩');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1088,105,'목살 (150g)',14000,0,'🥩');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1089,117,'목살 (150g)',14000,0,'🥩');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1090,125,'목살 (150g)',14000,0,'🥩');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1091,136,'목살 (150g)',14000,0,'🥩');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1092,138,'목살 (150g)',14000,0,'🥩');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1093,139,'목살 (150g)',14000,0,'🥩');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1094,144,'목살 (150g)',14000,0,'🥩');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1095,154,'목살 (150g)',14000,0,'🥩');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1096,156,'목살 (150g)',14000,0,'🥩');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1097,158,'목살 (150g)',14000,0,'🥩');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1098,161,'목살 (150g)',14000,0,'🥩');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1099,167,'목살 (150g)',14000,0,'🥩');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1105,4,'양념갈비 (200g)',22000,0,'🍖');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1106,21,'양념갈비 (200g)',22000,0,'🍖');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1107,28,'양념갈비 (200g)',22000,0,'🍖');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1108,35,'양념갈비 (200g)',22000,0,'🍖');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1109,39,'양념갈비 (200g)',22000,0,'🍖');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1110,43,'양념갈비 (200g)',22000,0,'🍖');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1111,44,'양념갈비 (200g)',22000,0,'🍖');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1112,58,'양념갈비 (200g)',22000,0,'🍖');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1113,65,'양념갈비 (200g)',22000,0,'🍖');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1114,70,'양념갈비 (200g)',22000,0,'🍖');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1115,79,'양념갈비 (200g)',22000,0,'🍖');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1116,85,'양념갈비 (200g)',22000,0,'🍖');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1117,99,'양념갈비 (200g)',22000,0,'🍖');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1118,104,'양념갈비 (200g)',22000,0,'🍖');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1119,105,'양념갈비 (200g)',22000,0,'🍖');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1120,117,'양념갈비 (200g)',22000,0,'🍖');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1121,125,'양념갈비 (200g)',22000,0,'🍖');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1122,136,'양념갈비 (200g)',22000,0,'🍖');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1123,138,'양념갈비 (200g)',22000,0,'🍖');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1124,139,'양념갈비 (200g)',22000,0,'🍖');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1125,144,'양념갈비 (200g)',22000,0,'🍖');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1126,154,'양념갈비 (200g)',22000,0,'🍖');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1127,156,'양념갈비 (200g)',22000,0,'🍖');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1128,158,'양념갈비 (200g)',22000,0,'🍖');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1129,161,'양념갈비 (200g)',22000,0,'🍖');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1130,167,'양념갈비 (200g)',22000,0,'🍖');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1136,4,'된장찌개',7000,0,'🍲');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1137,21,'된장찌개',7000,0,'🍲');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1138,28,'된장찌개',7000,0,'🍲');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1139,35,'된장찌개',7000,0,'🍲');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1140,39,'된장찌개',7000,0,'🍲');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1141,43,'된장찌개',7000,0,'🍲');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1142,44,'된장찌개',7000,0,'🍲');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1143,58,'된장찌개',7000,0,'🍲');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1144,65,'된장찌개',7000,0,'🍲');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1145,70,'된장찌개',7000,0,'🍲');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1146,79,'된장찌개',7000,0,'🍲');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1147,85,'된장찌개',7000,0,'🍲');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1148,99,'된장찌개',7000,0,'🍲');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1149,104,'된장찌개',7000,0,'🍲');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1150,105,'된장찌개',7000,0,'🍲');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1151,117,'된장찌개',7000,0,'🍲');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1152,125,'된장찌개',7000,0,'🍲');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1153,136,'된장찌개',7000,0,'🍲');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1154,138,'된장찌개',7000,0,'🍲');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1155,139,'된장찌개',7000,0,'🍲');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1156,144,'된장찌개',7000,0,'🍲');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1157,154,'된장찌개',7000,0,'🍲');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1158,156,'된장찌개',7000,0,'🍲');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1159,158,'된장찌개',7000,0,'🍲');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1160,161,'된장찌개',7000,0,'🍲');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1161,167,'된장찌개',7000,0,'🍲');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1167,4,'물냉면',9000,0,'🍜');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1168,21,'물냉면',9000,0,'🍜');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1169,28,'물냉면',9000,0,'🍜');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1170,35,'물냉면',9000,0,'🍜');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1171,39,'물냉면',9000,0,'🍜');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1172,43,'물냉면',9000,0,'🍜');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1173,44,'물냉면',9000,0,'🍜');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1174,58,'물냉면',9000,0,'🍜');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1175,65,'물냉면',9000,0,'🍜');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1176,70,'물냉면',9000,0,'🍜');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1177,79,'물냉면',9000,0,'🍜');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1178,85,'물냉면',9000,0,'🍜');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1179,99,'물냉면',9000,0,'🍜');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1180,104,'물냉면',9000,0,'🍜');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1181,105,'물냉면',9000,0,'🍜');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1182,117,'물냉면',9000,0,'🍜');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1183,125,'물냉면',9000,0,'🍜');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1184,136,'물냉면',9000,0,'🍜');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1185,138,'물냉면',9000,0,'🍜');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1186,139,'물냉면',9000,0,'🍜');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1187,144,'물냉면',9000,0,'🍜');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1188,154,'물냉면',9000,0,'🍜');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1189,156,'물냉면',9000,0,'🍜');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1190,158,'물냉면',9000,0,'🍜');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1191,161,'물냉면',9000,0,'🍜');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1192,167,'물냉면',9000,0,'🍜');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1198,29,'모둠회 (소)',35000,1,'🐟');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1199,32,'모둠회 (소)',35000,1,'🐟');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1200,34,'모둠회 (소)',35000,1,'🐟');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1201,46,'모둠회 (소)',35000,1,'🐟');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1202,51,'모둠회 (소)',35000,1,'🐟');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1203,57,'모둠회 (소)',35000,1,'🐟');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1204,62,'모둠회 (소)',35000,1,'🐟');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1205,63,'모둠회 (소)',35000,1,'🐟');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1206,64,'모둠회 (소)',35000,1,'🐟');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1207,74,'모둠회 (소)',35000,1,'🐟');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1208,76,'모둠회 (소)',35000,1,'🐟');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1209,81,'모둠회 (소)',35000,1,'🐟');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1210,92,'모둠회 (소)',35000,1,'🐟');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1211,94,'모둠회 (소)',35000,1,'🐟');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1212,95,'모둠회 (소)',35000,1,'🐟');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1213,102,'모둠회 (소)',35000,1,'🐟');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1214,108,'모둠회 (소)',35000,1,'🐟');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1215,109,'모둠회 (소)',35000,1,'🐟');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1216,112,'모둠회 (소)',35000,1,'🐟');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1217,115,'모둠회 (소)',35000,1,'🐟');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1218,123,'모둠회 (소)',35000,1,'🐟');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1219,127,'모둠회 (소)',35000,1,'🐟');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1220,128,'모둠회 (소)',35000,1,'🐟');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1221,140,'모둠회 (소)',35000,1,'🐟');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1222,141,'모둠회 (소)',35000,1,'🐟');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1223,146,'모둠회 (소)',35000,1,'🐟');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1224,147,'모둠회 (소)',35000,1,'🐟');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1225,149,'모둠회 (소)',35000,1,'🐟');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1226,152,'모둠회 (소)',35000,1,'🐟');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1227,159,'모둠회 (소)',35000,1,'🐟');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1228,160,'모둠회 (소)',35000,1,'🐟');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1229,162,'모둠회 (소)',35000,1,'🐟');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1261,29,'물회',15000,0,'🥣');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1262,32,'물회',15000,0,'🥣');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1263,34,'물회',15000,0,'🥣');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1264,46,'물회',15000,0,'🥣');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1265,51,'물회',15000,0,'🥣');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1266,57,'물회',15000,0,'🥣');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1267,62,'물회',15000,0,'🥣');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1268,63,'물회',15000,0,'🥣');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1269,64,'물회',15000,0,'🥣');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1270,74,'물회',15000,0,'🥣');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1271,76,'물회',15000,0,'🥣');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1272,81,'물회',15000,0,'🥣');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1273,92,'물회',15000,0,'🥣');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1274,94,'물회',15000,0,'🥣');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1275,95,'물회',15000,0,'🥣');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1276,102,'물회',15000,0,'🥣');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1277,108,'물회',15000,0,'🥣');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1278,109,'물회',15000,0,'🥣');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1279,112,'물회',15000,0,'🥣');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1280,115,'물회',15000,0,'🥣');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1281,123,'물회',15000,0,'🥣');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1282,127,'물회',15000,0,'🥣');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1283,128,'물회',15000,0,'🥣');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1284,140,'물회',15000,0,'🥣');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1285,141,'물회',15000,0,'🥣');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1286,146,'물회',15000,0,'🥣');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1287,147,'물회',15000,0,'🥣');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1288,149,'물회',15000,0,'🥣');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1289,152,'물회',15000,0,'🥣');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1290,159,'물회',15000,0,'🥣');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1291,160,'물회',15000,0,'🥣');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1292,162,'물회',15000,0,'🥣');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1324,29,'해물탕 (중)',40000,0,'🦐');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1325,32,'해물탕 (중)',40000,0,'🦐');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1326,34,'해물탕 (중)',40000,0,'🦐');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1327,46,'해물탕 (중)',40000,0,'🦐');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1328,51,'해물탕 (중)',40000,0,'🦐');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1329,57,'해물탕 (중)',40000,0,'🦐');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1330,62,'해물탕 (중)',40000,0,'🦐');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1331,63,'해물탕 (중)',40000,0,'🦐');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1332,64,'해물탕 (중)',40000,0,'🦐');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1333,74,'해물탕 (중)',40000,0,'🦐');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1334,76,'해물탕 (중)',40000,0,'🦐');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1335,81,'해물탕 (중)',40000,0,'🦐');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1336,92,'해물탕 (중)',40000,0,'🦐');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1337,94,'해물탕 (중)',40000,0,'🦐');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1338,95,'해물탕 (중)',40000,0,'🦐');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1339,102,'해물탕 (중)',40000,0,'🦐');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1340,108,'해물탕 (중)',40000,0,'🦐');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1341,109,'해물탕 (중)',40000,0,'🦐');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1342,112,'해물탕 (중)',40000,0,'🦐');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1343,115,'해물탕 (중)',40000,0,'🦐');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1344,123,'해물탕 (중)',40000,0,'🦐');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1345,127,'해물탕 (중)',40000,0,'🦐');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1346,128,'해물탕 (중)',40000,0,'🦐');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1347,140,'해물탕 (중)',40000,0,'🦐');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1348,141,'해물탕 (중)',40000,0,'🦐');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1349,146,'해물탕 (중)',40000,0,'🦐');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1350,147,'해물탕 (중)',40000,0,'🦐');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1351,149,'해물탕 (중)',40000,0,'🦐');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1352,152,'해물탕 (중)',40000,0,'🦐');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1353,159,'해물탕 (중)',40000,0,'🦐');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1354,160,'해물탕 (중)',40000,0,'🦐');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1355,162,'해물탕 (중)',40000,0,'🦐');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1387,29,'새우구이',25000,0,'🦞');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1388,32,'새우구이',25000,0,'🦞');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1389,34,'새우구이',25000,0,'🦞');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1390,46,'새우구이',25000,0,'🦞');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1391,51,'새우구이',25000,0,'🦞');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1392,57,'새우구이',25000,0,'🦞');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1393,62,'새우구이',25000,0,'🦞');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1394,63,'새우구이',25000,0,'🦞');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1395,64,'새우구이',25000,0,'🦞');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1396,74,'새우구이',25000,0,'🦞');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1397,76,'새우구이',25000,0,'🦞');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1398,81,'새우구이',25000,0,'🦞');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1399,92,'새우구이',25000,0,'🦞');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1400,94,'새우구이',25000,0,'🦞');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1401,95,'새우구이',25000,0,'🦞');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1402,102,'새우구이',25000,0,'🦞');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1403,108,'새우구이',25000,0,'🦞');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1404,109,'새우구이',25000,0,'🦞');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1405,112,'새우구이',25000,0,'🦞');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1406,115,'새우구이',25000,0,'🦞');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1407,123,'새우구이',25000,0,'🦞');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1408,127,'새우구이',25000,0,'🦞');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1409,128,'새우구이',25000,0,'🦞');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1410,140,'새우구이',25000,0,'🦞');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1411,141,'새우구이',25000,0,'🦞');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1412,146,'새우구이',25000,0,'🦞');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1413,147,'새우구이',25000,0,'🦞');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1414,149,'새우구이',25000,0,'🦞');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1415,152,'새우구이',25000,0,'🦞');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1416,159,'새우구이',25000,0,'🦞');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1417,160,'새우구이',25000,0,'🦞');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1418,162,'새우구이',25000,0,'🦞');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1450,6,'치즈버거 세트',9500,1,'🍔');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1451,67,'치즈버거 세트',9500,1,'🍔');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1452,168,'치즈버거 세트',9500,1,'🍔');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1453,6,'더블버거 세트',11500,0,'🍔');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1454,67,'더블버거 세트',11500,0,'🍔');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1455,168,'더블버거 세트',11500,0,'🍔');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1456,6,'감자튀김',4000,0,'🍟');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1457,67,'감자튀김',4000,0,'🍟');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1458,168,'감자튀김',4000,0,'🍟');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1459,6,'콜라',2500,0,'🥤');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1460,67,'콜라',2500,0,'🥤');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1461,168,'콜라',2500,0,'🥤');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1462,2,'노가리',8000,1,'🐟');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1463,19,'노가리',8000,1,'🐟');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1464,110,'노가리',8000,1,'🐟');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1465,172,'노가리',8000,1,'🐟');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1469,2,'골뱅이무침',15000,0,'🐚');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1470,19,'골뱅이무침',15000,0,'🐚');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1471,110,'골뱅이무침',15000,0,'🐚');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1472,172,'골뱅이무침',15000,0,'🐚');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1476,2,'계란말이',10000,0,'🥚');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1477,19,'계란말이',10000,0,'🥚');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1478,110,'계란말이',10000,0,'🥚');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1479,172,'계란말이',10000,0,'🥚');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1483,2,'생맥주 (500cc)',4500,0,'🍺');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1484,19,'생맥주 (500cc)',4500,0,'🍺');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1485,110,'생맥주 (500cc)',4500,0,'🍺');
+INSERT INTO `restaurant_menu` (`id`, `restaurantId`, `name`, `price`, `isPopular`, `emoji`) VALUES (1486,172,'생맥주 (500cc)',4500,0,'🍺');
