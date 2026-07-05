@@ -10,10 +10,10 @@ import {
   Clock,
   Pencil,
 } from 'lucide-react';
-import { restaurantsApi, pinsApi, photoSrc } from '../api/restaurants';
-import type { Restaurant, Pin, RestaurantPin, CreatePinDto } from '../api/restaurants';
-import PinForm from '../components/PinForm';
-import { haversineKm } from '../utils/distance';
+import { restaurantsApi, pinsApi, photoSrc } from '../../api/restaurants';
+import type { Restaurant, Pin, RestaurantPin, CreatePinDto } from '../../api/restaurants';
+import PinForm from '../../components/PinForm';
+import { haversineKm } from '../../utils/distance';
 import './RestaurantDetailPage.css';
 
 type Tab = 'menu' | 'photo' | 'review';

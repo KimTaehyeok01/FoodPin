@@ -2,10 +2,10 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ChevronLeft } from 'lucide-react';
-import { restaurantsApi, pinsApi } from '../api/restaurants';
-import type { Restaurant, Pin } from '../api/restaurants';
-import RestaurantCard from '../components/RestaurantCard';
-import { haversineKm } from '../utils/distance';
+import { restaurantsApi, pinsApi } from '../../api/restaurants';
+import type { Restaurant, Pin } from '../../api/restaurants';
+import RestaurantCard from '../../components/RestaurantCard';
+import { haversineKm } from '../../utils/distance';
 import './RestaurantListPage.css';
 
 const CATEGORIES = ['전체', '한식', '중식', '일식', '양식', '분식', '카페/디저트', '치킨/피자', '고기/구이', '해산물'];

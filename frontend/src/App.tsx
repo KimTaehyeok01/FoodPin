@@ -1,14 +1,14 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import OnboardingPage from './pages/OnboardingPage';
-import LoginPage from './pages/LoginPage';
-import RegisterPage from './pages/RegisterPage';
-import AuthCallback from './pages/AuthCallback';
+import OnboardingPage from './pages/auth/OnboardingPage';
+import LoginPage from './pages/auth/LoginPage';
+import RegisterPage from './pages/auth/RegisterPage';
+import AuthCallback from './pages/auth/AuthCallback';
 import HomePage from './pages/HomePage';
 import MapPage from './pages/MapPage';
-import MyPage from './pages/MyPage';
-import RestaurantDetailPage from './pages/RestaurantDetailPage';
-import RestaurantListPage from './pages/RestaurantListPage';
-import FavoritesPage from './pages/FavoritesPage';
+import MyPage from './pages/my/MyPage';
+import FavoritesPage from './pages/my/FavoritesPage';
+import RestaurantDetailPage from './pages/restaurant/RestaurantDetailPage';
+import RestaurantListPage from './pages/restaurant/RestaurantListPage';
 import BottomNav from './components/BottomNav';
 import './App.css';
 

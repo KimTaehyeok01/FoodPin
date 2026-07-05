@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ChevronRight, Heart, Star, MapPin, Bell, Shield, HelpCircle, LogOut, Edit } from 'lucide-react';
-import { pinsApi, photoSrc } from '../api/restaurants';
-import type { Pin } from '../api/restaurants';
+import { pinsApi, photoSrc } from '../../api/restaurants';
+import type { Pin } from '../../api/restaurants';
 import './MyPage.css';
 
 function parseJwt(token: string) {

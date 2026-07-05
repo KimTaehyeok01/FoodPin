@@ -2,9 +2,9 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ChevronLeft, MapPin, Star, Trash2 } from 'lucide-react';
-import { pinsApi, photoSrc } from '../api/restaurants';
-import type { Pin } from '../api/restaurants';
-import { haversineKm } from '../utils/distance';
+import { pinsApi, photoSrc } from '../../api/restaurants';
+import type { Pin } from '../../api/restaurants';
+import { haversineKm } from '../../utils/distance';
 import './FavoritesPage.css';
 
 export default function FavoritesPage() {
