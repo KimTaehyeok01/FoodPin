@@ -85,7 +85,9 @@ async function request<T>(path: string, options?: RequestInit): Promise<T> {
     throw new Error(error.message ?? `HTTP ${res.status}`);
   }
   if (res.status === 204) return undefined as T;
-  return res.json();
+  // 본문이 비어 있는 응답(예: DELETE 성공)은 JSON 파싱을 건너뛴다
+  const text = await res.text();
+  return (text ? JSON.parse(text) : undefined) as T;
 }
 
 export async function uploadImage(file: File): Promise<string> {

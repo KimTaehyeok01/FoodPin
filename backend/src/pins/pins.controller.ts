@@ -3,6 +3,8 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
+  HttpStatus,
   Param,
   ParseIntPipe,
   Patch,
@@ -48,6 +50,7 @@ export class PinsController {
   }
 
   @Delete(':restaurantId')
+  @HttpCode(HttpStatus.NO_CONTENT)
   unpin(
     @Req() req: any,
     @Param('restaurantId', ParseIntPipe) restaurantId: number,
