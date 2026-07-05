@@ -208,6 +208,51 @@
   line-height: 2;
 }
 
+/* 찜한 맛집 미리보기 썸네일 */
+.my-pinned-preview {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding-bottom: 2px;
+}
+
+.my-pinned-preview::-webkit-scrollbar { display: none; }
+
+.my-pinned-item {
+  flex-shrink: 0;
+  width: 88px;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  text-align: left;
+}
+
+.my-pinned-item img,
+.my-pinned-item__no-img {
+  width: 88px;
+  height: 88px;
+  border-radius: 14px;
+  object-fit: cover;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  background: #f0f0f5;
+}
+
+.my-pinned-item__name {
+  display: block;
+  margin-top: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #333;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 /* 메뉴 카드 */
 .my-menu-card {
   background: #fff;

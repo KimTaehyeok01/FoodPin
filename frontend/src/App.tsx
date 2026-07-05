@@ -8,6 +8,7 @@ import MapPage from './pages/MapPage';
 import MyPage from './pages/MyPage';
 import RestaurantDetailPage from './pages/RestaurantDetailPage';
 import RestaurantListPage from './pages/RestaurantListPage';
+import FavoritesPage from './pages/FavoritesPage';
 import BottomNav from './components/BottomNav';
 import './App.css';
 
@@ -26,6 +27,7 @@ function AppLayout() {
         <Route path="/map" element={<MapPage />} />
         <Route path="/mypage" element={<MyPage />} />
         <Route path="/restaurants" element={<RestaurantListPage />} />
+        <Route path="/favorites" element={<FavoritesPage />} />
         <Route path="/restaurants/:id" element={<RestaurantDetailPage />} />
       </Routes>
       <BottomNav />

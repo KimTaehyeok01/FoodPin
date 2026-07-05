@@ -1,5 +1,8 @@
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ChevronRight, Heart, Star, MapPin, Bell, Shield, HelpCircle, LogOut, Edit } from 'lucide-react';
+import { pinsApi, photoSrc } from '../api/restaurants';
+import type { Pin } from '../api/restaurants';
 import './MyPage.css';
 
 function parseJwt(token: string) {
@@ -18,12 +21,6 @@ const BADGES = [
   { emoji: '👑', label: '미식가', active: false },
 ];
 
-const MENU_ITEMS = [
-  { Icon: Heart, label: '찜한 맛집', count: 0, color: '#ff6b35' },
-  { Icon: Star, label: '내 리뷰', count: 0, color: '#ffc107' },
-  { Icon: MapPin, label: '방문한 곳', count: 0, color: '#4caf50' },
-];
-
 const SETTING_ITEMS = [
   { Icon: Bell, label: '알림 설정', color: '#ff6b35' },
   { Icon: Shield, label: '개인정보 보호', color: '#4caf50' },
@@ -34,6 +31,21 @@ export default function MyPage() {
   const navigate = useNavigate();
   const token = localStorage.getItem('token');
   const payload = token ? parseJwt(token) : null;
+
+  const [pins, setPins] = useState<Pin[]>([]);
+
+  useEffect(() => {
+    pinsApi.getMyPins().then(setPins).catch(console.error);
+  }, []);
+
+  const pinnedCount = pins.length;
+  const reviewCount = pins.filter((p) => p.memo).length;
+
+  const menuItems = [
+    { Icon: Heart, label: '찜한 맛집', count: pinnedCount, color: '#ff6b35', to: '/favorites' },
+    { Icon: Star, label: '내 리뷰', count: reviewCount, color: '#ffc107', to: '/favorites' },
+    { Icon: MapPin, label: '방문한 곳', count: pinnedCount, color: '#4caf50', to: '/favorites' },
+  ];
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -61,17 +73,17 @@ export default function MyPage() {
 
         <div className="my-stats">
           <div className="my-stat">
-            <span className="my-stat__num">0</span>
+            <span className="my-stat__num">{pinnedCount}</span>
             <span className="my-stat__label">방문</span>
           </div>
           <div className="my-stat__divider" />
           <div className="my-stat">
-            <span className="my-stat__num">0</span>
+            <span className="my-stat__num">{reviewCount}</span>
             <span className="my-stat__label">리뷰</span>
           </div>
           <div className="my-stat__divider" />
           <div className="my-stat">
-            <span className="my-stat__num">0</span>
+            <span className="my-stat__num">{pinnedCount}</span>
             <span className="my-stat__label">찜</span>
           </div>
           <div className="my-stat__divider" />
@@ -104,18 +116,39 @@ export default function MyPage() {
         <div className="my-card">
           <div className="my-card__header">
             <span className="my-card__title">❤️ 찜한 맛집</span>
-            <button className="my-card__more">전체보기</button>
+            {pinnedCount > 0 && (
+              <button className="my-card__more" onClick={() => navigate('/favorites')}>전체보기</button>
+            )}
           </div>
-          <div className="my-pinned-empty">
-            <p>아직 찜한 맛집이 없어요</p>
-            <p>마음에 드는 맛집을 핀해보세요 🍽️</p>
-          </div>
+          {pinnedCount === 0 ? (
+            <div className="my-pinned-empty">
+              <p>아직 찜한 맛집이 없어요</p>
+              <p>마음에 드는 맛집을 핀해보세요 🍽️</p>
+            </div>
+          ) : (
+            <div className="my-pinned-preview">
+              {pins.slice(0, 4).map((p) => (
+                <button
+                  key={p.id}
+                  className="my-pinned-item"
+                  onClick={() => navigate(`/restaurants/${p.restaurant.id}`)}
+                >
+                  {p.restaurant.photoUrl ? (
+                    <img src={photoSrc(p.restaurant.photoUrl)} alt={p.restaurant.name} />
+                  ) : (
+                    <span className="my-pinned-item__no-img">🍽️</span>
+                  )}
+                  <span className="my-pinned-item__name">{p.restaurant.name}</span>
+                </button>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* 메뉴 */}
         <div className="my-menu-card">
-          {MENU_ITEMS.map(({ Icon, label, count, color }) => (
-            <button key={label} className="my-menu-item">
+          {menuItems.map(({ Icon, label, count, color, to }) => (
+            <button key={label} className="my-menu-item" onClick={() => navigate(to)}>
               <div className="my-menu-icon" style={{ background: color + '22' }}>
                 <Icon size={16} strokeWidth={2} color={color} />
               </div>
