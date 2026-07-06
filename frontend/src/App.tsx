@@ -6,6 +6,7 @@ import AuthCallback from './pages/auth/AuthCallback';
 import HomePage from './pages/HomePage';
 import MapPage from './pages/MapPage';
 import NotificationsPage from './pages/NotificationsPage';
+import NotificationSettingsPage from './pages/NotificationSettingsPage';
 import MyPage from './pages/my/MyPage';
 import FavoritesPage from './pages/my/FavoritesPage';
 import RestaurantDetailPage from './pages/restaurant/RestaurantDetailPage';
@@ -30,6 +31,7 @@ function AppLayout() {
         <Route path="/restaurants" element={<RestaurantListPage />} />
         <Route path="/favorites" element={<FavoritesPage />} />
         <Route path="/notifications" element={<NotificationsPage />} />
+        <Route path="/notification-settings" element={<NotificationSettingsPage />} />
         <Route path="/restaurants/:id" element={<RestaurantDetailPage />} />
       </Routes>
       <BottomNav />

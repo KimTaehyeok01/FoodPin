@@ -6,6 +6,7 @@ import type { Restaurant, Pin } from '../api/restaurants';
 import RestaurantCard from '../components/RestaurantCard';
 import { haversineKm } from '../utils/distance';
 import { NOTI_LAST_SEEN_KEY } from './NotificationsPage';
+import { getNotiSettings } from '../utils/notiSettings';
 import './HomePage.css';
 
 const CATEGORIES = ['전체', '한식', '중식', '일식', '양식', '분식', '카페/디저트', '치킨/피자', '고기/구이', '해산물'];
@@ -40,13 +41,19 @@ export default function HomePage() {
 
   // 안 읽은 알림 여부 확인 (벨 아이콘 빨간 점)
   useEffect(() => {
-    notificationsApi.get(userLocation?.lat, userLocation?.lng)
-      .then((items) => {
-        const lastSeen = localStorage.getItem(NOTI_LAST_SEEN_KEY);
-        const unread = items.some(
-          (n) => !lastSeen || new Date(n.createdAt) > new Date(lastSeen),
+    const { nearbyEnabled, reviewEnabled, radiusKm } = getNotiSettings();
+    const lat = nearbyEnabled ? userLocation?.lat : undefined;
+    const lng = nearbyEnabled ? userLocation?.lng : undefined;
+    notificationsApi.get(lat, lng, nearbyEnabled ? radiusKm : undefined)
+      .then((all) => {
+        const filtered = all.filter((n) =>
+          (n.type === 'new_restaurant' && nearbyEnabled) ||
+          (n.type === 'new_review' && reviewEnabled),
         );
-        setHasUnreadNoti(unread);
+        const lastSeen = localStorage.getItem(NOTI_LAST_SEEN_KEY);
+        setHasUnreadNoti(filtered.some(
+          (n) => !lastSeen || new Date(n.createdAt) > new Date(lastSeen),
+        ));
       })
       .catch(() => {});
   }, [userLocation]);

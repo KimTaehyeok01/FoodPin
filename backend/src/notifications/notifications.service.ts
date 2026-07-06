@@ -44,6 +44,7 @@ export class NotificationsService {
     userId: number,
     lat?: number,
     lng?: number,
+    radiusKm?: number,
   ): Promise<NotificationItem[]> {
     const items: NotificationItem[] = [];
 
@@ -77,11 +78,12 @@ export class NotificationsService {
         order: { createdAt: 'DESC' },
         take: 100,
       });
+      const effectiveRadius = radiusKm ?? NEARBY_RADIUS_KM;
       const nearby = recent
         .filter(
           (r) =>
             haversineKm(lat, lng, Number(r.latitude), Number(r.longitude)) <=
-            NEARBY_RADIUS_KM,
+            effectiveRadius,
         )
         .slice(0, NEARBY_LIMIT);
       for (const r of nearby) {

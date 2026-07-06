@@ -123,8 +123,14 @@ export interface NotificationItem {
 }
 
 export const notificationsApi = {
-  get: (lat?: number, lng?: number) => {
-    const q = lat != null && lng != null ? `?lat=${lat}&lng=${lng}` : '';
+  get: (lat?: number, lng?: number, radiusKm?: number) => {
+    const params = new URLSearchParams();
+    if (lat != null && lng != null) {
+      params.set('lat', String(lat));
+      params.set('lng', String(lng));
+    }
+    if (radiusKm != null) params.set('radius', String(radiusKm));
+    const q = params.toString() ? `?${params}` : '';
     return request<NotificationItem[]>(`/notifications${q}`);
   },
 };

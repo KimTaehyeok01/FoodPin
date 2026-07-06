@@ -22,9 +22,9 @@ const BADGES = [
 ];
 
 const SETTING_ITEMS = [
-  { Icon: Bell, label: '알림 설정', color: '#ff6b35' },
-  { Icon: Shield, label: '개인정보 보호', color: '#4caf50' },
-  { Icon: HelpCircle, label: '고객센터', color: '#2196f3' },
+  { Icon: Bell, label: '알림 설정', color: '#ff6b35', to: '/notification-settings' },
+  { Icon: Shield, label: '개인정보 보호', color: '#4caf50', to: null },
+  { Icon: HelpCircle, label: '고객센터', color: '#2196f3', to: null },
 ];
 
 export default function MyPage() {
@@ -160,8 +160,8 @@ export default function MyPage() {
         </div>
 
         <div className="my-menu-card" style={{ marginTop: 12 }}>
-          {SETTING_ITEMS.map(({ Icon, label, color }) => (
-            <button key={label} className="my-menu-item">
+          {SETTING_ITEMS.map(({ Icon, label, color, to }) => (
+            <button key={label} className="my-menu-item" onClick={() => to && navigate(to)}>
               <div className="my-menu-icon" style={{ background: color + '22' }}>
                 <Icon size={16} strokeWidth={2} color={color} />
               </div>

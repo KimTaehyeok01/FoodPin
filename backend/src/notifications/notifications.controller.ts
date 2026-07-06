@@ -13,11 +13,13 @@ export class NotificationsController {
     @Req() req: any,
     @Query('lat') lat?: string,
     @Query('lng') lng?: string,
+    @Query('radius') radius?: string,
   ) {
     return this.notificationsService.getNotifications(
       req.user.id,
       lat != null ? Number(lat) : undefined,
       lng != null ? Number(lng) : undefined,
+      radius != null ? Number(radius) : undefined,
     );
   }
 }

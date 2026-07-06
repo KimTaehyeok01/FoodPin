@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { ChevronLeft, Star, MapPin } from 'lucide-react';
 import { notificationsApi } from '../api/restaurants';
 import type { NotificationItem } from '../api/restaurants';
+import { getNotiSettings } from '../utils/notiSettings';
 import './NotificationsPage.css';
 
 export const NOTI_LAST_SEEN_KEY = 'noti_last_seen';
@@ -14,9 +15,21 @@ export default function NotificationsPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const { nearbyEnabled, reviewEnabled, radiusKm } = getNotiSettings();
+
     const load = (lat?: number, lng?: number) => {
-      notificationsApi.get(lat, lng)
-        .then(setItems)
+      // nearbyEnabled=false 면 lat/lng 전달하지 않음 → 백엔드가 새 맛집 항목을 반환하지 않음
+      const effectiveLat = nearbyEnabled ? lat : undefined;
+      const effectiveLng = nearbyEnabled ? lng : undefined;
+      notificationsApi.get(effectiveLat, effectiveLng, nearbyEnabled ? radiusKm : undefined)
+        .then((all) => {
+          setItems(
+            all.filter((n) =>
+              (n.type === 'new_restaurant' && nearbyEnabled) ||
+              (n.type === 'new_review' && reviewEnabled),
+            ),
+          );
+        })
         .catch(console.error)
         .finally(() => {
           setLoading(false);
