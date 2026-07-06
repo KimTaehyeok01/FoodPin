@@ -151,7 +151,7 @@ export default function RestaurantDetailPage() {
   return (
     <div
       className={`rdx${isLeaving ? ' rdx--leaving' : ''}`}
-      onAnimationEnd={() => { if (isLeaving) navigate(-1); }}
+      onAnimationEnd={(e) => { if (isLeaving && e.target === e.currentTarget) navigate(-1); }}
     >
       <div className="rdx-layout">
         {/* 히어로 */}

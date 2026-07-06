@@ -12,6 +12,9 @@ export default function FavoritesPage() {
   const [pins, setPins] = useState<Pin[]>([]);
   const [loading, setLoading] = useState(true);
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
+  const [isLeaving, setIsLeaving] = useState(false);
+
+  const handleBack = () => setIsLeaving(true);
 
   useEffect(() => {
     pinsApi.getMyPins()
@@ -40,9 +43,12 @@ export default function FavoritesPage() {
   };
 
   return (
-    <div className="fav-page">
+    <div
+      className={`fav-page${isLeaving ? ' fav-page--leaving' : ''}`}
+      onAnimationEnd={(e) => { if (isLeaving && e.target === e.currentTarget) navigate(-1); }}
+    >
       <header className="fav-header">
-        <button className="fav-back" onClick={() => navigate(-1)} aria-label="뒤로가기">
+        <button className="fav-back" onClick={handleBack} aria-label="뒤로가기">
           <ChevronLeft size={22} strokeWidth={2.5} />
         </button>
         <div>

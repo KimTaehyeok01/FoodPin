@@ -25,7 +25,7 @@
 
 /* 뒤로가기 시 반대 방향(오른쪽)으로 화면 전체가 밀려나가는 효과 */
 .rdx--leaving {
-  animation: rdx-slide-out 0.3s cubic-bezier(0.4, 0, 1, 1) forwards;
+  animation: rdx-slide-out 0.36s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
 @keyframes rdx-slide-out {

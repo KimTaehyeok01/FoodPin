@@ -1,9 +1,31 @@
 /* 찜한 맛집 목록 페이지 스타일 — 모바일 퍼스트 (375px) */
 
 .fav-page {
-  min-height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 68px;
+  overflow-y: auto;
+  overflow-x: hidden;
   background: #f5f5f7;
-  padding-bottom: 88px;
+  z-index: 10;
+  transform: translateX(0);
+  animation: fav-slide-in 0.36s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes fav-slide-in {
+  from { transform: translateX(100%); }
+  to   { transform: translateX(0); }
+}
+
+.fav-page--leaving {
+  animation: fav-slide-out 0.36s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes fav-slide-out {
+  from { transform: translateX(0); }
+  to   { transform: translateX(100%); }
 }
 
 /* ── 헤더 ── */

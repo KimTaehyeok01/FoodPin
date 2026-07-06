@@ -20,6 +20,9 @@ export default function RestaurantListPage() {
   const [selectedCategory, setSelectedCategory] = useState('전체');
   const [sortKey, setSortKey] = useState<SortKey>('latest');
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
+  const [isLeaving, setIsLeaving] = useState(false);
+
+  const handleBack = () => setIsLeaving(true);
 
   useEffect(() => {
     Promise.all([restaurantsApi.getAll(), pinsApi.getMyPins()])
@@ -53,9 +56,12 @@ export default function RestaurantListPage() {
   });
 
   return (
-    <div className="rl-page">
+    <div
+      className={`rl-page${isLeaving ? ' rl-page--leaving' : ''}`}
+      onAnimationEnd={(e) => { if (isLeaving && e.target === e.currentTarget) navigate(-1); }}
+    >
       <header className="rl-header">
-        <button className="rl-back" onClick={() => navigate(-1)} aria-label="뒤로가기">
+        <button className="rl-back" onClick={handleBack} aria-label="뒤로가기">
           <ChevronLeft size={22} strokeWidth={2.5} />
         </button>
         <h1 className="rl-title">전체 맛집</h1>
