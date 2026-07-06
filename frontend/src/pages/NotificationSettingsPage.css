@@ -200,3 +200,17 @@
     padding: 32px 24px;
   }
 }
+
+@media (min-width: 960px) {
+  .noti-settings-page {
+    top: 60px;
+    bottom: 0;
+  }
+  .noti-settings-header {
+    padding: 28px 40px;
+  }
+  .noti-settings-body {
+    max-width: 600px;
+    padding: 32px 40px;
+  }
+}

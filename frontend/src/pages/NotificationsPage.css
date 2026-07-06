@@ -159,6 +159,10 @@
 
 /* PC (960px+) */
 @media (min-width: 960px) {
+  .noti-page {
+    top: 60px;
+    bottom: 0;
+  }
   .noti-header { padding: 28px 40px; }
   .noti-body {
     max-width: 1080px;
