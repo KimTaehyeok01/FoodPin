@@ -13,6 +13,7 @@ export default function NotificationsPage() {
   const navigate = useNavigate();
   const [items, setItems] = useState<NotificationItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isLeaving, setIsLeaving] = useState(false);
 
   useEffect(() => {
     const { nearbyEnabled, reviewEnabled, radiusKm } = getNotiSettings();
@@ -48,9 +49,12 @@ export default function NotificationsPage() {
   }, []);
 
   return (
-    <div className="noti-page">
+    <div
+      className={`noti-page${isLeaving ? ' noti-page--leaving' : ''}`}
+      onAnimationEnd={(e) => { if (isLeaving && e.target === e.currentTarget) navigate(-1); }}
+    >
       <header className="noti-header">
-        <button className="noti-back" onClick={() => navigate(-1)} aria-label="뒤로가기">
+        <button className="noti-back" onClick={() => setIsLeaving(true)} aria-label="뒤로가기">
           <ChevronLeft size={22} strokeWidth={2.5} />
         </button>
         <h1 className="noti-title">알림</h1>
