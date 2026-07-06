@@ -92,7 +92,7 @@
 /* ── 검색 ── */
 .home-search-wrap {
   background: linear-gradient(180deg, #131f3a 0%, #1a2744 100%);
-  padding: 14px 20px 20px;
+  padding: 14px 20px 28px;
 }
 
 .home-search-box {
@@ -130,7 +130,7 @@
 .home-body {
   background: #f5f5f7;
   border-radius: 20px 20px 0 0;
-  margin-top: -6px;
+  margin-top: -24px;
   padding-bottom: 20px;
 }
 
