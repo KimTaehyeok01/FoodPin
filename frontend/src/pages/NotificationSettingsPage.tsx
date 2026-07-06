@@ -10,6 +10,9 @@ const RADIUS_OPTIONS = [1, 5, 10];
 export default function NotificationSettingsPage() {
   const navigate = useNavigate();
   const [settings, setSettings] = useState(getNotiSettings);
+  const [isLeaving, setIsLeaving] = useState(false);
+
+  const handleBack = () => setIsLeaving(true);
 
   const toggle = (key: 'nearbyEnabled' | 'reviewEnabled') => {
     const next = !settings[key];
@@ -26,9 +29,12 @@ export default function NotificationSettingsPage() {
   };
 
   return (
-    <div className="noti-settings-page">
+    <div
+      className={`noti-settings-page${isLeaving ? ' noti-settings-page--leaving' : ''}`}
+      onAnimationEnd={(e) => { if (isLeaving && e.target === e.currentTarget) navigate(-1); }}
+    >
       <header className="noti-settings-header">
-        <button className="noti-settings-back" onClick={() => navigate(-1)} aria-label="뒤로가기">
+        <button className="noti-settings-back" onClick={handleBack} aria-label="뒤로가기">
           <ChevronLeft size={22} strokeWidth={2.5} />
         </button>
         <h1 className="noti-settings-title">알림 설정</h1>
