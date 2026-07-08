@@ -131,6 +131,17 @@ const CATEGORIES = [
 - `MapPage`: `keep-alive` 패턴 (한 번 마운트 후 `display` 전환)
 - `KakaoMap`: 지도 클릭 → 마커 추가 → `AddPinForm` 표시 → 식당 등록
 - `display:none` 상태에서 초기화하면 타일이 깨지므로 첫 방문 전까지 마운트 자체를 막음
+- 내 위치 버튼: geolocation 획득 → 지도 이동 + 파란 점 마커 표시 (마커는 1개 재사용)
+
+### MapViewHandle (지도 컴포넌트 외부 제어 인터페이스)
+
+```typescript
+export interface MapViewHandle {
+  moveTo: (lat: number, lng: number) => void;          // 지도 이동 (검색 결과 이동에 사용)
+  showMyLocation: (lat: number, lng: number) => void;  // 내 위치 마커 표시 + 이동
+}
+// 사용: mapViewRef.current?.moveTo(lat, lng)
+```
 
 ### RestaurantDetailPage 탭 구조
 
