@@ -135,6 +135,33 @@ export const notificationsApi = {
   },
 };
 
+export interface UserProfile {
+  id: number;
+  provider: string | null;
+  email: string | null;
+  nickname: string;
+  profileImage: string | null;
+  address: string | null;
+  age: number | null;
+  createdAt: string;
+}
+
+export interface UpdateProfileDto {
+  nickname?: string;
+  profileImage?: string;
+  address?: string;
+  age?: number;
+}
+
+export const usersApi = {
+  getMe: () => request<UserProfile>("/users/me"),
+  updateProfile: (dto: UpdateProfileDto) =>
+    request<UserProfile>("/users/me", {
+      method: "PATCH",
+      body: JSON.stringify(dto),
+    }),
+};
+
 export const pinsApi = {
   getMyPins: () => request<Pin[]>("/pins/me"),
   getForRestaurant: (restaurantId: number) =>

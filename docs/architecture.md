@@ -53,7 +53,7 @@ AppModule
 │   └── exports: [JwtModule]
 ├── RestaurantsModule
 ├── PinsModule
-├── UsersModule
+├── UsersModule        ← GET/PATCH /users/me (프로필)
 ├── NotificationsModule
 └── UploadModule
 ```
@@ -97,6 +97,7 @@ AppModule
 /restaurants/:id           → RestaurantDetailPage
 /restaurants               → RestaurantListPage
 /favorites                 → FavoritesPage
+/profile-edit              → ProfileEditPage
 /notifications             → NotificationsPage
 /notification-settings     → NotificationSettingsPage
 ```

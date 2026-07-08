@@ -345,6 +345,46 @@ field: file (이미지 파일, 최대 10MB)
 
 ---
 
+## Users
+
+### GET /users/me *(인증 필요)*
+
+내 프로필 조회. password 등 민감 정보 제외.
+
+**Response** `200 OK`
+```json
+{
+  "id": 1,
+  "provider": null,
+  "email": "user@example.com",
+  "nickname": "홍길동",
+  "profileImage": "/uploads/1234567890-abc.jpg",
+  "address": "서울 노원구",
+  "age": 25,
+  "createdAt": "2026-07-01T00:00:00.000Z"
+}
+```
+
+---
+
+### PATCH /users/me *(인증 필요)*
+
+프로필 수정. 수정할 필드만 포함.
+
+**Request**
+```json
+{
+  "nickname": "새닉네임",
+  "profileImage": "/uploads/abc.jpg",
+  "address": "서울 강남구",
+  "age": 30
+}
+```
+
+**Response** `200 OK` — 수정된 프로필 (GET /users/me와 동일 형식)
+
+---
+
 ## 갱신 트리거
 
 이 파일을 갱신해야 하는 경우.

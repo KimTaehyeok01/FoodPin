@@ -1,17 +1,9 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { ChevronRight, Heart, Star, MapPin, Bell, Shield, HelpCircle, LogOut, Edit } from 'lucide-react';
-import { pinsApi, photoSrc } from '../../api/restaurants';
-import type { Pin } from '../../api/restaurants';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { ChevronRight, Heart, Star, MapPin, Bell, UserRound, HelpCircle, LogOut, Edit } from 'lucide-react';
+import { pinsApi, usersApi, photoSrc } from '../../api/restaurants';
+import type { Pin, UserProfile } from '../../api/restaurants';
 import './MyPage.css';
-
-function parseJwt(token: string) {
-  try {
-    return JSON.parse(atob(token.split('.')[1]));
-  } catch {
-    return null;
-  }
-}
 
 const BADGES = [
   { emoji: '🍜', label: '라멘마스터', active: true },
@@ -23,20 +15,26 @@ const BADGES = [
 
 const SETTING_ITEMS = [
   { Icon: Bell, label: '알림 설정', color: '#ff6b35', to: '/notification-settings' },
-  { Icon: Shield, label: '개인정보 보호', color: '#4caf50', to: null },
+  { Icon: UserRound, label: '프로필 정보 변경', color: '#4caf50', to: '/profile-edit' },
   { Icon: HelpCircle, label: '고객센터', color: '#2196f3', to: null },
 ];
 
 export default function MyPage() {
   const navigate = useNavigate();
-  const token = localStorage.getItem('token');
-  const payload = token ? parseJwt(token) : null;
+  const location = useLocation();
 
   const [pins, setPins] = useState<Pin[]>([]);
+  const [profile, setProfile] = useState<UserProfile | null>(null);
 
   useEffect(() => {
     pinsApi.getMyPins().then(setPins).catch(console.error);
   }, []);
+
+  // 마이페이지 탭 진입 시마다 프로필 갱신 (keep-alive 상태에서 프로필 변경 반영)
+  useEffect(() => {
+    if (location.pathname !== '/mypage') return;
+    usersApi.getMe().then(setProfile).catch(console.error);
+  }, [location.pathname]);
 
   const pinnedCount = pins.length;
   const reviewCount = pins.filter((p) => p.memo).length;
@@ -58,14 +56,20 @@ export default function MyPage() {
       <div className="my-header">
         <div className="my-profile-row">
           <div className="my-avatar-wrap">
-            <div className="my-avatar">👤</div>
+            <div className="my-avatar">
+              {profile?.profileImage ? (
+                <img src={photoSrc(profile.profileImage)} alt="프로필" className="my-avatar__img" />
+              ) : (
+                '👤'
+              )}
+            </div>
           </div>
           <div className="my-profile-info">
-            <p className="my-username">푸드핀 유저</p>
-            <p className="my-email">{payload?.email ?? 'foodpin@example.com'}</p>
+            <p className="my-username">{profile?.nickname ?? '푸드핀 유저'}</p>
+            <p className="my-email">{profile?.email ?? ''}</p>
             <span className="my-level">🍴 미식 탐험가 Lv.1</span>
           </div>
-          <button className="my-edit-btn">
+          <button className="my-edit-btn" onClick={() => navigate('/profile-edit')}>
             <Edit size={14} strokeWidth={2} />
             편집
           </button>

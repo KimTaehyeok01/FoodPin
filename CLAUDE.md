@@ -42,6 +42,7 @@
 | [features/auth.md](features/auth.md)                   | 로그인·회원가입·소셜 로그인 구현                         |
 | [features/restaurants.md](features/restaurants.md)     | 식당 CRUD, 메뉴, 지도 핀                                 |
 | [features/pins.md](features/pins.md)                   | 핀(별점·메모) CRUD, 찜 목록                              |
+| [features/users.md](features/users.md)                 | 프로필 조회·수정                                         |
 | [features/notifications.md](features/notifications.md) | 알림 조회, 설정, 읽음 처리                               |
 | [features/upload.md](features/upload.md)               | 이미지 업로드, 정적 파일 서빙                            |
 

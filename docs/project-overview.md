@@ -75,7 +75,7 @@ FoodPin/
     │   │   ├── NotificationsPage.tsx
     │   │   ├── NotificationSettingsPage.tsx
     │   │   ├── auth/             ← OnboardingPage, LoginPage, RegisterPage, AuthCallback
-    │   │   ├── my/               ← MyPage, FavoritesPage
+    │   │   ├── my/               ← MyPage, FavoritesPage, ProfileEditPage
     │   │   └── restaurant/       ← RestaurantDetailPage, RestaurantListPage
     │   ├── components/
     │   │   ├── KakaoMap.tsx
