@@ -11,6 +11,7 @@ import {
   IsIn,
 } from 'class-validator';
 import { FOOD_CATEGORIES, FoodCategory } from '../../users/user.entity';
+import { GENDERS, Gender } from '../../users/user.entity';
 
 export class RegisterDto {
   @IsEmail()
@@ -23,18 +24,23 @@ export class RegisterDto {
 
   @IsString()
   @MaxLength(50)
+  name: string;
+
+  @IsString()
+  @MaxLength(50)
   nickname: string;
 
-  @IsOptional()
   @IsString()
   @MaxLength(255)
-  address?: string;
+  address: string;
 
-  @IsOptional()
   @IsInt()
   @Min(1)
   @Max(120)
-  age?: number;
+  age: number;
+
+  @IsIn([...GENDERS])
+  gender: Gender;
 
   @IsOptional()
   @IsArray()

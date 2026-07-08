@@ -41,16 +41,51 @@
 
 **DTO 필드**
 - `email: string` — `@IsEmail()`
-- `password: string` — `@IsString()`
-- `nickname: string` — `@IsString()`
+- `password: string` — `@IsString()`, 8자 이상
+- `name: string` — `@IsString()`, 실명 (필수)
+- `nickname: string` — `@IsString()`, 앱에서 사용할 이름 (필수)
+- `address: string` — `@IsString()`, 주소 (필수)
+- `age: number` — `@IsInt()` 1~120 (필수)
+- `gender: 'male' | 'female'` — `@IsIn(GENDERS)` (필수)
 - `favoriteCategories?: string[]` — `@IsOptional()`
+
+`address`, `age`, `gender`는 회원가입 시에는 필수지만, DB 컬럼 자체는 nullable이다 (소셜 로그인 유저는 값이 없기 때문). 상세 → [docs/erd.md](../docs/erd.md#nullable-컬럼-주의)
 
 **서비스 로직**
 1. `email` 중복 확인 → `ConflictException('이미 사용 중인 이메일입니다.')`
 2. `bcrypt.hash(password, 10)` 해싱
-3. User 저장
+3. User 저장 (name, nickname, address, age, gender 모두 저장)
 4. 즐겨찾는 카테고리가 있으면 `user_favorite_category` 테이블에 저장
 5. `generateToken(user)` → `{ token }`
+
+### 이메일 중복 확인 (회원가입 1단계)
+
+**엔드포인트:** `GET /auth/check-email?email={email}`
+
+프론트엔드 회원가입 폼은 3단계로 구성된다 (기본 정보 → 추가 정보 → 선호 음식).
+이메일 중복 확인은 **1단계(기본 정보) 입력 완료 후, 2단계로 넘어가기 전**에 수행한다.
+이렇게 하면 유저가 주소·나이·성별·선호음식까지 다 입력한 뒤에야 이메일이 이미 사용 중이라는 걸 알게 되는 문제를 방지한다.
+
+```typescript
+// authService.isEmailAvailable(email) → boolean
+// 컨트롤러: GET /auth/check-email → { available: boolean }
+```
+
+실제 가입(`POST /auth/register`) 시에도 동일한 중복 체크를 한 번 더 수행한다 (동시 가입 등 레이스 컨디션 방지).
+
+### 주소 입력 (다음 우편번호 서비스)
+
+회원가입 2단계에서 주소는 직접 타이핑하지 않고, **다음(Daum) 우편번호 검색 팝업**으로 선택한다.
+
+```typescript
+// 스크립트: https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js (API 키 불필요)
+new daum.Postcode({
+  oncomplete: (data) => setForm((f) => ({ ...f, address: data.address })),
+}).embed(containerElement);
+```
+
+- 모달 오버레이 내부에 `embed()`로 삽입 (새 창을 띄우지 않음 — 팝업 차단 이슈 회피)
+- 타입 선언: `frontend/src/types/daum-postcode.d.ts`
 
 ---
 

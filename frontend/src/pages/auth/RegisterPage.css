@@ -81,6 +81,33 @@
   border-color: #ff6b35;
 }
 
+.field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.field-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: #555;
+}
+
+.address-search-btn {
+  height: 52px;
+  border: 1.5px solid #e8e8e8;
+  border-radius: 12px;
+  padding: 0 16px;
+  font-size: 15px;
+  text-align: left;
+  background: #fff;
+  color: #111;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.address-search-btn:hover { border-color: #ff6b35; }
+
 .category-grid {
   display: flex;
   flex-wrap: wrap;
@@ -158,4 +185,68 @@
 
 .register-login-link strong {
   color: #ff6b35;
+}
+
+/* ── 주소 검색 팝업 (모바일 375px 기준: 전체 화면) ── */
+.postcode-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.postcode-modal {
+  width: 100vw;
+  height: 100vh;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+}
+
+.postcode-modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid #eee;
+  font-size: 16px;
+  font-weight: 700;
+  color: #111;
+}
+
+.postcode-modal__close {
+  background: none;
+  border: none;
+  font-size: 18px;
+  color: #999;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+}
+
+.postcode-modal__body {
+  flex: 1;
+  min-height: 0;
+}
+
+/* ── 태블릿 (600px+) ── */
+@media (min-width: 600px) {
+  .postcode-modal {
+    width: 480px;
+    height: 600px;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.25);
+  }
+}
+
+/* ── PC (960px+) ── */
+@media (min-width: 960px) {
+  .postcode-modal {
+    width: 500px;
+    height: 620px;
+  }
 }

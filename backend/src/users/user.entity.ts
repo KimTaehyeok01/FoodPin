@@ -8,6 +8,7 @@ import {
 import { Pin } from '../pins/pin.entity';
 import { UserFavoriteCategory } from './user-favorite-category.entity';
 export { FOOD_CATEGORIES, FoodCategory } from './food-category.constants';
+export { GENDERS, Gender } from './gender.constants';
 
 @Entity('user')
 export class User {
@@ -26,6 +27,9 @@ export class User {
   @Column({ type: 'varchar', length: 255, nullable: true })
   password: string | null;
 
+  @Column({ type: 'varchar', length: 50, nullable: true })
+  name: string | null;
+
   @Column({ type: 'varchar', length: 50 })
   nickname: string;
 
@@ -37,6 +41,9 @@ export class User {
 
   @Column({ type: 'tinyint', unsigned: true, nullable: true })
   age: number | null;
+
+  @Column({ type: 'varchar', length: 10, nullable: true })
+  gender: string | null;
 
   @CreateDateColumn()
   createdAt: Date;

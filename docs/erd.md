@@ -28,15 +28,19 @@ pin: (userId, restaurantId) UNIQUE
 | providerId    | VARCHAR(100)             | nullable         | 소셜 고유 ID                  |
 | email         | VARCHAR(255)             | UNIQUE, nullable | 이메일 (일반 로그인만)        |
 | password      | VARCHAR(255)             | nullable         | bcrypt 해시 (일반 로그인만)   |
-| nickname      | VARCHAR(50)              | NOT NULL         | 닉네임                        |
+| name          | VARCHAR(50)              | nullable         | 실명 (일반 회원가입 시 필수 입력, 소셜은 미제공) |
+| nickname      | VARCHAR(50)              | NOT NULL         | 닉네임 (앱에서 사용할 이름)   |
 | profileImage  | VARCHAR(255)             | nullable         | 프로필 이미지 URL             |
-| address       | VARCHAR(255)             | nullable         | 주소                          |
-| age           | TINYINT UNSIGNED         | nullable         | 나이                          |
+| address       | VARCHAR(255)             | nullable         | 주소 (일반 회원가입 시 필수 입력) |
+| age           | TINYINT UNSIGNED         | nullable         | 나이 (일반 회원가입 시 필수 입력) |
+| gender        | VARCHAR(10)              | nullable         | 성별 — `male` / `female` (일반 회원가입 시 필수 입력) |
 | createdAt     | DATETIME                 | NOT NULL         | 가입일 (@CreateDateColumn)    |
 
 **관계**
 - `@OneToMany` → `pin` (userId)
 - `@OneToMany` → `user_favorite_category` (userId)
+
+**nullable 컬럼 주의:** `name`, `address`, `age`, `gender`는 DB 레벨에서는 nullable이다. 소셜 로그인 유저는 이 값들을 제공하지 않기 때문. 대신 `RegisterDto`(일반 회원가입)에서 필수값으로 강제한다.
 
 ---
 

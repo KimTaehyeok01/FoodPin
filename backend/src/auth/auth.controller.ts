@@ -3,6 +3,7 @@ import {
   Post,
   Get,
   Body,
+  Query,
   Req,
   Res,
   UseGuards,
@@ -20,6 +21,13 @@ const FRONTEND_URL = process.env.FRONTEND_URL ?? 'http://localhost:5173';
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
+
+  // 이메일 중복 확인 (회원가입 기본 정보 단계에서 다음으로 넘어갈 때 호출)
+  @Get('check-email')
+  async checkEmail(@Query('email') email: string) {
+    const available = await this.authService.isEmailAvailable(email);
+    return { available };
+  }
 
   // 일반 회원가입
   @Post('register')

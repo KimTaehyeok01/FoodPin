@@ -46,6 +46,13 @@ export class AuthService {
     return user;
   }
 
+  // 이메일 중복 여부 확인 (회원가입 1단계에서 사용)
+  async isEmailAvailable(email: string): Promise<boolean> {
+    if (!email) return false;
+    const exists = await this.userRepository.findOneBy({ email });
+    return !exists;
+  }
+
   // 일반 회원가입
   async register(dto: RegisterDto): Promise<User> {
     const exists = await this.userRepository.findOneBy({ email: dto.email });
@@ -56,9 +63,11 @@ export class AuthService {
       this.userRepository.create({
         email: dto.email,
         password: hashed,
+        name: dto.name,
         nickname: dto.nickname,
-        address: dto.address ?? null,
-        age: dto.age ?? null,
+        address: dto.address,
+        age: dto.age,
+        gender: dto.gender,
         provider: null,
         providerId: null,
         profileImage: null,

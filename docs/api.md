@@ -34,20 +34,42 @@ Authorization: Bearer {token}
 
 ## Auth
 
+### GET /auth/check-email
+
+이메일 중복 확인. 회원가입 1단계(기본 정보 입력)에서 다음 단계로 넘어가기 전 호출.
+
+**Query Parameters**
+
+| 파라미터 | 타입   | 설명       |
+| -------- | ------ | ---------- |
+| email    | string | 확인할 이메일 |
+
+**Response** `200 OK`
+```json
+{ "available": true }
+```
+
+---
+
 ### POST /auth/register
 
-회원가입 (일반 이메일).
+회원가입 (일반 이메일). `address`, `age`, `gender`는 필수값 — 소셜 로그인과 달리 일반 가입은 추가 정보를 의무 입력한다.
 
 **Request**
 ```json
 {
   "email": "user@example.com",
   "password": "password123",
-  "nickname": "홍길동"
+  "name": "홍길동",
+  "nickname": "길동이",
+  "address": "서울 노원구 공릉동",
+  "age": 25,
+  "gender": "male",
+  "favoriteCategories": ["한식", "카페/디저트"]
 }
 ```
 
-**Response** `200 OK`
+**Response** `201 Created`
 ```json
 { "token": "eyJhbGciOi..." }
 ```
