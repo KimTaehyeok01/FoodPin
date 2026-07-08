@@ -72,6 +72,21 @@ function makeLabel(restaurant: Restaurant, isPinned: boolean, rating?: number): 
 
 export interface MapViewHandle {
   moveTo: (lat: number, lng: number) => void;
+  showMyLocation: (lat: number, lng: number) => void;
+}
+
+// 내 위치 표시용 파란 점 마커 (외곽 펄스 + 중심 점)
+function makeMyLocationDot(): HTMLElement {
+  const wrap = document.createElement('div');
+  wrap.style.cssText = `
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #4285f4;
+    border: 3px solid #fff;
+    box-shadow: 0 0 0 2px rgba(66,133,244,0.35), 0 2px 8px rgba(0,0,0,0.3);
+  `;
+  return wrap;
 }
 
 interface Props {
@@ -94,6 +109,7 @@ export default function MapView({
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<kakao.maps.Map | null>(null);
   const overlaysRef = useRef<kakao.maps.CustomOverlay[]>([]);
+  const myLocationOverlayRef = useRef<kakao.maps.CustomOverlay | null>(null);
   const [mapReady, setMapReady] = useState(false);
 
   useImperativeHandle(ref, () => ({
@@ -102,6 +118,26 @@ export default function MapView({
       if (!map) return;
       map.setLevel(4);
       map.panTo(new kakao.maps.LatLng(lat, lng));
+    },
+    showMyLocation: (lat: number, lng: number) => {
+      const map = mapRef.current;
+      if (!map) return;
+      const position = new kakao.maps.LatLng(lat, lng);
+
+      // 기존 내 위치 마커가 있으면 위치만 갱신, 없으면 새로 생성
+      if (myLocationOverlayRef.current) {
+        myLocationOverlayRef.current.setPosition(position);
+      } else {
+        myLocationOverlayRef.current = new kakao.maps.CustomOverlay({
+          position,
+          content: makeMyLocationDot(),
+          yAnchor: 0.5,
+          map,
+        });
+      }
+
+      map.setLevel(4);
+      map.panTo(position);
     },
   }), []);
 
@@ -128,6 +164,7 @@ export default function MapView({
     return () => {
       destroyed = true;
       mapRef.current = null;
+      myLocationOverlayRef.current = null;
       setMapReady(false);
     };
   }, []);

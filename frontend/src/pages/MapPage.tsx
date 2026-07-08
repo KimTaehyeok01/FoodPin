@@ -83,6 +83,21 @@ export default function MapPage() {
     });
   };
 
+  const handleMyLocation = () => {
+    if (!navigator.geolocation) {
+      alert('이 브라우저에서는 위치 기능을 사용할 수 없습니다.');
+      return;
+    }
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        mapViewRef.current?.showMyLocation(pos.coords.latitude, pos.coords.longitude);
+      },
+      () => {
+        alert('위치 정보를 가져올 수 없습니다. 위치 권한을 확인해주세요.');
+      },
+    );
+  };
+
   const handleUnpin = async () => {
     if (!selectedRestaurant) return;
     try {
@@ -98,7 +113,7 @@ export default function MapPage() {
     <div className="map-page">
       <header className="map-header">
         <h1>지도</h1>
-        <button className="map-header__location-btn">
+        <button className="map-header__location-btn" onClick={handleMyLocation}>
           <Navigation size={14} strokeWidth={2.5} />
           내 위치
         </button>
