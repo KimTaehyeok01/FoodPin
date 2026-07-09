@@ -10,6 +10,7 @@ import OnboardingPage from "./pages/auth/OnboardingPage";
 import LoginPage from "./pages/auth/LoginPage";
 import RegisterPage from "./pages/auth/RegisterPage";
 import AuthCallback from "./pages/auth/AuthCallback";
+import CompleteProfilePage from "./pages/auth/CompleteProfilePage";
 import HomePage from "./pages/HomePage";
 import MapPage from "./pages/MapPage";
 import NotificationsPage from "./pages/NotificationsPage";
@@ -114,6 +115,14 @@ export default function App() {
           element={
             <div className="app-shell">
               <AuthCallback />
+            </div>
+          }
+        />
+        <Route
+          path="/complete-profile"
+          element={
+            <div className="app-shell">
+              <CompleteProfilePage />
             </div>
           }
         />

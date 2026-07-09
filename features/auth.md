@@ -128,10 +128,36 @@ new daum.Postcode({
 const hash = window.location.hash;  // '#token=eyJ...'
 const token = hash.replace('#token=', '');
 localStorage.setItem('token', token);
-navigate('/');
+// 프로필 완성 여부 확인 후 분기 (아래 참고)
 ```
 
 ---
+
+## 소셜 로그인 프로필 완성
+
+카카오/네이버 프로필에는 `nickname`, `profileImage`만 있고 `name`(실명)·`address`·`age`·`gender`가 없다.
+일반 회원가입은 이 필드들을 필수로 받기 때문에, 가입 경로에 따라 데이터 완성도가 달라지는 걸 막기 위해
+소셜 로그인도 최초(또는 미완성 상태)에는 반드시 이 필드들을 채우게 한 뒤에만 앱에 진입시킨다.
+
+**흐름**
+```
+AuthCallback: localStorage에 token 저장
+  → usersApi.getMe() 호출
+  → name/address/age/gender 중 하나라도 비어있으면 → navigate('/complete-profile')
+  → 모두 채워져 있으면 → navigate('/')
+```
+
+**CompleteProfilePage** (`frontend/src/pages/auth/CompleteProfilePage.tsx`)
+- 뒤로가기 없음 — 필수 입력이므로 건너뛸 수 없다
+- 진입 시 `usersApi.getMe()`로 카카오/네이버 프로필의 닉네임을 기본값으로 채워둠 (그 자리에서 바로 수정 가능)
+- 필드: 이름(필수), 닉네임(필수, 소셜 프로필 값이 기본 채워짐), 주소(다음 우편번호 팝업, 필수), 나이(필수), 성별(필수), 선호 음식(선택)
+- 제출 시 `usersApi.updateProfile({ name, nickname, address, age, gender, favoriteCategories })` → `PATCH /users/me`
+- 성공 시 `navigate('/', { replace: true })`
+
+**재로그인 시 처리:** 이미 완성된 유저는 매번 `getMe()`로 확인만 하고 바로 홈으로 이동한다.
+과거에 이 페이지를 건너뛴(완성하지 않은) 유저는 다음 로그인 때도 다시 `/complete-profile`로 보내진다 — 영구적으로 우회할 수 없다.
+
+**알려진 한계:** `/complete-profile`은 `PrivateRoute` 밖에 있어(로그인 직후 접근 전용 라우트라 `AuthCallback`과 동일하게 취급), 토큰 없이 URL을 직접 입력해도 페이지 자체는 열린다. 다만 이 경우 저장 API 호출이 401로 실패해 에러 메시지만 뜨고 실질적인 피해는 없다.
 
 ## JWT 토큰
 

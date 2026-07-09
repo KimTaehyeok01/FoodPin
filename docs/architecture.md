@@ -126,10 +126,11 @@ const [isLeaving, setIsLeaving] = useState(false);
 ### 인증 라우트 (공개)
 
 ```
-/onboarding    → OnboardingPage
-/login         → LoginPage
-/register      → RegisterPage
-/auth/callback → AuthCallback    ← 소셜 로그인 후 토큰 수신
+/onboarding        → OnboardingPage
+/login             → LoginPage
+/register          → RegisterPage
+/auth/callback     → AuthCallback         ← 소셜 로그인 후 토큰 수신
+/complete-profile  → CompleteProfilePage  ← 소셜 로그인 유저의 이름·주소·나이·성별 필수 입력
 ```
 
 ### `lastBase` 패턴
@@ -168,10 +169,13 @@ const activeBase = isBase ? location.pathname : lastBase;
 5. authService.findOrCreate({ provider, providerId, nickname, profileImage })
 6. JWT 생성 → res.redirect(`${FRONTEND_URL}/auth/callback#token=${jwt}`)
 7. AuthCallback 페이지: window.location.hash에서 token 추출
-8. localStorage.setItem('token', token) → navigate('/')
+8. localStorage.setItem('token', token)
+9. usersApi.getMe() 호출 → name/address/age/gender 중 하나라도 비어있으면 /complete-profile, 아니면 /
 ```
 
 **URL fragment 방식 선택 이유:** 서버 로그에 토큰 노출 없음, 서버로 fragment가 전송되지 않음.
+
+**소셜 로그인 프로필 완성 (신규):** 카카오/네이버는 닉네임·프로필사진만 제공하고 이름·주소·나이·성별은 주지 않는다. 일반 회원가입은 이 필드들을 필수로 받으므로, 데이터 일관성을 위해 소셜 로그인도 최초(또는 미완성) 시 `/complete-profile`에서 동일하게 필수 입력을 받은 뒤에만 앱에 진입하게 한다. 상세 → [features/auth.md](../features/auth.md#소셜-로그인-프로필-완성)
 
 ### JWT 검증 (매 인증 요청)
 

@@ -379,10 +379,12 @@ field: file (이미지 파일, 최대 10MB)
   "id": 1,
   "provider": null,
   "email": "user@example.com",
-  "nickname": "홍길동",
+  "name": "홍길동",
+  "nickname": "길동이",
   "profileImage": "/uploads/1234567890-abc.jpg",
   "address": "서울 노원구",
   "age": 25,
+  "gender": "male",
   "createdAt": "2026-07-01T00:00:00.000Z"
 }
 ```
@@ -391,19 +393,22 @@ field: file (이미지 파일, 최대 10MB)
 
 ### PATCH /users/me *(인증 필요)*
 
-프로필 수정. 수정할 필드만 포함.
+프로필 수정. 수정할 필드만 포함. `favoriteCategories`를 보내면 기존 즐겨찾는 카테고리를 전부 교체한다 (빈 배열이면 전체 삭제).
 
 **Request**
 ```json
 {
+  "name": "홍길동",
   "nickname": "새닉네임",
   "profileImage": "/uploads/abc.jpg",
   "address": "서울 강남구",
-  "age": 30
+  "age": 30,
+  "gender": "male",
+  "favoriteCategories": ["한식", "카페/디저트"]
 }
 ```
 
-**Response** `200 OK` — 수정된 프로필 (GET /users/me와 동일 형식)
+**Response** `200 OK` — 수정된 프로필 (GET /users/me와 동일 형식, favoriteCategories는 응답에 포함되지 않음)
 
 ---
 

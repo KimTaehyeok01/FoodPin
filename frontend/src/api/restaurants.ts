@@ -139,18 +139,23 @@ export interface UserProfile {
   id: number;
   provider: string | null;
   email: string | null;
+  name: string | null;
   nickname: string;
   profileImage: string | null;
   address: string | null;
   age: number | null;
+  gender: string | null;
   createdAt: string;
 }
 
 export interface UpdateProfileDto {
+  name?: string;
   nickname?: string;
   profileImage?: string;
   address?: string;
   age?: number;
+  gender?: string;
+  favoriteCategories?: string[];
 }
 
 export const usersApi = {

@@ -5,7 +5,9 @@
 ## 개요
 
 로그인한 유저의 프로필 조회·수정 기능.
-닉네임, 프로필 사진, 주소, 나이를 변경할 수 있다. 프로필 사진은 upload 기능을 재사용한다.
+이름, 닉네임, 프로필 사진, 주소, 나이, 성별, 즐겨찾는 카테고리를 변경할 수 있다. 프로필 사진은 upload 기능을 재사용한다.
+
+소셜 로그인 유저의 이름·주소·나이·성별 필수 입력 흐름은 [features/auth.md](auth.md#소셜-로그인-프로필-완성) 참고.
 
 ---
 
@@ -35,7 +37,7 @@
 | Method | URL | 설명 |
 | ------ | --- | ---- |
 | GET | /users/me | 내 프로필 조회 (password 제외) |
-| PATCH | /users/me | 프로필 수정 (nickname, profileImage, address, age) |
+| PATCH | /users/me | 프로필 수정 (name, nickname, profileImage, address, age, gender, favoriteCategories) |
 
 모두 `JwtAuthGuard` 적용 (컨트롤러 레벨). 상세 → [docs/api.md](../docs/api.md#users)
 
@@ -48,8 +50,8 @@
 ```typescript
 // password, providerId를 응답에서 제외하기 위한 select 상수
 const PROFILE_SELECT = {
-  id: true, provider: true, email: true, nickname: true,
-  profileImage: true, address: true, age: true, createdAt: true,
+  id: true, provider: true, email: true, name: true, nickname: true,
+  profileImage: true, address: true, age: true, gender: true, createdAt: true,
 } as const;
 
 const user = await this.userRepo.findOne({
@@ -63,8 +65,21 @@ const user = await this.userRepo.findOne({
 ```typescript
 const user = await this.userRepo.findOneBy({ id: userId });
 if (!user) throw new NotFoundException('유저를 찾을 수 없습니다.');
-Object.assign(user, dto);   // DTO의 정의된 필드만 덮어씀 (whitelist 검증 통과분)
+
+const { favoriteCategories, ...fields } = dto;
+Object.assign(user, fields);   // DTO의 정의된 필드만 덮어씀 (whitelist 검증 통과분)
 await this.userRepo.save(user);
+
+// favoriteCategories가 오면 기존 값을 전부 지우고 새로 저장 (부분 추가가 아닌 전체 교체)
+if (favoriteCategories) {
+  await this.favCategoryRepo.delete({ userId });
+  if (favoriteCategories.length) {
+    await this.favCategoryRepo.save(
+      favoriteCategories.map((category) => this.favCategoryRepo.create({ userId, category })),
+    );
+  }
+}
+
 return this.getMe(userId);  // password 제외된 형태로 재조회 후 반환
 ```
 
@@ -111,18 +126,23 @@ export interface UserProfile {
   id: number;
   provider: string | null;
   email: string | null;
+  name: string | null;
   nickname: string;
   profileImage: string | null;
   address: string | null;
   age: number | null;
+  gender: string | null;
   createdAt: string;
 }
 
 export interface UpdateProfileDto {
+  name?: string;
   nickname?: string;
   profileImage?: string;
   address?: string;
   age?: number;
+  gender?: string;
+  favoriteCategories?: string[];
 }
 ```
 

@@ -1,0 +1,197 @@
+/* 소셜 로그인 추가 정보 입력 페이지 스타일 — 모바일 퍼스트 (375px) */
+
+.cp-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fafafa;
+  padding: 24px;
+}
+
+.cp-box {
+  width: 100%;
+  max-width: 380px;
+}
+
+.cp-loading {
+  font-size: 14px;
+  color: #aaa;
+}
+
+.cp-box h2 {
+  font-size: 24px;
+  font-weight: 800;
+  color: #111;
+  margin-bottom: 6px;
+}
+
+.cp-box p {
+  font-size: 14px;
+  color: #aaa;
+  margin-bottom: 28px;
+}
+
+.cp-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.cp-fields input {
+  height: 52px;
+  border: 1.5px solid #e8e8e8;
+  border-radius: 12px;
+  padding: 0 16px;
+  font-size: 15px;
+  outline: none;
+  background: #fff;
+  transition: border-color 0.2s;
+}
+
+.cp-fields input:focus {
+  border-color: #ff6b35;
+}
+
+.cp-field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cp-field-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: #555;
+}
+
+.cp-address-btn {
+  height: 52px;
+  border: 1.5px solid #e8e8e8;
+  border-radius: 12px;
+  padding: 0 16px;
+  font-size: 15px;
+  text-align: left;
+  background: #fff;
+  color: #111;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.cp-address-btn:hover { border-color: #ff6b35; }
+
+.cp-chip-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.cp-chip {
+  padding: 10px 16px;
+  border-radius: 24px;
+  border: 1.5px solid #e8e8e8;
+  background: #fff;
+  font-size: 14px;
+  font-weight: 500;
+  color: #555;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.cp-chip--active {
+  background: #fff1eb;
+  border-color: #ff6b35;
+  color: #ff6b35;
+  font-weight: 700;
+}
+
+.cp-error {
+  font-size: 13px;
+  color: #e53e3e;
+  text-align: center;
+  margin: 16px 0 0;
+}
+
+.cp-submit {
+  width: 100%;
+  height: 52px;
+  margin-top: 28px;
+  background: #ff6b35;
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.cp-submit:disabled {
+  opacity: 0.6;
+}
+
+/* ── 주소 검색 팝업 ── */
+.cp-postcode-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cp-postcode-modal {
+  width: 100vw;
+  height: 100vh;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+}
+
+.cp-postcode-modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid #eee;
+  font-size: 16px;
+  font-weight: 700;
+  color: #111;
+}
+
+.cp-postcode-modal__close {
+  background: none;
+  border: none;
+  font-size: 18px;
+  color: #999;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+}
+
+.cp-postcode-modal__body {
+  flex: 1;
+  min-height: 0;
+}
+
+/* ── 태블릿 (600px+) ── */
+@media (min-width: 600px) {
+  .cp-postcode-modal {
+    width: 480px;
+    height: 600px;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.25);
+  }
+}
+
+/* ── PC (960px+) ── */
+@media (min-width: 960px) {
+  .cp-box { max-width: 420px; }
+
+  .cp-postcode-modal {
+    width: 500px;
+    height: 620px;
+  }
+}

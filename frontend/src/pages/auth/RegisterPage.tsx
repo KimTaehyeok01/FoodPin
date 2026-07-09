@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { loadDaumPostcodeScript } from '../../utils/daumPostcode';
 import './RegisterPage.css';
 
 const API_URL = import.meta.env.VITE_API_URL;
@@ -13,24 +14,6 @@ const GENDER_OPTIONS: { value: string; label: string }[] = [
   { value: 'male', label: '남성' },
   { value: 'female', label: '여성' },
 ];
-
-// 다음 우편번호 서비스 스크립트 로드 (API 키 불필요)
-function loadDaumPostcodeScript(): Promise<void> {
-  return new Promise((resolve, reject) => {
-    if (window.daum?.Postcode) { resolve(); return; }
-    const existing = document.getElementById('daum-postcode-script');
-    if (existing) {
-      existing.addEventListener('load', () => resolve());
-      return;
-    }
-    const script = document.createElement('script');
-    script.id = 'daum-postcode-script';
-    script.src = 'https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js';
-    script.onload = () => resolve();
-    script.onerror = reject;
-    document.head.appendChild(script);
-  });
-}
 
 type Step = 1 | 2 | 3;
 
