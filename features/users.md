@@ -97,6 +97,15 @@ setProfileImage(url);
 // 저장 시: usersApi.updateProfile({ profileImage: url, ... })
 ```
 
+### MyPage 상단 아바타 — 빠른 사진 변경
+
+마이페이지 상단 아바타를 누르면 액션시트(모바일: 하단 시트 / 600px+: 중앙 모달)가 뜬다.
+`ProfileEditPage`처럼 폼 전체를 열지 않고, 사진만 바로 바꿀 수 있는 단축 경로다.
+
+- **사진 선택** → 숨겨진 `<input type="file">` 클릭 → `uploadImage()` → `usersApi.updateProfile({ profileImage: url })` → 응답으로 `profile` state 즉시 갱신
+- **기본 프로필로 변경** → `usersApi.updateProfile({ profileImage: null })` — 백엔드 `UpdateProfileDto.profileImage`는 `string | null` 허용, `null`이면 사진을 지운다
+- 두 액션 모두 별도 "저장" 버튼 없이 선택 즉시 반영된다 (폼 방식인 `ProfileEditPage`와의 차이점)
+
 ### MyPage keep-alive 대응
 
 MyPage는 항상 마운트되어 있으므로(`display` 전환), 프로필 수정 후 돌아와도

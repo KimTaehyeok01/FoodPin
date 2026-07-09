@@ -23,10 +23,11 @@ export class UpdateProfileDto {
   @MaxLength(50)
   nickname?: string;
 
+  // null이면 기본 프로필로 되돌림 (IsOptional은 null/undefined 모두 검증을 건너뛴다)
   @IsOptional()
   @IsString()
   @MaxLength(255)
-  profileImage?: string;
+  profileImage?: string | null;
 
   @IsOptional()
   @IsString()

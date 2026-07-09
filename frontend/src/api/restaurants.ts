@@ -151,7 +151,7 @@ export interface UserProfile {
 export interface UpdateProfileDto {
   name?: string;
   nickname?: string;
-  profileImage?: string;
+  profileImage?: string | null;
   address?: string;
   age?: number;
   gender?: string;

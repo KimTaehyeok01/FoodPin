@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { ChevronRight, Heart, Star, MapPin, Bell, UserRound, HelpCircle, LogOut, Edit } from 'lucide-react';
-import { pinsApi, usersApi, photoSrc } from '../../api/restaurants';
+import { ChevronRight, Heart, Star, MapPin, Bell, UserRound, HelpCircle, LogOut, Edit, Camera } from 'lucide-react';
+import { pinsApi, usersApi, uploadImage, photoSrc } from '../../api/restaurants';
 import type { Pin, UserProfile } from '../../api/restaurants';
 import './MyPage.css';
 
@@ -25,6 +25,9 @@ export default function MyPage() {
 
   const [pins, setPins] = useState<Pin[]>([]);
   const [profile, setProfile] = useState<UserProfile | null>(null);
+  const [avatarMenuOpen, setAvatarMenuOpen] = useState(false);
+  const [avatarSaving, setAvatarSaving] = useState(false);
+  const avatarFileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     pinsApi.getMyPins().then(setPins).catch(console.error);
@@ -50,19 +53,68 @@ export default function MyPage() {
     navigate('/login', { replace: true });
   };
 
+  const handlePickPhoto = () => {
+    setAvatarMenuOpen(false);
+    avatarFileInputRef.current?.click();
+  };
+
+  const handleAvatarFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    e.target.value = '';
+    if (!file) return;
+    setAvatarSaving(true);
+    try {
+      const url = await uploadImage(file);
+      const updated = await usersApi.updateProfile({ profileImage: url });
+      setProfile(updated);
+    } catch {
+      alert('프로필 사진 변경에 실패했습니다.');
+    } finally {
+      setAvatarSaving(false);
+    }
+  };
+
+  const handleResetPhoto = async () => {
+    setAvatarMenuOpen(false);
+    setAvatarSaving(true);
+    try {
+      const updated = await usersApi.updateProfile({ profileImage: null });
+      setProfile(updated);
+    } catch {
+      alert('기본 프로필로 변경하지 못했습니다.');
+    } finally {
+      setAvatarSaving(false);
+    }
+  };
+
   return (
     <div className="my-page">
       {/* 헤더 */}
       <div className="my-header">
         <div className="my-profile-row">
           <div className="my-avatar-wrap">
-            <div className="my-avatar">
+            <button
+              className="my-avatar"
+              onClick={() => setAvatarMenuOpen(true)}
+              disabled={avatarSaving}
+              aria-label="프로필 사진 변경"
+            >
               {profile?.profileImage ? (
                 <img src={photoSrc(profile.profileImage)} alt="프로필" className="my-avatar__img" />
               ) : (
                 '👤'
               )}
-            </div>
+              <span className="my-avatar__camera">
+                <Camera size={12} strokeWidth={2} />
+              </span>
+            </button>
+            <input
+              ref={avatarFileInputRef}
+              type="file"
+              accept="image/*"
+              style={{ display: 'none' }}
+              onChange={handleAvatarFileChange}
+            />
           </div>
           <div className="my-profile-info">
             <p className="my-username">{profile?.nickname ?? '푸드핀 유저'}</p>
@@ -182,6 +234,22 @@ export default function MyPage() {
 
         <p className="my-version">FoodPin v1.0.0</p>
       </div>
+
+      {avatarMenuOpen && (
+        <div className="my-avatar-menu-overlay" onClick={() => setAvatarMenuOpen(false)}>
+          <div className="my-avatar-menu" onClick={(e) => e.stopPropagation()}>
+            <button className="my-avatar-menu__item" onClick={handlePickPhoto}>
+              사진 선택
+            </button>
+            <button className="my-avatar-menu__item" onClick={handleResetPhoto}>
+              기본 프로필로 변경
+            </button>
+            <button className="my-avatar-menu__cancel" onClick={() => setAvatarMenuOpen(false)}>
+              취소
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

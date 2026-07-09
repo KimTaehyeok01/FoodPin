@@ -393,7 +393,7 @@ field: file (이미지 파일, 최대 10MB)
 
 ### PATCH /users/me *(인증 필요)*
 
-프로필 수정. 수정할 필드만 포함. `favoriteCategories`를 보내면 기존 즐겨찾는 카테고리를 전부 교체한다 (빈 배열이면 전체 삭제).
+프로필 수정. 수정할 필드만 포함. `favoriteCategories`를 보내면 기존 즐겨찾는 카테고리를 전부 교체한다 (빈 배열이면 전체 삭제). `profileImage`에 `null`을 보내면 기본 프로필로 되돌린다.
 
 **Request**
 ```json
