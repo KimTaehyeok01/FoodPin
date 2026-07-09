@@ -98,6 +98,7 @@ AppModule
 /restaurants               → RestaurantListPage
 /favorites                 → FavoritesPage
 /profile-edit              → ProfileEditPage
+/badges                    → BadgesPage
 /notifications             → NotificationsPage
 /notification-settings     → NotificationSettingsPage
 ```

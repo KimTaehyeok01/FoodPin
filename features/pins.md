@@ -26,8 +26,10 @@
 | `frontend/src/components/RestaurantCard.tsx` | 카드 내 핀 토글 버튼 |
 | `frontend/src/components/PinForm.tsx` | 별점·메모 수정 폼 |
 | `frontend/src/pages/my/FavoritesPage.tsx` | 찜한 맛집 목록 |
+| `frontend/src/pages/my/BadgesPage.tsx` | 뱃지 전체보기 (달성 조건·진행률) |
 | `frontend/src/pages/restaurant/RestaurantDetailPage.tsx` | 리뷰 탭 (식당의 모든 핀) |
 | `frontend/src/api/restaurants.ts` | `pinsApi` 클라이언트 |
+| `frontend/src/utils/badges.ts` | 핀 데이터 기반 뱃지 정의·판정 로직 |
 
 ---
 
@@ -153,6 +155,38 @@ const handlePin = async (e: React.MouseEvent) => {
 
 - `pinsApi.getForRestaurant(id)` 조회
 - `RestaurantPin` 타입: user 정보(nickname, profileImage) + rating + memo
+
+### 뱃지 (MyPage 미리보기 + BadgesPage 전체보기)
+
+서버에 뱃지 테이블 없이, **`pins` 배열을 클라이언트에서 계산**해 획득 여부를 판정한다.
+
+```typescript
+// utils/badges.ts
+export interface BadgeDef {
+  id: string;
+  emoji: string;
+  label: string;
+  description: string;
+  target: number;
+  getProgress: (pins: Pin[]) => number;  // 현재 달성치 계산
+}
+
+export function isBadgeEarned(badge: BadgeDef, pins: Pin[]): boolean {
+  return badge.getProgress(pins) >= badge.target;
+}
+```
+
+**뱃지 종류** (`BADGE_DEFS`)
+- 방문 개수: 첫 방문 / 10곳 / 30곳 / 50곳 달성 (`pins.length`)
+- 카테고리 편중: 한식러버·카페투어러·고기러버·라멘마스터 (특정 `restaurant.category` 3곳 이상)
+- 리뷰: 리뷰어 (메모 있는 핀 5개 이상)
+- 별점: 미식가 (별점 5점 준 곳 5곳 이상)
+
+**MyPage 미리보기** — 획득한 뱃지를 먼저 정렬해 최대 5개만 표시. "전체보기" → `/badges`.
+
+**BadgesPage** — 전체 뱃지를 그리드로 표시, 각 카드에 진행률 바(`progress/target`)와 잠금 여부(`bdg-card--locked`, 그레이스케일) 표시.
+
+**설계 이유:** 뱃지 조건이 방문 개수/카테고리/별점처럼 단순 카운트 기반이라, 프론트에서 `pins` 데이터로 즉시 계산 가능. 서버 테이블·API 없이 가볍게 구현했다. 나중에 연속 방문일 등 시계열 조건이 추가되면 백엔드로 옮기는 걸 고려한다.
 
 ---
 

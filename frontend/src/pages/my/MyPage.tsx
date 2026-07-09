@@ -19,15 +19,8 @@ import {
   photoSrc,
 } from "../../api/restaurants";
 import type { Pin, UserProfile } from "../../api/restaurants";
+import { BADGE_DEFS, isBadgeEarned } from "../../utils/badges";
 import "./MyPage.css";
-
-const BADGES = [
-  { emoji: "🍜", label: "라멘마스터", active: true },
-  { emoji: "🥢", label: "한식러버", active: true },
-  { emoji: "☕", label: "카페투어러", active: true },
-  { emoji: "🏆", label: "50곳달성", active: false },
-  { emoji: "👑", label: "미식가", active: false },
-];
 
 const SETTING_ITEMS = [
   {
@@ -64,6 +57,11 @@ export default function MyPage() {
 
   const pinnedCount = pins.length;
   const reviewCount = pins.filter((p) => p.memo).length;
+
+  // 획득한 뱃지를 먼저 보여주고, 미리보기는 5개까지만
+  const previewBadges = [...BADGE_DEFS]
+    .sort((a, b) => Number(isBadgeEarned(b, pins)) - Number(isBadgeEarned(a, pins)))
+    .slice(0, 5);
 
   const menuItems = [
     {
@@ -206,18 +204,23 @@ export default function MyPage() {
         <div className="my-card">
           <div className="my-card__header">
             <span className="my-card__title">내 뱃지</span>
-            <button className="my-card__more">전체보기</button>
+            <button className="my-card__more" onClick={() => navigate("/badges")}>
+              전체보기
+            </button>
           </div>
           <div className="my-badges">
-            {BADGES.map((b) => (
-              <div
-                key={b.label}
-                className={`my-badge ${b.active ? "" : "my-badge--locked"}`}
-              >
-                <div className="my-badge__icon">{b.emoji}</div>
-                <span className="my-badge__label">{b.label}</span>
-              </div>
-            ))}
+            {previewBadges.map((b) => {
+              const earned = isBadgeEarned(b, pins);
+              return (
+                <div
+                  key={b.id}
+                  className={`my-badge ${earned ? "" : "my-badge--locked"}`}
+                >
+                  <div className="my-badge__icon">{b.emoji}</div>
+                  <span className="my-badge__label">{b.label}</span>
+                </div>
+              );
+            })}
           </div>
         </div>
 
