@@ -10,6 +10,10 @@
 - 코드에 Claude 관련 정보(Co-Authored-By 등)를 절대 넣지 않는다.
 - UI는 **모바일 퍼스트** 기준으로 작성한다 (375px 기준 → 태블릿/데스크탑 확장).
 - **UI 수정 시 반드시 모바일(375px) · 태블릿(600px) · PC(960px) 세 화면을 모두 함께 수정한다.**
+- **레이아웃/여백/반응형 확인은 PC 개발자도구 모바일 화면으로 충분하다.** 단, 아래 항목을 새로 만들거나 수정할 때는 devtools만으로 검증됐다고 하지 말고 실기기(가능하면 iOS Safari) 확인이 필요하다고 먼저 안내한다 — devtools 모바일 화면은 여전히 Chrome(Blink) 엔진으로 렌더링되어 Safari(WebKit) 전용 버그를 못 잡는다.
+  - `position: fixed`를 `transform`/`overflow`가 있는 조상 안에서 쓰는 경우
+  - CSS 애니메이션이 걸린 오버레이/슬라이드 전환
+  - geolocation, 카메라 등 브라우저 네이티브 API를 쓰는 기능
 - TypeScript strict 모드를 사용한다.
 - API 응답은 항상 JSON.
 - 새 소스 파일 첫 줄에 한국어 주석으로 역할을 명시한다.
