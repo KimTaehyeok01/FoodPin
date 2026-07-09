@@ -2,20 +2,27 @@
 
 /* 상세 페이지는 내비게이션 영역을 제외한 화면 전체를 덮는 독립 프레임으로 만들어
    화면 자체가 옆에서 밀려 들어오고 나가는 네이티브 앱 같은 전환을 구현한다.
-   (내부에 있는 플로팅 버튼도 이 프레임을 기준으로 고정되어, 전환 중 위치가 틀어지지 않는다) */
+   (내부에 있는 플로팅 버튼도 이 프레임을 기준으로 고정되어, 전환 중 위치가 틀어지지 않는다)
+   주의: .rdx 자신은 스크롤을 갖지 않는다 — transform(고정 기준점)과 overflow-y:auto(스크롤)를
+   같은 요소에 동시에 두면 iOS Safari에서 내부 position:fixed 버튼이 스크롤에 끌려가며
+   다른 콘텐츠와 겹치는 버그가 있다. 실제 스크롤은 .rdx-layout이 담당한다. */
 .rdx {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 68px; /* 모바일 하단 내비 높이만큼 제외 */
-  overflow-y: auto;
-  overflow-x: hidden;
   background: linear-gradient(180deg, #0e1628 0%, #131f3a 100%);
   z-index: 10;
   /* 항상 자체 좌표계를 갖게 하여(하위 fixed 버튼의 기준) 애니메이션 전후 기준이 바뀌지 않도록 함 */
   transform: translateX(0);
   animation: rdx-slide-in 0.36s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.rdx-layout {
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 @keyframes rdx-slide-in {
@@ -105,8 +112,7 @@
   background: #fff;
   border-radius: 24px 24px 0 0;
   margin-top: -24px;
-  /* 하단 여백: 플로팅 CTA(52px) + 바텀 내비(68px) 위로 흰 배경이 이어지도록 */
-  padding: 24px 20px 170px;
+  padding: 24px 20px 32px;
 }
 
 .rdx-top {
@@ -476,14 +482,11 @@
   color: #bbb;
 }
 
-/* ── 플로팅 CTA ── */
+/* ── 리뷰 작성 CTA (길찾기/전화하기 버튼 바로 아래, 일반 흐름에 배치) ── */
 .rdx-cta {
-  position: fixed;
-  left: 16px;
-  right: 16px;
-  /* .rdx 자체가 하단 내비(68px)만큼 이미 안쪽으로 들어와 있으므로, 여기서는 나머지 여백(16px)만 더한다 */
-  bottom: 16px;
+  width: 100%;
   height: 52px;
+  margin-top: 10px;
   border: none;
   border-radius: 26px;
   background: linear-gradient(135deg, #ff8a5c 0%, #ff6b35 100%);
@@ -496,7 +499,6 @@
   gap: 8px;
   cursor: pointer;
   box-shadow: 0 6px 20px rgba(255,107,53,0.45);
-  z-index: 150;
 }
 
 /* ── 로딩 / 빈 상태 ── */
@@ -614,11 +616,7 @@
   }
 
   .rdx-cta {
-    position: static;
-    width: 100%;
     height: 54px;
-    margin: 10px 0 0;
-    font-size: 15px;
   }
 
   /* 탭 콘텐츠 카드 */
