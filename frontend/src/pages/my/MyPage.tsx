@@ -1,22 +1,48 @@
-import { useState, useEffect, useRef } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { ChevronRight, Heart, Star, MapPin, Bell, UserRound, HelpCircle, LogOut, Edit, Camera } from 'lucide-react';
-import { pinsApi, usersApi, uploadImage, photoSrc } from '../../api/restaurants';
-import type { Pin, UserProfile } from '../../api/restaurants';
-import './MyPage.css';
+import { useState, useEffect, useRef } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import {
+  ChevronRight,
+  Heart,
+  Star,
+  MapPin,
+  Bell,
+  UserRound,
+  HelpCircle,
+  LogOut,
+  Edit,
+  Camera,
+} from "lucide-react";
+import {
+  pinsApi,
+  usersApi,
+  uploadImage,
+  photoSrc,
+} from "../../api/restaurants";
+import type { Pin, UserProfile } from "../../api/restaurants";
+import "./MyPage.css";
 
 const BADGES = [
-  { emoji: '🍜', label: '라멘마스터', active: true },
-  { emoji: '🥢', label: '한식러버', active: true },
-  { emoji: '☕', label: '카페투어러', active: true },
-  { emoji: '🏆', label: '50곳달성', active: false },
-  { emoji: '👑', label: '미식가', active: false },
+  { emoji: "🍜", label: "라멘마스터", active: true },
+  { emoji: "🥢", label: "한식러버", active: true },
+  { emoji: "☕", label: "카페투어러", active: true },
+  { emoji: "🏆", label: "50곳달성", active: false },
+  { emoji: "👑", label: "미식가", active: false },
 ];
 
 const SETTING_ITEMS = [
-  { Icon: Bell, label: '알림 설정', color: '#ff6b35', to: '/notification-settings' },
-  { Icon: UserRound, label: '프로필 정보 변경', color: '#4caf50', to: '/profile-edit' },
-  { Icon: HelpCircle, label: '고객센터', color: '#2196f3', to: null },
+  {
+    Icon: Bell,
+    label: "알림 설정",
+    color: "#ff6b35",
+    to: "/notification-settings",
+  },
+  {
+    Icon: UserRound,
+    label: "프로필 정보 변경",
+    color: "#4caf50",
+    to: "/profile-edit",
+  },
+  { Icon: HelpCircle, label: "고객센터", color: "#2196f3", to: null },
 ];
 
 export default function MyPage() {
@@ -29,13 +55,10 @@ export default function MyPage() {
   const [avatarSaving, setAvatarSaving] = useState(false);
   const avatarFileInputRef = useRef<HTMLInputElement>(null);
 
+  // 마이페이지 탭 진입 시마다 핀·프로필 갱신
   useEffect(() => {
+    if (location.pathname !== "/mypage") return;
     pinsApi.getMyPins().then(setPins).catch(console.error);
-  }, []);
-
-  // 마이페이지 탭 진입 시마다 프로필 갱신 (keep-alive 상태에서 프로필 변경 반영)
-  useEffect(() => {
-    if (location.pathname !== '/mypage') return;
     usersApi.getMe().then(setProfile).catch(console.error);
   }, [location.pathname]);
 
@@ -43,14 +66,32 @@ export default function MyPage() {
   const reviewCount = pins.filter((p) => p.memo).length;
 
   const menuItems = [
-    { Icon: Heart, label: '찜한 맛집', count: pinnedCount, color: '#ff6b35', to: '/favorites' },
-    { Icon: Star, label: '내 리뷰', count: reviewCount, color: '#ffc107', to: '/favorites' },
-    { Icon: MapPin, label: '방문한 곳', count: pinnedCount, color: '#4caf50', to: '/favorites' },
+    {
+      Icon: Heart,
+      label: "찜한 맛집",
+      count: pinnedCount,
+      color: "#ff6b35",
+      to: "/favorites",
+    },
+    {
+      Icon: Star,
+      label: "내 리뷰",
+      count: reviewCount,
+      color: "#ffc107",
+      to: "/favorites",
+    },
+    {
+      Icon: MapPin,
+      label: "방문한 곳",
+      count: pinnedCount,
+      color: "#4caf50",
+      to: "/favorites",
+    },
   ];
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    navigate('/login', { replace: true });
+    localStorage.removeItem("token");
+    navigate("/login", { replace: true });
   };
 
   const handlePickPhoto = () => {
@@ -58,9 +99,11 @@ export default function MyPage() {
     avatarFileInputRef.current?.click();
   };
 
-  const handleAvatarFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleAvatarFileChange = async (
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     const file = e.target.files?.[0];
-    e.target.value = '';
+    e.target.value = "";
     if (!file) return;
     setAvatarSaving(true);
     try {
@@ -68,7 +111,7 @@ export default function MyPage() {
       const updated = await usersApi.updateProfile({ profileImage: url });
       setProfile(updated);
     } catch {
-      alert('프로필 사진 변경에 실패했습니다.');
+      alert("프로필 사진 변경에 실패했습니다.");
     } finally {
       setAvatarSaving(false);
     }
@@ -81,7 +124,7 @@ export default function MyPage() {
       const updated = await usersApi.updateProfile({ profileImage: null });
       setProfile(updated);
     } catch {
-      alert('기본 프로필로 변경하지 못했습니다.');
+      alert("기본 프로필로 변경하지 못했습니다.");
     } finally {
       setAvatarSaving(false);
     }
@@ -100,9 +143,13 @@ export default function MyPage() {
               aria-label="프로필 사진 변경"
             >
               {profile?.profileImage ? (
-                <img src={photoSrc(profile.profileImage)} alt="프로필" className="my-avatar__img" />
+                <img
+                  src={photoSrc(profile.profileImage)}
+                  alt="프로필"
+                  className="my-avatar__img"
+                />
               ) : (
-                '👤'
+                "👤"
               )}
               <span className="my-avatar__camera">
                 <Camera size={12} strokeWidth={2} />
@@ -112,16 +159,19 @@ export default function MyPage() {
               ref={avatarFileInputRef}
               type="file"
               accept="image/*"
-              style={{ display: 'none' }}
+              style={{ display: "none" }}
               onChange={handleAvatarFileChange}
             />
           </div>
           <div className="my-profile-info">
-            <p className="my-username">{profile?.nickname ?? '푸드핀 유저'}</p>
-            <p className="my-email">{profile?.email ?? ''}</p>
+            <p className="my-username">{profile?.nickname ?? "푸드핀 유저"}</p>
+            <p className="my-email">{profile?.email ?? ""}</p>
             <span className="my-level">🍴 미식 탐험가 Lv.1</span>
           </div>
-          <button className="my-edit-btn" onClick={() => navigate('/profile-edit')}>
+          <button
+            className="my-edit-btn"
+            onClick={() => navigate("/profile-edit")}
+          >
             <Edit size={14} strokeWidth={2} />
             편집
           </button>
@@ -160,7 +210,10 @@ export default function MyPage() {
           </div>
           <div className="my-badges">
             {BADGES.map((b) => (
-              <div key={b.label} className={`my-badge ${b.active ? '' : 'my-badge--locked'}`}>
+              <div
+                key={b.label}
+                className={`my-badge ${b.active ? "" : "my-badge--locked"}`}
+              >
                 <div className="my-badge__icon">{b.emoji}</div>
                 <span className="my-badge__label">{b.label}</span>
               </div>
@@ -173,7 +226,12 @@ export default function MyPage() {
           <div className="my-card__header">
             <span className="my-card__title">❤️ 찜한 맛집</span>
             {pinnedCount > 0 && (
-              <button className="my-card__more" onClick={() => navigate('/favorites')}>전체보기</button>
+              <button
+                className="my-card__more"
+                onClick={() => navigate("/favorites")}
+              >
+                전체보기
+              </button>
             )}
           </div>
           {pinnedCount === 0 ? (
@@ -190,11 +248,16 @@ export default function MyPage() {
                   onClick={() => navigate(`/restaurants/${p.restaurant.id}`)}
                 >
                   {p.restaurant.photoUrl ? (
-                    <img src={photoSrc(p.restaurant.photoUrl)} alt={p.restaurant.name} />
+                    <img
+                      src={photoSrc(p.restaurant.photoUrl)}
+                      alt={p.restaurant.name}
+                    />
                   ) : (
                     <span className="my-pinned-item__no-img">🍽️</span>
                   )}
-                  <span className="my-pinned-item__name">{p.restaurant.name}</span>
+                  <span className="my-pinned-item__name">
+                    {p.restaurant.name}
+                  </span>
                 </button>
               ))}
             </div>
@@ -204,12 +267,21 @@ export default function MyPage() {
         {/* 메뉴 */}
         <div className="my-menu-card">
           {menuItems.map(({ Icon, label, count, color, to }) => (
-            <button key={label} className="my-menu-item" onClick={() => navigate(to)}>
-              <div className="my-menu-icon" style={{ background: color + '22' }}>
+            <button
+              key={label}
+              className="my-menu-item"
+              onClick={() => navigate(to)}
+            >
+              <div
+                className="my-menu-icon"
+                style={{ background: color + "22" }}
+              >
                 <Icon size={16} strokeWidth={2} color={color} />
               </div>
               <span className="my-menu-label">{label}</span>
-              <span className="my-menu-count" style={{ color }}>{count}개</span>
+              <span className="my-menu-count" style={{ color }}>
+                {count}개
+              </span>
               <ChevronRight size={16} strokeWidth={2} color="#ddd" />
             </button>
           ))}
@@ -217,8 +289,15 @@ export default function MyPage() {
 
         <div className="my-menu-card" style={{ marginTop: 12 }}>
           {SETTING_ITEMS.map(({ Icon, label, color, to }) => (
-            <button key={label} className="my-menu-item" onClick={() => to && navigate(to)}>
-              <div className="my-menu-icon" style={{ background: color + '22' }}>
+            <button
+              key={label}
+              className="my-menu-item"
+              onClick={() => to && navigate(to)}
+            >
+              <div
+                className="my-menu-icon"
+                style={{ background: color + "22" }}
+              >
                 <Icon size={16} strokeWidth={2} color={color} />
               </div>
               <span className="my-menu-label">{label}</span>
@@ -236,7 +315,10 @@ export default function MyPage() {
       </div>
 
       {avatarMenuOpen && (
-        <div className="my-avatar-menu-overlay" onClick={() => setAvatarMenuOpen(false)}>
+        <div
+          className="my-avatar-menu-overlay"
+          onClick={() => setAvatarMenuOpen(false)}
+        >
           <div className="my-avatar-menu" onClick={(e) => e.stopPropagation()}>
             <button className="my-avatar-menu__item" onClick={handlePickPhoto}>
               사진 선택
@@ -244,7 +326,10 @@ export default function MyPage() {
             <button className="my-avatar-menu__item" onClick={handleResetPhoto}>
               기본 프로필로 변경
             </button>
-            <button className="my-avatar-menu__cancel" onClick={() => setAvatarMenuOpen(false)}>
+            <button
+              className="my-avatar-menu__cancel"
+              onClick={() => setAvatarMenuOpen(false)}
+            >
               취소
             </button>
           </div>
