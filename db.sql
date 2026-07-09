@@ -12,10 +12,12 @@ CREATE TABLE IF NOT EXISTS `user` (
   `providerId`   VARCHAR(100)     NULL,
   `email`        VARCHAR(255)     NULL UNIQUE,
   `password`     VARCHAR(255)     NULL,
+  `name`         VARCHAR(50)      NULL,
   `nickname`     VARCHAR(50)      NOT NULL,
   `profileImage` VARCHAR(255)     NULL,
   `address`      VARCHAR(255)     NULL,
   `age`          TINYINT UNSIGNED NULL,
+  `gender`       VARCHAR(10)      NULL,
   `createdAt`    DATETIME(6)      NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
