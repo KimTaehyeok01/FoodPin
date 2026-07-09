@@ -146,6 +146,7 @@ export interface UserProfile {
   age: number | null;
   gender: string | null;
   createdAt: string;
+  favoriteCategories: string[];
 }
 
 export interface UpdateProfileDto {

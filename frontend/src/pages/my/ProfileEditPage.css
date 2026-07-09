@@ -161,6 +161,31 @@
 
 .pe-field__input::placeholder { color: #ccc; }
 
+.pe-chip-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.pe-chip {
+  padding: 8px 14px;
+  border-radius: 20px;
+  border: 1.5px solid #e0e0e8;
+  background: #fff;
+  font-size: 13px;
+  font-weight: 500;
+  color: #666;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.pe-chip--active {
+  background: #fff1eb;
+  border-color: #ff6b35;
+  color: #ff6b35;
+  font-weight: 700;
+}
+
 /* ── 저장 버튼 ── */
 .pe-save {
   width: 100%;

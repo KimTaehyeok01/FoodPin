@@ -385,7 +385,8 @@ field: file (이미지 파일, 최대 10MB)
   "address": "서울 노원구",
   "age": 25,
   "gender": "male",
-  "createdAt": "2026-07-01T00:00:00.000Z"
+  "createdAt": "2026-07-01T00:00:00.000Z",
+  "favoriteCategories": ["한식", "카페/디저트"]
 }
 ```
 
@@ -408,7 +409,7 @@ field: file (이미지 파일, 최대 10MB)
 }
 ```
 
-**Response** `200 OK` — 수정된 프로필 (GET /users/me와 동일 형식, favoriteCategories는 응답에 포함되지 않음)
+**Response** `200 OK` — 수정된 프로필 (GET /users/me와 동일 형식, favoriteCategories 포함)
 
 ---
 

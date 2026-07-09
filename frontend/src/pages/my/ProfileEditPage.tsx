@@ -1,9 +1,14 @@
-// 프로필 정보 변경 페이지 — 닉네임·주소·나이·프로필 사진 수정
+// 프로필 정보 변경 페이지 — 닉네임·주소·선호 음식 카테고리·프로필 사진 수정
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ChevronLeft, Camera } from 'lucide-react';
 import { usersApi, uploadImage, photoSrc } from '../../api/restaurants';
 import './ProfileEditPage.css';
+
+const CATEGORIES = [
+  '한식', '중식', '일식', '양식', '분식',
+  '카페/디저트', '치킨/피자', '고기/구이', '해산물', '패스트푸드', '술집/포차',
+];
 
 export default function ProfileEditPage() {
   const navigate = useNavigate();
@@ -14,7 +19,7 @@ export default function ProfileEditPage() {
 
   const [nickname, setNickname] = useState('');
   const [address, setAddress] = useState('');
-  const [age, setAge] = useState('');
+  const [favoriteCategories, setFavoriteCategories] = useState<string[]>([]);
   const [profileImage, setProfileImage] = useState<string | null>(null);
   const [email, setEmail] = useState<string | null>(null);
 
@@ -23,13 +28,19 @@ export default function ProfileEditPage() {
       .then((me) => {
         setNickname(me.nickname);
         setAddress(me.address ?? '');
-        setAge(me.age != null ? String(me.age) : '');
+        setFavoriteCategories(me.favoriteCategories);
         setProfileImage(me.profileImage);
         setEmail(me.email);
       })
       .catch(console.error)
       .finally(() => setLoading(false));
   }, []);
+
+  const toggleCategory = (cat: string) => {
+    setFavoriteCategories((prev) =>
+      prev.includes(cat) ? prev.filter((c) => c !== cat) : [...prev, cat],
+    );
+  };
 
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -48,17 +59,12 @@ export default function ProfileEditPage() {
       alert('닉네임을 입력해주세요.');
       return;
     }
-    const parsedAge = age.trim() ? Number(age) : undefined;
-    if (parsedAge !== undefined && (!Number.isInteger(parsedAge) || parsedAge < 1 || parsedAge > 120)) {
-      alert('나이는 1~120 사이의 숫자로 입력해주세요.');
-      return;
-    }
     setSaving(true);
     try {
       await usersApi.updateProfile({
         nickname: trimmed,
         address: address.trim() || undefined,
-        age: parsedAge,
+        favoriteCategories,
         profileImage: profileImage ?? undefined,
       });
       setIsLeaving(true);
@@ -131,16 +137,21 @@ export default function ProfileEditPage() {
               />
             </label>
 
-            <label className="pe-field">
-              <span className="pe-field__label">나이</span>
-              <input
-                className="pe-field__input"
-                value={age}
-                inputMode="numeric"
-                placeholder="예: 25"
-                onChange={(e) => setAge(e.target.value.replace(/\D/g, ''))}
-              />
-            </label>
+            <div className="pe-field">
+              <span className="pe-field__label">선호 음식</span>
+              <div className="pe-chip-grid">
+                {CATEGORIES.map((cat) => (
+                  <button
+                    key={cat}
+                    type="button"
+                    className={`pe-chip ${favoriteCategories.includes(cat) ? 'pe-chip--active' : ''}`}
+                    onClick={() => toggleCategory(cat)}
+                  >
+                    {cat}
+                  </button>
+                ))}
+              </div>
+            </div>
 
             <button className="pe-save" onClick={handleSave} disabled={saving}>
               {saving ? '저장 중...' : '저장'}

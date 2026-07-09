@@ -7,6 +7,9 @@
 로그인한 유저의 프로필 조회·수정 기능.
 이름, 닉네임, 프로필 사진, 주소, 나이, 성별, 즐겨찾는 카테고리를 변경할 수 있다. 프로필 사진은 upload 기능을 재사용한다.
 
+**주의:** `ProfileEditPage`(일상적인 프로필 수정 화면)는 닉네임·주소·즐겨찾는 카테고리·프로필 사진만 수정한다.
+이름·나이·성별은 최초 가입(일반 회원가입 또는 [소셜 로그인 프로필 완성](auth.md#소셜-로그인-프로필-완성))에서만 입력받고, 이후 별도 수정 화면은 없다.
+
 소셜 로그인 유저의 이름·주소·나이·성별 필수 입력 흐름은 [features/auth.md](auth.md#소셜-로그인-프로필-완성) 참고.
 
 ---
@@ -58,6 +61,10 @@ const user = await this.userRepo.findOne({
   where: { id: userId },
   select: PROFILE_SELECT,
 });
+
+// favoriteCategories는 관계 테이블이라 별도 조회 후 문자열 배열로 변환해 합침
+const categories = await this.favCategoryRepo.find({ where: { userId } });
+return { ...user, favoriteCategories: categories.map((c) => c.category) };
 ```
 
 ### updateProfile
@@ -122,8 +129,10 @@ useEffect(() => {
 ### ProfileEditPage
 
 - 오버레이 패턴 (`pe-` prefix, slide-in/out, `isLeaving`)
-- 진입 시 `usersApi.getMe()`로 현재 값 로드
-- 클라이언트 유효성 검사: 닉네임 필수, 나이 1~120 정수
+- 진입 시 `usersApi.getMe()`로 현재 값(닉네임/주소/즐겨찾는 카테고리/프로필 사진) 로드
+- 필드: 닉네임(필수), 주소, 선호 음식 카테고리(칩 다중 선택, 회원가입과 동일한 `CATEGORIES` 목록)
+- 저장 시 `favoriteCategories`는 선택 여부와 무관하게 항상 전송 — 빈 배열이면 전체 삭제로 처리됨 (교체 방식이므로)
+- 클라이언트 유효성 검사: 닉네임 필수
 - 저장 성공 → slide-out → 마이페이지 복귀 (경로 감지로 자동 갱신)
 
 ---

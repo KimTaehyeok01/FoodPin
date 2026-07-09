@@ -20,6 +20,11 @@ const PROFILE_SELECT = {
   createdAt: true,
 } as const;
 
+// User의 favoriteCategories(관계 엔티티 배열)를 카테고리 이름 배열로 바꿔서 응답한다
+type UserProfileResult = Omit<Partial<User>, 'favoriteCategories'> & {
+  favoriteCategories: string[];
+};
+
 @Injectable()
 export class UsersService {
   constructor(
@@ -29,19 +34,20 @@ export class UsersService {
     private readonly favCategoryRepo: Repository<UserFavoriteCategory>,
   ) {}
 
-  async getMe(userId: number): Promise<Partial<User>> {
+  async getMe(userId: number): Promise<UserProfileResult> {
     const user = await this.userRepo.findOne({
       where: { id: userId },
       select: PROFILE_SELECT,
     });
     if (!user) throw new NotFoundException('유저를 찾을 수 없습니다.');
-    return user;
+    const categories = await this.favCategoryRepo.find({ where: { userId } });
+    return { ...user, favoriteCategories: categories.map((c) => c.category) };
   }
 
   async updateProfile(
     userId: number,
     dto: UpdateProfileDto,
-  ): Promise<Partial<User>> {
+  ): Promise<UserProfileResult> {
     const user = await this.userRepo.findOneBy({ id: userId });
     if (!user) throw new NotFoundException('유저를 찾을 수 없습니다.');
 
