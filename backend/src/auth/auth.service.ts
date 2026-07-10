@@ -96,6 +96,19 @@ export class AuthService {
     return this.generateToken(user);
   }
 
+  // 관리자 로그인 — 이메일+비밀번호 검증은 일반 로그인과 동일하되, role이 admin인 계정만 허용
+  async adminLogin(dto: LoginDto): Promise<string> {
+    const user = await this.userRepository.findOneBy({ email: dto.email });
+    if (!user || !user.password) throw new UnauthorizedException('이메일 또는 비밀번호가 올바르지 않습니다.');
+
+    const valid = await bcrypt.compare(dto.password, user.password);
+    if (!valid) throw new UnauthorizedException('이메일 또는 비밀번호가 올바르지 않습니다.');
+
+    if (user.role !== 'admin') throw new UnauthorizedException('관리자 권한이 없습니다.');
+
+    return this.generateToken(user);
+  }
+
   generateToken(user: User): string {
     return this.jwtService.sign({ sub: user.id });
   }

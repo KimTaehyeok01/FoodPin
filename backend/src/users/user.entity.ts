@@ -9,6 +9,7 @@ import { Pin } from '../pins/pin.entity';
 import { UserFavoriteCategory } from './user-favorite-category.entity';
 export { FOOD_CATEGORIES, FoodCategory } from './food-category.constants';
 export { GENDERS, Gender } from './gender.constants';
+export { ROLES, Role } from './role.constants';
 
 @Entity('user')
 export class User {
@@ -44,6 +45,9 @@ export class User {
 
   @Column({ type: 'varchar', length: 10, nullable: true })
   gender: string | null;
+
+  @Column({ type: 'varchar', length: 20, default: 'user' })
+  role: string;
 
   @CreateDateColumn()
   createdAt: Date;

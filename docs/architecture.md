@@ -136,6 +136,15 @@ const [isLeaving, setIsLeaving] = useState(false);
 /complete-profile  → CompleteProfilePage  ← 소셜 로그인 유저의 이름·주소·나이·성별 필수 입력
 ```
 
+### 관리자 라우트 (일반 유저 흐름과 분리)
+
+```
+/admin/login   → AdminLoginPage      ← 이메일+비밀번호만 (소셜 로그인 없음)
+/admin         → AdminDashboardPage  ← AdminRoute로 보호 (admin_token 존재 여부만 확인)
+```
+
+일반 유저 세션(`localStorage.token`)과 완전히 분리된 `localStorage.admin_token`을 사용한다. `AdminRoute`는 토큰 존재 여부만 클라이언트에서 확인하고, 실제 `role` 검증은 백엔드 `AdminGuard`가 매 요청마다 수행한다. 회원관리·앱관리 등 세부 기능은 미구현 — 현재는 로그인/세션 확인까지만 구현.
+
 ### `lastBase` 패턴
 
 오버레이가 닫혔을 때 마지막 탭으로 복귀하기 위해 `lastBase` 상태 유지.

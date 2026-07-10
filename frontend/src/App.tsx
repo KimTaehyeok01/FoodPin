@@ -20,6 +20,8 @@ import FavoritesPage from "./pages/my/FavoritesPage";
 import ProfileEditPage from "./pages/my/ProfileEditPage";
 import BadgesPage from "./pages/my/BadgesPage";
 import InquiriesPage from "./pages/my/InquiriesPage";
+import AdminLoginPage from "./pages/admin/AdminLoginPage";
+import AdminDashboardPage from "./pages/admin/AdminDashboardPage";
 import RestaurantDetailPage from "./pages/restaurant/RestaurantDetailPage";
 import RestaurantListPage from "./pages/restaurant/RestaurantListPage";
 import BottomNav from "./components/BottomNav";
@@ -30,6 +32,13 @@ function PrivateRoute({ children }: { children: React.ReactNode }) {
   if (token) return <>{children}</>;
   const seen = localStorage.getItem("onboarding_seen");
   return <Navigate to={seen ? "/login" : "/onboarding"} replace />;
+}
+
+// 일반 유저 세션(token)과 분리된 admin_token으로만 판단
+function AdminRoute({ children }: { children: React.ReactNode }) {
+  const adminToken = localStorage.getItem("admin_token");
+  if (adminToken) return <>{children}</>;
+  return <Navigate to="/admin/login" replace />;
 }
 
 const BASE_PATHS = ["/", "/map", "/mypage"];
@@ -128,6 +137,22 @@ export default function App() {
             <div className="app-shell">
               <CompleteProfilePage />
             </div>
+          }
+        />
+        <Route
+          path="/admin/login"
+          element={
+            <div className="app-shell">
+              <AdminLoginPage />
+            </div>
+          }
+        />
+        <Route
+          path="/admin"
+          element={
+            <AdminRoute>
+              <AdminDashboardPage />
+            </AdminRoute>
           }
         />
         <Route

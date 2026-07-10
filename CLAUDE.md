@@ -50,6 +50,7 @@
 | [features/notifications.md](features/notifications.md) | 알림 조회, 설정, 읽음 처리                               |
 | [features/upload.md](features/upload.md)               | 이미지 업로드, 정적 파일 서빙                            |
 | [features/inquiries.md](features/inquiries.md)         | 1:1 문의 등록·조회 (고객센터)                            |
+| [features/admin.md](features/admin.md)                 | 관리자 로그인·세션 (회원관리·앱관리는 TODO)              |
 
 ---
 

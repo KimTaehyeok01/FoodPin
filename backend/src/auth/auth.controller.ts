@@ -15,6 +15,8 @@ import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { User } from '../users/user.entity';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { AdminGuard } from './guards/admin.guard';
 
 const FRONTEND_URL = process.env.FRONTEND_URL ?? 'http://localhost:5173';
 
@@ -43,6 +45,22 @@ export class AuthController {
   async login(@Body() dto: LoginDto) {
     const token = await this.authService.login(dto);
     return { token };
+  }
+
+  // 관리자 로그인 (이메일+비밀번호만, role이 admin인 계정만 허용)
+  @Post('admin/login')
+  @HttpCode(HttpStatus.OK)
+  async adminLogin(@Body() dto: LoginDto) {
+    const token = await this.authService.adminLogin(dto);
+    return { token };
+  }
+
+  // 관리자 세션 확인
+  @Get('admin/me')
+  @UseGuards(JwtAuthGuard, AdminGuard)
+  getAdminMe(@Req() req: { user: User }) {
+    const { id, nickname, email, role } = req.user;
+    return { id, nickname, email, role };
   }
 
   // 카카오 소셜 로그인

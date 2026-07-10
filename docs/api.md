@@ -123,6 +123,35 @@ redirect → {FRONTEND_URL}/auth/callback#token={jwt}
 
 ---
 
+### POST /auth/admin/login
+
+관리자 로그인. 이메일+비밀번호만 지원(소셜 로그인 없음). `role`이 `admin`이 아닌 계정은 비밀번호가 맞아도 거부된다.
+
+**Request**
+```json
+{ "email": "admin@example.com", "password": "password123" }
+```
+
+**Response** `200 OK`
+```json
+{ "token": "eyJhbGciOi..." }
+```
+
+**최초 관리자 지정:** 회원가입 후 DB에서 해당 유저의 `role`을 `admin`으로 수동 변경.
+
+---
+
+### GET /auth/admin/me *(관리자 인증 필요)*
+
+관리자 세션 확인. `role`이 `admin`이 아니면 403.
+
+**Response** `200 OK`
+```json
+{ "id": 1, "nickname": "관리자", "email": "admin@example.com", "role": "admin" }
+```
+
+---
+
 ## Restaurants
 
 ### GET /restaurants

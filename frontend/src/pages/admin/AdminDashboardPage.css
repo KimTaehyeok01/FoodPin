@@ -1,0 +1,55 @@
+/* 관리자 대시보드 — 모바일 퍼스트 (375px) */
+
+.admin-dash-page {
+  min-height: 100vh;
+  background: #f5f5f7;
+}
+
+.admin-dash-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #0e1628;
+  padding: 20px;
+}
+
+.admin-dash-title {
+  color: #fff;
+  font-size: 17px;
+  font-weight: 800;
+}
+
+.admin-dash-logout {
+  border: none;
+  background: rgba(255,255,255,0.12);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.admin-dash-body {
+  padding: 24px 20px;
+  color: #222;
+  font-size: 15px;
+  line-height: 1.8;
+}
+
+.admin-dash-notice {
+  color: #999;
+  font-size: 13px;
+}
+
+/* 태블릿 (600px+) / PC (960px+) */
+@media (min-width: 600px) {
+  .admin-dash-header {
+    padding: 20px 40px;
+  }
+  .admin-dash-body {
+    padding: 32px 40px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+}

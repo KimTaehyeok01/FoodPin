@@ -35,6 +35,7 @@ pin: (userId, restaurantId) UNIQUE
 | address       | VARCHAR(255)             | nullable         | 주소 (일반 회원가입 시 필수 입력) |
 | age           | TINYINT UNSIGNED         | nullable         | 나이 (일반 회원가입 시 필수 입력) |
 | gender        | VARCHAR(10)              | nullable         | 성별 — `male` / `female` (일반 회원가입 시 필수 입력) |
+| role          | VARCHAR(20)              | NOT NULL, DEFAULT 'user' | `user` / `admin` — 관리자는 DB에서 수동으로 지정 |
 | createdAt     | DATETIME                 | NOT NULL         | 가입일 (@CreateDateColumn)    |
 
 **관계**
