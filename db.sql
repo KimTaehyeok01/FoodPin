@@ -74,6 +74,19 @@ CREATE TABLE IF NOT EXISTS `restaurant_menu` (
   CONSTRAINT `FK_menu_restaurant` FOREIGN KEY (`restaurantId`) REFERENCES `restaurant` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+CREATE TABLE IF NOT EXISTS `inquiry` (
+  `id`         INT          NOT NULL AUTO_INCREMENT,
+  `userId`     INT          NOT NULL,
+  `title`      VARCHAR(100) NOT NULL,
+  `content`    TEXT         NOT NULL,
+  `status`     VARCHAR(20)  NOT NULL DEFAULT 'pending',
+  `answer`     TEXT         NULL,
+  `answeredAt` DATETIME     NULL,
+  `createdAt`  DATETIME(6)  NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+  PRIMARY KEY (`id`),
+  CONSTRAINT `FK_inquiry_user` FOREIGN KEY (`userId`) REFERENCES `user` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 -- ── 기존 데이터 초기화 ──
 DELETE FROM restaurant_menu;
 DELETE FROM pin;

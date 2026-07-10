@@ -19,6 +19,7 @@ import MyPage from "./pages/my/MyPage";
 import FavoritesPage from "./pages/my/FavoritesPage";
 import ProfileEditPage from "./pages/my/ProfileEditPage";
 import BadgesPage from "./pages/my/BadgesPage";
+import InquiriesPage from "./pages/my/InquiriesPage";
 import RestaurantDetailPage from "./pages/restaurant/RestaurantDetailPage";
 import RestaurantListPage from "./pages/restaurant/RestaurantListPage";
 import BottomNav from "./components/BottomNav";
@@ -72,6 +73,7 @@ function AppLayout() {
         <Route path="/favorites" element={<FavoritesPage />} />
         <Route path="/profile-edit" element={<ProfileEditPage />} />
         <Route path="/badges" element={<BadgesPage />} />
+        <Route path="/inquiries" element={<InquiriesPage />} />
         <Route path="/notifications" element={<NotificationsPage />} />
         <Route
           path="/notification-settings"

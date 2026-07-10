@@ -168,6 +168,31 @@ export const usersApi = {
     }),
 };
 
+export interface Inquiry {
+  id: number;
+  userId: number;
+  title: string;
+  content: string;
+  status: 'pending' | 'answered';
+  answer: string | null;
+  answeredAt: string | null;
+  createdAt: string;
+}
+
+export interface CreateInquiryDto {
+  title: string;
+  content: string;
+}
+
+export const inquiriesApi = {
+  getMine: () => request<Inquiry[]>('/inquiries'),
+  create: (dto: CreateInquiryDto) =>
+    request<Inquiry>('/inquiries', {
+      method: 'POST',
+      body: JSON.stringify(dto),
+    }),
+};
+
 export const pinsApi = {
   getMyPins: () => request<Pin[]>("/pins/me"),
   getForRestaurant: (restaurantId: number) =>

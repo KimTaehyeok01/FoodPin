@@ -413,6 +413,48 @@ field: file (이미지 파일, 최대 10MB)
 
 ---
 
+## Inquiries
+
+### GET /inquiries *(인증 필요)*
+
+내 문의 목록.
+
+**Response** `200 OK`
+```json
+[
+  {
+    "id": 1,
+    "userId": 1,
+    "title": "지도가 안 열려요",
+    "content": "안드로이드에서 지도 탭을 누르면...",
+    "status": "pending",
+    "answer": null,
+    "answeredAt": null,
+    "createdAt": "2026-07-10T00:00:00.000Z"
+  }
+]
+```
+
+---
+
+### POST /inquiries *(인증 필요)*
+
+문의 등록.
+
+**Request**
+```json
+{
+  "title": "지도가 안 열려요",
+  "content": "안드로이드에서 지도 탭을 누르면 화면이 하얗게 나와요."
+}
+```
+
+**Response** `201 Created` — 생성된 문의 객체 (`status: "pending"`)
+
+**답변:** 이번 버전에는 관리자 답변 UI가 없다. `answer`/`status`/`answeredAt`는 DB에서 수동으로 채운다.
+
+---
+
 ## 갱신 트리거
 
 이 파일을 갱신해야 하는 경우.

@@ -7,6 +7,7 @@
 ```
 user 1 ──────── N user_favorite_category
 user 1 ──────── N pin
+user 1 ──────── N inquiry
 restaurant 1 ── N pin
 restaurant 1 ── N restaurant_menu
 
@@ -122,6 +123,25 @@ pin: (userId, restaurantId) UNIQUE
 
 **제약**
 - `@Unique(['userId', 'restaurantId'])` — 한 유저가 한 식당에 핀 1개만 등록 가능
+
+---
+
+### inquiry
+
+1:1 문의. user와 1:N.
+
+| 컬럼       | 타입          | 제약           | 설명                                    |
+| ---------- | ------------- | -------------- | --------------------------------------- |
+| id         | INT (PK, AI)  | NOT NULL       | 고유 ID                                 |
+| userId     | INT (FK)      | NOT NULL       | user.id (onDelete: CASCADE)             |
+| title      | VARCHAR(100)  | NOT NULL       | 문의 제목                               |
+| content    | TEXT          | NOT NULL       | 문의 내용                               |
+| status     | VARCHAR(20)   | DEFAULT pending| `pending` / `answered`                  |
+| answer     | TEXT          | nullable       | 관리자 답변 (현재 DB에서 수동 입력)     |
+| answeredAt | DATETIME      | nullable       | 답변 등록 시각                          |
+| createdAt  | DATETIME      | NOT NULL       | 등록일 (@CreateDateColumn)              |
+
+**주의:** 관리자 답변 UI는 아직 없다. `answer`/`status`/`answeredAt`는 DB에서 직접 채우는 최소 버전.
 
 ---
 

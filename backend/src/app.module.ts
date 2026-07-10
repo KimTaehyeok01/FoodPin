@@ -9,6 +9,7 @@ import { UploadModule } from './upload/upload.module';
 import { PinsModule } from './pins/pins.module';
 import { NotificationsModule } from './notifications/notifications.module';
 import { UsersModule } from './users/users.module';
+import { InquiriesModule } from './inquiries/inquiries.module';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { UsersModule } from './users/users.module';
     UploadModule,
     NotificationsModule,
     UsersModule,
+    InquiriesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

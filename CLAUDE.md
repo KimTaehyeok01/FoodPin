@@ -49,6 +49,7 @@
 | [features/users.md](features/users.md)                 | 프로필 조회·수정                                         |
 | [features/notifications.md](features/notifications.md) | 알림 조회, 설정, 읽음 처리                               |
 | [features/upload.md](features/upload.md)               | 이미지 업로드, 정적 파일 서빙                            |
+| [features/inquiries.md](features/inquiries.md)         | 1:1 문의 등록·조회 (고객센터)                            |
 
 ---
 

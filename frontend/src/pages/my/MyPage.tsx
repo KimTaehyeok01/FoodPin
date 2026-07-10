@@ -35,7 +35,7 @@ const SETTING_ITEMS = [
     color: "#4caf50",
     to: "/profile-edit",
   },
-  { Icon: HelpCircle, label: "고객센터", color: "#2196f3", to: null },
+  { Icon: HelpCircle, label: "고객센터", color: "#2196f3", to: "/inquiries" },
 ];
 
 export default function MyPage() {

@@ -55,6 +55,7 @@ AppModule
 ├── PinsModule
 ├── UsersModule        ← GET/PATCH /users/me (프로필)
 ├── NotificationsModule
+├── InquiriesModule    ← GET/POST /inquiries (1:1 문의)
 └── UploadModule
 ```
 
@@ -99,6 +100,7 @@ AppModule
 /favorites                 → FavoritesPage
 /profile-edit              → ProfileEditPage
 /badges                    → BadgesPage
+/inquiries                 → InquiriesPage
 /notifications             → NotificationsPage
 /notification-settings     → NotificationSettingsPage
 ```

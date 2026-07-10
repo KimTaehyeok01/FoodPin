@@ -1,0 +1,277 @@
+/* 고객센터(1:1 문의) 페이지 스타일 — 모바일 퍼스트 (375px) */
+
+.inq-page {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 68px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: #f5f5f7;
+  z-index: 10;
+  transform: translateX(0);
+  animation: inq-slide-in 0.36s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes inq-slide-in {
+  from { transform: translateX(100%); }
+  to   { transform: translateX(0); }
+}
+
+.inq-page--leaving {
+  animation: inq-slide-out 0.36s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes inq-slide-out {
+  from { transform: translateX(0); }
+  to   { transform: translateX(100%); }
+}
+
+/* ── 헤더 ── */
+.inq-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: linear-gradient(135deg, #0e1628 0%, #131f3a 100%);
+  padding: 52px 20px 28px;
+}
+
+.inq-back {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255,255,255,0.12);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.inq-title {
+  font-size: 20px;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -0.4px;
+}
+
+/* ── 바디 ── */
+.inq-body {
+  background: #f5f5f7;
+  border-radius: 20px 20px 0 0;
+  margin-top: -24px;
+  padding: 20px 16px;
+  min-height: 60vh;
+}
+
+.inq-write-btn {
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 14px;
+  background: #ff6b35;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-bottom: 18px;
+}
+
+/* ── 작성 폼 ── */
+.inq-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: #fff;
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  margin-bottom: 18px;
+}
+
+.inq-form__input,
+.inq-form__textarea {
+  border: 1px solid #ececec;
+  border-radius: 10px;
+  padding: 12px;
+  font-size: 14px;
+  color: #222;
+  font-family: inherit;
+  resize: vertical;
+}
+
+.inq-form__input:focus,
+.inq-form__textarea:focus {
+  outline: none;
+  border-color: #ff6b35;
+}
+
+.inq-form__actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.inq-form__cancel,
+.inq-form__submit {
+  padding: 10px 18px;
+  border-radius: 10px;
+  border: none;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.inq-form__cancel {
+  background: #f0f0f3;
+  color: #666;
+}
+
+.inq-form__submit {
+  background: #ff6b35;
+  color: #fff;
+}
+
+.inq-form__submit:disabled {
+  background: #ffc7ab;
+  cursor: not-allowed;
+}
+
+/* ── 목록 ── */
+.inq-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.inq-item {
+  background: #fff;
+  border-radius: 16px;
+  padding: 14px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.inq-item__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.inq-item__title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #222;
+}
+
+.inq-item__status {
+  flex-shrink: 0;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 20px;
+}
+
+.inq-item__status--pending {
+  background: #f0f0f3;
+  color: #999;
+}
+
+.inq-item__status--answered {
+  background: #e9f7ee;
+  color: #2fa360;
+}
+
+.inq-item__content {
+  margin-top: 6px;
+  font-size: 13px;
+  color: #666;
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
+
+.inq-item__date {
+  display: block;
+  margin-top: 8px;
+  font-size: 11px;
+  color: #bbb;
+}
+
+.inq-item__answer {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid #f0f0f3;
+}
+
+.inq-item__answer-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #ff6b35;
+}
+
+.inq-item__answer p {
+  margin-top: 4px;
+  font-size: 13px;
+  color: #444;
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
+
+/* ── 스켈레톤 / 빈 상태 ── */
+.inq-skeleton {
+  height: 90px;
+  border-radius: 16px;
+  background: linear-gradient(90deg, #e8e8ec 25%, #f2f2f5 50%, #e8e8ec 75%);
+  background-size: 200% 100%;
+  animation: inq-shimmer 1.4s infinite;
+}
+
+@keyframes inq-shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.inq-empty {
+  text-align: center;
+  padding: 60px 0;
+  color: #bbb;
+  font-size: 15px;
+  line-height: 2;
+}
+
+.inq-empty p:first-child { font-size: 40px; }
+
+/* ── 태블릿 (600px+) ── */
+@media (min-width: 600px) {
+  .inq-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+}
+
+/* ── PC (960px+) ── */
+@media (min-width: 960px) {
+  .inq-page {
+    top: 60px;
+    bottom: 0;
+  }
+
+  .inq-header {
+    padding: 28px 40px;
+  }
+
+  .inq-body {
+    max-width: 900px;
+    margin: -24px auto 0;
+    padding: 28px 40px;
+  }
+
+  .inq-list {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+}
