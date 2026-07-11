@@ -93,6 +93,8 @@ export class AuthService {
     const valid = await bcrypt.compare(dto.password, user.password);
     if (!valid) throw new UnauthorizedException('이메일 또는 비밀번호가 올바르지 않습니다.');
 
+    if (user.isBanned) throw new UnauthorizedException('정지된 계정입니다.');
+
     return this.generateToken(user);
   }
 

@@ -27,6 +27,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
   async validate(payload: JwtPayload): Promise<User> {
     const user = await this.userRepository.findOneBy({ id: payload.sub });
     if (!user) throw new UnauthorizedException();
+    if (user.isBanned) throw new UnauthorizedException('정지된 계정입니다.');
     return user;
   }
 }

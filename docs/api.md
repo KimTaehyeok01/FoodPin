@@ -480,7 +480,107 @@ field: file (이미지 파일, 최대 10MB)
 
 **Response** `201 Created` — 생성된 문의 객체 (`status: "pending"`)
 
-**답변:** 이번 버전에는 관리자 답변 UI가 없다. `answer`/`status`/`answeredAt`는 DB에서 수동으로 채운다.
+**답변:** `PATCH /admin/inquiries/:id/answer`(관리자 전용)으로 등록한다.
+
+---
+
+## Admin
+
+모든 엔드포인트 `JwtAuthGuard` + `AdminGuard` 적용 — `role`이 `admin`이 아니면 403.
+
+### GET /admin/stats
+
+요약 통계.
+
+**Response** `200 OK`
+```json
+{ "userCount": 42, "restaurantCount": 172, "pendingInquiryCount": 3 }
+```
+
+---
+
+### GET /admin/users
+
+회원 목록. `search` 쿼리로 닉네임/이메일 부분 검색.
+
+**Response** `200 OK`
+```json
+[
+  {
+    "id": 1,
+    "provider": null,
+    "email": "user@example.com",
+    "nickname": "길동이",
+    "role": "user",
+    "isBanned": false,
+    "createdAt": "2026-07-01T00:00:00.000Z"
+  }
+]
+```
+
+---
+
+### PATCH /admin/users/:id/ban
+
+회원 정지/해제.
+
+**Request** `{ "banned": true }`
+
+**Response** `200 OK`
+
+**즉시 반영:** 정지된 유저는 다음 요청부터 (본인이 이미 로그인해있어도) `JwtStrategy`에서 즉시 401로 거부된다.
+
+---
+
+### DELETE /admin/users/:id
+
+회원 삭제. 연관된 핀·즐겨찾기·문의가 CASCADE로 함께 삭제된다.
+
+**Response** `204 No Content`
+
+---
+
+### GET /admin/restaurants
+
+식당 목록. `search` 쿼리로 이름 부분 검색.
+
+---
+
+### DELETE /admin/restaurants/:id
+
+식당 삭제 (등록자 소유권 무관, 관리자는 전체 삭제 가능). 관련 핀·메뉴가 CASCADE로 함께 삭제된다.
+
+**Response** `204 No Content`
+
+---
+
+### GET /admin/pins
+
+전체 리뷰(핀) 목록. 작성자 닉네임 + 식당 이름 포함.
+
+---
+
+### DELETE /admin/pins/:id
+
+부적절한 리뷰 삭제.
+
+**Response** `204 No Content`
+
+---
+
+### GET /admin/inquiries
+
+전체 유저의 문의 목록 (작성자 닉네임/이메일 포함).
+
+---
+
+### PATCH /admin/inquiries/:id/answer
+
+문의 답변 등록. `status`를 `answered`로, `answeredAt`을 현재 시각으로 자동 설정.
+
+**Request** `{ "answer": "안드로이드 앱 캐시를 지우고 다시 시도해주세요." }`
+
+**Response** `200 OK` — 수정된 문의 객체
 
 ---
 

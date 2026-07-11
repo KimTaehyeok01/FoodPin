@@ -36,6 +36,7 @@ pin: (userId, restaurantId) UNIQUE
 | age           | TINYINT UNSIGNED         | nullable         | 나이 (일반 회원가입 시 필수 입력) |
 | gender        | VARCHAR(10)              | nullable         | 성별 — `male` / `female` (일반 회원가입 시 필수 입력) |
 | role          | VARCHAR(20)              | NOT NULL, DEFAULT 'user' | `user` / `admin` — 관리자는 DB에서 수동으로 지정 |
+| isBanned      | BOOLEAN                  | NOT NULL, DEFAULT false | 정지 여부 — true면 일반 로그인·JWT 인증 모두 즉시 거부 |
 | createdAt     | DATETIME                 | NOT NULL         | 가입일 (@CreateDateColumn)    |
 
 **관계**

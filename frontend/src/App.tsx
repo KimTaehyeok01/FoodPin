@@ -22,6 +22,10 @@ import BadgesPage from "./pages/my/BadgesPage";
 import InquiriesPage from "./pages/my/InquiriesPage";
 import AdminLoginPage from "./pages/admin/AdminLoginPage";
 import AdminDashboardPage from "./pages/admin/AdminDashboardPage";
+import AdminUsersPage from "./pages/admin/AdminUsersPage";
+import AdminRestaurantsPage from "./pages/admin/AdminRestaurantsPage";
+import AdminPinsPage from "./pages/admin/AdminPinsPage";
+import AdminInquiriesPage from "./pages/admin/AdminInquiriesPage";
 import RestaurantDetailPage from "./pages/restaurant/RestaurantDetailPage";
 import RestaurantListPage from "./pages/restaurant/RestaurantListPage";
 import BottomNav from "./components/BottomNav";
@@ -152,6 +156,38 @@ export default function App() {
           element={
             <AdminRoute>
               <AdminDashboardPage />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin/users"
+          element={
+            <AdminRoute>
+              <AdminUsersPage />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin/restaurants"
+          element={
+            <AdminRoute>
+              <AdminRestaurantsPage />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin/pins"
+          element={
+            <AdminRoute>
+              <AdminPinsPage />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin/inquiries"
+          element={
+            <AdminRoute>
+              <AdminInquiriesPage />
             </AdminRoute>
           }
         />

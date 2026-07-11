@@ -19,6 +19,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `age`          TINYINT UNSIGNED NULL,
   `gender`       VARCHAR(10)      NULL,
   `role`         VARCHAR(20)      NOT NULL DEFAULT 'user',
+  `isBanned`     TINYINT(1)       NOT NULL DEFAULT 0,
   `createdAt`    DATETIME(6)      NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

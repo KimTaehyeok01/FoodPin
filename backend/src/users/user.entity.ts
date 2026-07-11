@@ -49,6 +49,9 @@ export class User {
   @Column({ type: 'varchar', length: 20, default: 'user' })
   role: string;
 
+  @Column({ type: 'boolean', default: false })
+  isBanned: boolean;
+
   @CreateDateColumn()
   createdAt: Date;
 

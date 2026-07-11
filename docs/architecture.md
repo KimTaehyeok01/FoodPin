@@ -56,6 +56,7 @@ AppModule
 ├── UsersModule        ← GET/PATCH /users/me (프로필)
 ├── NotificationsModule
 ├── InquiriesModule    ← GET/POST /inquiries (1:1 문의)
+├── AdminModule        ← /admin/* (회원·식당·리뷰·문의 관리, AdminGuard)
 └── UploadModule
 ```
 
@@ -139,11 +140,17 @@ const [isLeaving, setIsLeaving] = useState(false);
 ### 관리자 라우트 (일반 유저 흐름과 분리)
 
 ```
-/admin/login   → AdminLoginPage      ← 이메일+비밀번호만 (소셜 로그인 없음)
-/admin         → AdminDashboardPage  ← AdminRoute로 보호 (admin_token 존재 여부만 확인)
+/admin/login       → AdminLoginPage        ← 이메일+비밀번호만 (소셜 로그인 없음)
+/admin             → AdminDashboardPage    ← 요약 통계
+/admin/users       → AdminUsersPage        ← 회원 검색·정지/해제·삭제
+/admin/restaurants → AdminRestaurantsPage  ← 식당 검색·삭제
+/admin/pins        → AdminPinsPage         ← 리뷰 조회·삭제
+/admin/inquiries   → AdminInquiriesPage    ← 문의 조회·답변 등록
 ```
 
-일반 유저 세션(`localStorage.token`)과 완전히 분리된 `localStorage.admin_token`을 사용한다. `AdminRoute`는 토큰 존재 여부만 클라이언트에서 확인하고, 실제 `role` 검증은 백엔드 `AdminGuard`가 매 요청마다 수행한다. 회원관리·앱관리 등 세부 기능은 미구현 — 현재는 로그인/세션 확인까지만 구현.
+일반 유저 세션(`localStorage.token`)과 완전히 분리된 `localStorage.admin_token`을 사용한다. `AdminRoute`는 토큰 존재 여부만 클라이언트에서 확인하고(`PrivateRoute`와 동일한 패턴), 실제 `role` 검증은 백엔드 `AdminGuard`가 매 요청마다 수행한다. 세부 페이지는 `AdminLayout`(상단 헤더 + 탭 네비게이션) 공통 컴포넌트로 감싼다.
+
+**세션 즉시 무효화:** 회원을 정지(`isBanned`)하거나 삭제하면, 그 유저가 발급받은 기존 JWT도 다음 요청부터 `JwtStrategy`에서 즉시 거부된다(재로그인 필요). 관리자 계정 자신을 정지/삭제해도 동일하게 즉시 로그아웃된다.
 
 ### `lastBase` 패턴
 
