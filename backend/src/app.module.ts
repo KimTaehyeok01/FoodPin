@@ -26,7 +26,7 @@ import { AdminModule } from './admin/admin.module';
         password: config.get('DB_PASSWORD'),
         database: config.get('DB_DATABASE'),
         entities: [__dirname + '/**/*.entity{.ts,.js}'],
-        synchronize: true,
+        synchronize: config.get('NODE_ENV') !== 'production',
         logging: false,
       }),
     }),
