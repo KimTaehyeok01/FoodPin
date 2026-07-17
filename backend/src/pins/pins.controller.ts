@@ -15,6 +15,7 @@ import {
 import { PinsService } from './pins.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CreatePinDto } from './dto/create-pin.dto';
+import { UpdatePinDto } from './dto/update-pin.dto';
 
 @Controller('pins')
 @UseGuards(JwtAuthGuard)
@@ -44,7 +45,7 @@ export class PinsController {
   updatePin(
     @Req() req: any,
     @Param('restaurantId', ParseIntPipe) restaurantId: number,
-    @Body() dto: Partial<CreatePinDto>,
+    @Body() dto: UpdatePinDto,
   ) {
     return this.pinsService.updatePin(req.user.id, restaurantId, dto);
   }

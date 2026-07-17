@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Pin } from './pin.entity';
 import { CreatePinDto } from './dto/create-pin.dto';
+import { UpdatePinDto } from './dto/update-pin.dto';
 
 @Injectable()
 export class PinsService {
@@ -44,7 +45,7 @@ export class PinsService {
     return this.pinRepo.save(pin);
   }
 
-  async updatePin(userId: number, restaurantId: number, dto: Partial<CreatePinDto>): Promise<Pin> {
+  async updatePin(userId: number, restaurantId: number, dto: UpdatePinDto): Promise<Pin> {
     const pin = await this.pinRepo.findOne({ where: { userId, restaurantId } });
     if (!pin) throw new NotFoundException('핀을 찾을 수 없습니다.');
     Object.assign(pin, dto);

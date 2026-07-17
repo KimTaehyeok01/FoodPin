@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Restaurant } from './restaurant.entity';
 import { CreateRestaurantDto } from './dto/create-restaurant.dto';
+import { UpdateRestaurantDto } from './dto/update-restaurant.dto';
 
 @Injectable()
 export class RestaurantsService {
@@ -30,7 +31,7 @@ export class RestaurantsService {
     return this.restaurantRepo.save(restaurant);
   }
 
-  async update(id: number, userId: number, dto: Partial<CreateRestaurantDto>): Promise<Restaurant> {
+  async update(id: number, userId: number, dto: UpdateRestaurantDto): Promise<Restaurant> {
     const restaurant = await this.findOne(id);
     if (restaurant.userId !== null && restaurant.userId !== userId) {
       throw new ForbiddenException('수정 권한이 없습니다.');

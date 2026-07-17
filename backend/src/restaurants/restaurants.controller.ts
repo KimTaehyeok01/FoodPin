@@ -16,6 +16,7 @@ import { Request } from 'express';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RestaurantsService } from './restaurants.service';
 import { CreateRestaurantDto } from './dto/create-restaurant.dto';
+import { UpdateRestaurantDto } from './dto/update-restaurant.dto';
 import { User } from '../users/user.entity';
 
 type AuthRequest = Request & { user: User };
@@ -44,7 +45,7 @@ export class RestaurantsController {
   @UseGuards(JwtAuthGuard)
   update(
     @Param('id', ParseIntPipe) id: number,
-    @Body() dto: Partial<CreateRestaurantDto>,
+    @Body() dto: UpdateRestaurantDto,
     @Req() req: AuthRequest,
   ) {
     return this.restaurantsService.update(id, req.user.id, dto);
