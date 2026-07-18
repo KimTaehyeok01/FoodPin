@@ -12,6 +12,7 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ConfigService } from '@nestjs/config';
+import { Throttle, ThrottlerGuard } from '@nestjs/throttler';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
@@ -28,6 +29,8 @@ export class AuthController {
 
   // 이메일 중복 확인 (회원가입 기본 정보 단계에서 다음으로 넘어갈 때 호출)
   @Get('check-email')
+  @UseGuards(ThrottlerGuard)
+  @Throttle({ default: { limit: 20, ttl: 60000 } })
   async checkEmail(@Query('email') email: string) {
     const available = await this.authService.isEmailAvailable(email);
     return { available };
@@ -43,6 +46,8 @@ export class AuthController {
 
   // 일반 로그인
   @Post('login')
+  @UseGuards(ThrottlerGuard)
+  @Throttle({ default: { limit: 5, ttl: 60000 } })
   @HttpCode(HttpStatus.OK)
   async login(@Body() dto: LoginDto) {
     const token = await this.authService.login(dto);
@@ -51,6 +56,8 @@ export class AuthController {
 
   // 관리자 로그인 (이메일+비밀번호만, role이 admin인 계정만 허용)
   @Post('admin/login')
+  @UseGuards(ThrottlerGuard)
+  @Throttle({ default: { limit: 5, ttl: 60000 } })
   @HttpCode(HttpStatus.OK)
   async adminLogin(@Body() dto: LoginDto) {
     const token = await this.authService.adminLogin(dto);
