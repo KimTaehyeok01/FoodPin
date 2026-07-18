@@ -11,6 +11,7 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import { ConfigService } from '@nestjs/config';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
@@ -18,11 +19,12 @@ import { User } from '../users/user.entity';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { AdminGuard } from './guards/admin.guard';
 
-const FRONTEND_URL = process.env.FRONTEND_URL ?? 'http://localhost:5173';
-
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly config: ConfigService,
+  ) {}
 
   // 이메일 중복 확인 (회원가입 기본 정보 단계에서 다음으로 넘어갈 때 호출)
   @Get('check-email')
@@ -72,7 +74,8 @@ export class AuthController {
   @UseGuards(AuthGuard('kakao'))
   kakaoCallback(@Req() req: { user: User }, @Res() res: any) {
     const token = this.authService.generateToken(req.user);
-    res.redirect(`${FRONTEND_URL}/auth/callback#token=${token}`);
+    const frontendUrl = this.config.get('FRONTEND_URL') ?? 'http://localhost:5173';
+    res.redirect(`${frontendUrl}/auth/callback#token=${token}`);
   }
 
   // 네이버 소셜 로그인
@@ -84,6 +87,7 @@ export class AuthController {
   @UseGuards(AuthGuard('naver'))
   naverCallback(@Req() req: { user: User }, @Res() res: any) {
     const token = this.authService.generateToken(req.user);
-    res.redirect(`${FRONTEND_URL}/auth/callback#token=${token}`);
+    const frontendUrl = this.config.get('FRONTEND_URL') ?? 'http://localhost:5173';
+    res.redirect(`${frontendUrl}/auth/callback#token=${token}`);
   }
 }
