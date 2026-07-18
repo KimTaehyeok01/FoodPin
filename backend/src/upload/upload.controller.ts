@@ -11,6 +11,8 @@ import { diskStorage } from 'multer';
 import { extname } from 'path';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
+const ALLOWED_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
+
 @UseGuards(JwtAuthGuard)
 @Controller('upload')
 export class UploadController {
@@ -25,7 +27,8 @@ export class UploadController {
         },
       }),
       fileFilter: (_req, file, cb) => {
-        if (!file.mimetype.match(/^image\//)) {
+        const ext = extname(file.originalname).toLowerCase();
+        if (!file.mimetype.match(/^image\//) || !ALLOWED_EXTENSIONS.includes(ext)) {
           return cb(new BadRequestException('이미지 파일만 업로드 가능합니다.'), false);
         }
         cb(null, true);
