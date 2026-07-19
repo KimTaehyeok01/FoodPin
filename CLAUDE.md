@@ -93,6 +93,7 @@
 - 사용 클래스: `NotFoundException`, `ConflictException`, `UnauthorizedException`, `ForbiddenException`, `BadRequestException`
 - 에러 메시지는 **한국어**로 작성 (예: `'식당을 찾을 수 없습니다.'`)
 - 컨트롤러에 try/catch 금지 — 예외는 서비스에서만 던진다
+- DB 유니크 제약 위반(동시 요청 race)은 서비스에서 catch → `ConflictException`으로 변환 (예: `auth.service.ts`의 `isDuplicateError` 헬퍼)
 
 **응답 포맷**
 
@@ -105,6 +106,12 @@
 
 - 모든 엔드포인트가 인증 필요 → 클래스 레벨 `@UseGuards(JwtAuthGuard)`
 - 일부만 인증 필요 → 메서드 레벨 선택 적용
+- 관리자 전용 엔드포인트 → `@UseGuards(JwtAuthGuard, AdminGuard)` (role 검사)
+
+**Rate Limiting 규칙**
+
+- 브루트포스·이메일 열거(enumeration)·부하 공격에 노출되는 인증 관련 엔드포인트에 `@UseGuards(ThrottlerGuard)` + `@Throttle(...)` 개별 적용 (전역 가드 아님)
+- 상세 제한값 → [docs/security.md](docs/security.md#rate-limiting-nestjsthrottler)
 
 ### 프론트엔드
 
