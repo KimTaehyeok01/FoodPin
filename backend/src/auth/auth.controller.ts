@@ -38,6 +38,8 @@ export class AuthController {
 
   // 일반 회원가입
   @Post('register')
+  @UseGuards(ThrottlerGuard)
+  @Throttle({ default: { limit: 5, ttl: 60000 } })
   async register(@Body() dto: RegisterDto) {
     const user = await this.authService.register(dto);
     const token = this.authService.generateToken(user);

@@ -4,6 +4,7 @@ import {
   Column,
   CreateDateColumn,
   OneToMany,
+  Unique,
 } from 'typeorm';
 import { Pin } from '../pins/pin.entity';
 import { UserFavoriteCategory } from './user-favorite-category.entity';
@@ -12,6 +13,7 @@ export { GENDERS, Gender } from './gender.constants';
 export { ROLES, Role } from './role.constants';
 
 @Entity('user')
+@Unique(['provider', 'providerId'])
 export class User {
   @PrimaryGeneratedColumn()
   id: number;

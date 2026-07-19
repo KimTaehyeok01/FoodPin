@@ -25,7 +25,25 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
   }
 
   async validate(payload: JwtPayload): Promise<User> {
-    const user = await this.userRepository.findOneBy({ id: payload.sub });
+    // password를 제외하고 조회 — req.user가 실수로 응답에 실려도 해시가 유출되지 않도록
+    const user = await this.userRepository.findOne({
+      where: { id: payload.sub },
+      select: {
+        id: true,
+        provider: true,
+        providerId: true,
+        email: true,
+        name: true,
+        nickname: true,
+        profileImage: true,
+        address: true,
+        age: true,
+        gender: true,
+        role: true,
+        isBanned: true,
+        createdAt: true,
+      },
+    });
     if (!user) throw new UnauthorizedException();
     if (user.isBanned) throw new UnauthorizedException('정지된 계정입니다.');
     return user;

@@ -48,13 +48,13 @@ export class RestaurantsController {
     @Body() dto: UpdateRestaurantDto,
     @Req() req: AuthRequest,
   ) {
-    return this.restaurantsService.update(id, req.user.id, dto);
+    return this.restaurantsService.update(id, req.user, dto);
   }
 
   @Delete(':id')
   @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
   remove(@Param('id', ParseIntPipe) id: number, @Req() req: AuthRequest) {
-    return this.restaurantsService.remove(id, req.user.id);
+    return this.restaurantsService.remove(id, req.user);
   }
 }
