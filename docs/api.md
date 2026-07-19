@@ -29,6 +29,7 @@ Authorization: Bearer {token}
 | 권한 없음 (타인 리소스) | 403 Forbidden |
 | 리소스 없음 | 404 Not Found |
 | 중복 (이미 존재) | 409 Conflict |
+| 호출 횟수 초과 (rate limit) | 429 Too Many Requests |
 
 ---
 
@@ -36,7 +37,7 @@ Authorization: Bearer {token}
 
 ### GET /auth/check-email
 
-이메일 중복 확인. 회원가입 1단계(기본 정보 입력)에서 다음 단계로 넘어가기 전 호출.
+이메일 중복 확인. 회원가입 1단계(기본 정보 입력)에서 다음 단계로 넘어가기 전 호출. rate limit 20회/분.
 
 **Query Parameters**
 
@@ -53,7 +54,7 @@ Authorization: Bearer {token}
 
 ### POST /auth/register
 
-회원가입 (일반 이메일). `address`, `age`, `gender`는 필수값 — 소셜 로그인과 달리 일반 가입은 추가 정보를 의무 입력한다.
+회원가입 (일반 이메일). `address`, `age`, `gender`는 필수값 — 소셜 로그인과 달리 일반 가입은 추가 정보를 의무 입력한다. rate limit 5회/분.
 
 **Request**
 ```json
@@ -74,11 +75,13 @@ Authorization: Bearer {token}
 { "token": "eyJhbGciOi..." }
 ```
 
+**Error** `409 Conflict` — 이미 사용 중인 이메일 (check-email 통과 후 race로 중복돼도 동일하게 409)
+
 ---
 
 ### POST /auth/login
 
-일반 로그인.
+일반 로그인. rate limit 5회/분.
 
 **Request**
 ```json
@@ -125,7 +128,7 @@ redirect → {FRONTEND_URL}/auth/callback#token={jwt}
 
 ### POST /auth/admin/login
 
-관리자 로그인. 이메일+비밀번호만 지원(소셜 로그인 없음). `role`이 `admin`이 아닌 계정은 비밀번호가 맞아도 거부된다.
+관리자 로그인. 이메일+비밀번호만 지원(소셜 로그인 없음). `role`이 `admin`이 아닌 계정은 비밀번호가 맞아도 거부된다. 정지(`isBanned`)된 계정도 거부. rate limit 5회/분.
 
 **Request**
 ```json
@@ -228,7 +231,7 @@ redirect → {FRONTEND_URL}/auth/callback#token={jwt}
 
 ### PATCH /restaurants/:id *(인증 필요)*
 
-식당 수정. 등록자 본인만 가능.
+식당 수정. 등록자 본인만 가능. 소유자가 없는(`userId: null`) 시드 식당은 관리자만 가능.
 
 **Request** — 수정할 필드만 포함 (Partial)
 ```json
@@ -241,7 +244,7 @@ redirect → {FRONTEND_URL}/auth/callback#token={jwt}
 
 ### DELETE /restaurants/:id *(인증 필요)*
 
-식당 삭제. 등록자 본인만 가능.
+식당 삭제. 등록자 본인만 가능. 소유자가 없는(`userId: null`) 시드 식당은 관리자만 가능.
 
 **Response** `204 No Content`
 

@@ -12,6 +12,7 @@ restaurant 1 ── N pin
 restaurant 1 ── N restaurant_menu
 
 pin: (userId, restaurantId) UNIQUE
+user: (provider, providerId) UNIQUE
 ```
 
 ---
@@ -38,6 +39,9 @@ pin: (userId, restaurantId) UNIQUE
 | role          | VARCHAR(20)              | NOT NULL, DEFAULT 'user' | `user` / `admin` — 관리자는 DB에서 수동으로 지정 |
 | isBanned      | BOOLEAN                  | NOT NULL, DEFAULT false | 정지 여부 — true면 일반 로그인·JWT 인증 모두 즉시 거부 |
 | createdAt     | DATETIME                 | NOT NULL         | 가입일 (@CreateDateColumn)    |
+
+**제약**
+- `@Unique(['provider', 'providerId'])` — 같은 소셜 계정으로 유저 중복 생성 방지 (OAuth 콜백 동시 요청 race 대비). 운영 DB는 `synchronize`가 꺼져 있으므로 배포 시 유니크 인덱스를 수동 적용해야 한다.
 
 **관계**
 - `@OneToMany` → `pin` (userId)
@@ -90,7 +94,7 @@ pin: (userId, restaurantId) UNIQUE
 - `@OneToMany` → `pin` (restaurantId)
 - `@OneToMany` → `restaurant_menu` (restaurantId)
 
-**소유권 주의:** `userId`가 `null`이면 공용 레코드로 간주하여 누구나 수정 가능. 추후 정책 재검토 필요.
+**소유권 주의:** `userId`가 `null`인 레코드(시드 데이터)는 관리자(`role: admin`)만 수정·삭제 가능. 소유자가 있으면 본인만 가능.
 
 ---
 

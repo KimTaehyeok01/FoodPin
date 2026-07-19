@@ -41,7 +41,7 @@
 
 핵심 필드.
 - `latitude`, `longitude`: `DECIMAL(10,7)` — 카카오맵 좌표
-- `userId`: nullable — 시드 데이터는 null (공용 레코드)
+- `userId`: nullable — 시드 데이터는 null (관리자만 수정·삭제 가능)
 - `photoUrl`: `/uploads/xxx.jpg` (업로드) 또는 `https://...` (외부 URL) 혼용
 - `menus`: `@OneToMany` → `RestaurantMenu`
 
@@ -54,8 +54,8 @@
 | GET | /restaurants | 불필요 | 전체 목록 (createdAt DESC) |
 | GET | /restaurants/:id | 불필요 | 단건 + menus 포함 |
 | POST | /restaurants | 필요 | 등록 |
-| PATCH | /restaurants/:id | 필요 | 수정 (본인만) |
-| DELETE | /restaurants/:id | 필요 | 삭제 (본인만) |
+| PATCH | /restaurants/:id | 필요 | 수정 (본인만 · null 소유는 관리자만) |
+| DELETE | /restaurants/:id | 필요 | 삭제 (본인만 · null 소유는 관리자만) |
 
 자세한 요청/응답 형식 → [docs/api.md](../docs/api.md#restaurants)
 
@@ -84,10 +84,11 @@ if (!restaurant) throw new NotFoundException('식당을 찾을 수 없습니다.
 ### 소유권 체크
 
 ```typescript
-// userId가 null이면 공용 레코드 → 누구나 수정 가능
-if (restaurant.userId !== null && restaurant.userId !== userId) {
-  throw new ForbiddenException('수정 권한이 없습니다.');
-}
+// assertCanModify — update/remove 공통
+// 소유자 본인만 수정·삭제 가능. 소유자 없는(시드) 식당은 관리자만 가능
+const allowed =
+  restaurant.userId === null ? user.role === 'admin' : restaurant.userId === user.id;
+if (!allowed) throw new ForbiddenException(message);
 ```
 
 ---
