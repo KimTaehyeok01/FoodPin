@@ -1,5 +1,7 @@
 node_modules/
 dist/
 .env
-.claude/
+.claude/artifacts/
+.claude/settings.local.json
+.claude/launch.json
 .idea/
