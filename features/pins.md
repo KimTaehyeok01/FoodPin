@@ -27,9 +27,11 @@
 | `frontend/src/components/PinForm.tsx` | 별점·메모 수정 폼 |
 | `frontend/src/pages/my/FavoritesPage.tsx` | 찜한 맛집 목록 |
 | `frontend/src/pages/my/BadgesPage.tsx` | 뱃지 전체보기 (달성 조건·진행률) |
+| `frontend/src/pages/my/StatsPage.tsx` | 방문 통계 대시보드 (카테고리별·별점별·월별 차트) |
 | `frontend/src/pages/restaurant/RestaurantDetailPage.tsx` | 리뷰 탭 (식당의 모든 핀) |
 | `frontend/src/api/restaurants.ts` | `pinsApi` 클라이언트 |
 | `frontend/src/utils/badges.ts` | 핀 데이터 기반 뱃지 정의·판정 로직 |
+| `frontend/src/utils/stats.ts` | 핀 데이터 기반 통계 집계 로직 (카테고리별/별점별/월별) |
 
 ---
 
@@ -187,6 +189,17 @@ export function isBadgeEarned(badge: BadgeDef, pins: Pin[]): boolean {
 **BadgesPage** — 전체 뱃지를 그리드로 표시, 각 카드에 진행률 바(`progress/target`)와 잠금 여부(`bdg-card--locked`, 그레이스케일) 표시.
 
 **설계 이유:** 뱃지 조건이 방문 개수/카테고리/별점처럼 단순 카운트 기반이라, 프론트에서 `pins` 데이터로 즉시 계산 가능. 서버 테이블·API 없이 가볍게 구현했다. 나중에 연속 방문일 등 시계열 조건이 추가되면 백엔드로 옮기는 걸 고려한다.
+
+### 방문 통계 대시보드 (MyPage → `/stats`)
+
+뱃지와 동일하게 서버 API 추가 없이, `pinsApi.getMyPins()` 결과를 클라이언트에서 집계해 recharts로 시각화한다(`utils/stats.ts`).
+
+- **KPI 3개**: 총 방문, 평균 별점, 이번달 방문
+- **카테고리별 방문 순위**: `restaurant.category`별 카운트(가로 막대, 내림차순, 상위 6개)
+- **별점 분포**: 1~5점별 카운트(세로 막대, 0건도 표시)
+- **월별 방문 추이**: 최근 6개월 카운트(영역 차트, 방문 없는 달도 0으로 표시)
+
+모두 단일 계열 차트라 앱 브랜드 컬러(`#ff6b35`) 하나로 통일하고 범례는 두지 않는다.
 
 ---
 

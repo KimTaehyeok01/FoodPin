@@ -1,0 +1,187 @@
+/* 내 방문 통계 대시보드 페이지 스타일 — 모바일 퍼스트 (375px) */
+
+.stats-page {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 68px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: #f5f5f7;
+  z-index: 10;
+  transform: translateX(0);
+  animation: stats-slide-in 0.36s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes stats-slide-in {
+  from { transform: translateX(100%); }
+  to   { transform: translateX(0); }
+}
+
+.stats-page--leaving {
+  animation: stats-slide-out 0.36s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes stats-slide-out {
+  from { transform: translateX(0); }
+  to   { transform: translateX(100%); }
+}
+
+/* ── 헤더 ── */
+.stats-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: linear-gradient(135deg, #0e1628 0%, #131f3a 100%);
+  padding: 52px 20px 28px;
+}
+
+.stats-back {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255,255,255,0.12);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.stats-title {
+  font-size: 20px;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -0.4px;
+}
+
+/* ── 바디 ── */
+.stats-body {
+  background: #f5f5f7;
+  border-radius: 20px 20px 0 0;
+  margin-top: -24px;
+  padding: 20px 16px;
+  min-height: 60vh;
+}
+
+/* ── KPI ── */
+.stats-kpi {
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border-radius: 18px;
+  padding: 18px 8px;
+  margin-bottom: 14px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+}
+
+.stats-kpi__item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.stats-kpi__item + .stats-kpi__item {
+  border-left: 1px solid #f0f0f3;
+}
+
+.stats-kpi__num {
+  font-size: 20px;
+  font-weight: 800;
+  color: #ff6b35;
+}
+
+.stats-kpi__label {
+  font-size: 12px;
+  color: #999;
+}
+
+/* ── 차트 카드 ── */
+.stats-card {
+  background: #fff;
+  border-radius: 18px;
+  padding: 18px 14px 14px;
+  margin-bottom: 14px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+}
+
+.stats-card__title {
+  font-size: 14px;
+  font-weight: 800;
+  color: #111;
+  margin-bottom: 12px;
+}
+
+.stats-chart-wrap {
+  width: 100%;
+  height: 200px;
+}
+
+/* ── 빈 상태 ── */
+.stats-empty {
+  text-align: center;
+  padding: 60px 0 40px;
+  color: #bbb;
+  font-size: 15px;
+  line-height: 2;
+}
+
+.stats-empty p:first-child { font-size: 40px; }
+
+.stats-empty__sub {
+  font-size: 13px;
+  color: #ccc;
+}
+
+/* ── 스켈레톤 ── */
+.stats-skeleton {
+  height: 200px;
+  border-radius: 18px;
+  margin-bottom: 14px;
+  background: linear-gradient(90deg, #e8e8ec 25%, #f2f2f5 50%, #e8e8ec 75%);
+  background-size: 200% 100%;
+  animation: stats-shimmer 1.4s infinite;
+}
+
+.stats-skeleton--kpi {
+  height: 76px;
+}
+
+@keyframes stats-shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ── 태블릿 (600px+) ── */
+@media (min-width: 600px) {
+  .stats-chart-wrap {
+    height: 240px;
+  }
+}
+
+/* ── PC (960px+) ── */
+@media (min-width: 960px) {
+  .stats-page {
+    top: 60px;
+    bottom: 0;
+  }
+
+  .stats-header {
+    padding: 28px 40px;
+  }
+
+  .stats-body {
+    max-width: 900px;
+    margin: -24px auto 0;
+    padding: 28px 40px;
+  }
+
+  .stats-chart-wrap {
+    height: 260px;
+  }
+}

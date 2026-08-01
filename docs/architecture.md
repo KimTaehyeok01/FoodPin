@@ -101,6 +101,7 @@ AppModule
 /favorites                 → FavoritesPage
 /profile-edit              → ProfileEditPage
 /badges                    → BadgesPage
+/stats                     → StatsPage
 /inquiries                 → InquiriesPage
 /notifications             → NotificationsPage
 /notification-settings     → NotificationSettingsPage

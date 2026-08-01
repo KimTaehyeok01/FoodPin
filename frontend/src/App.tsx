@@ -19,6 +19,7 @@ import MyPage from "./pages/my/MyPage";
 import FavoritesPage from "./pages/my/FavoritesPage";
 import ProfileEditPage from "./pages/my/ProfileEditPage";
 import BadgesPage from "./pages/my/BadgesPage";
+import StatsPage from "./pages/my/StatsPage";
 import InquiriesPage from "./pages/my/InquiriesPage";
 import AdminLoginPage from "./pages/admin/AdminLoginPage";
 import AdminDashboardPage from "./pages/admin/AdminDashboardPage";
@@ -86,6 +87,7 @@ function AppLayout() {
         <Route path="/favorites" element={<FavoritesPage />} />
         <Route path="/profile-edit" element={<ProfileEditPage />} />
         <Route path="/badges" element={<BadgesPage />} />
+        <Route path="/stats" element={<StatsPage />} />
         <Route path="/inquiries" element={<InquiriesPage />} />
         <Route path="/notifications" element={<NotificationsPage />} />
         <Route

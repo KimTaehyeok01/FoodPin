@@ -5,6 +5,7 @@ import {
   Heart,
   Star,
   MapPin,
+  TrendingUp,
   Bell,
   UserRound,
   HelpCircle,
@@ -84,6 +85,13 @@ export default function MyPage() {
       count: pinnedCount,
       color: "#4caf50",
       to: "/favorites",
+    },
+    {
+      Icon: TrendingUp,
+      label: "방문 통계",
+      count: pinnedCount,
+      color: "#9c27b0",
+      to: "/stats",
     },
   ];
 

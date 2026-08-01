@@ -1,4 +1,9 @@
 {
+  "env": {
+    "ENABLE_PROMPT_CACHING_1H": "true",
+    "FORCE_PROMPT_CACHING_5M": "false",
+    "CLAUDE_CODE_ENABLE_AWAY_SUMMARY": "true"
+  },
   "permissions": {
     "allow": [
       "PowerShell(Stop-Process -Name \"node\" -ErrorAction SilentlyContinue)",
@@ -41,7 +46,8 @@
       "Bash(rm -r .claude/artifacts/)",
       "Bash(git worktree remove --force*)",
       "Bash(git worktree remove*)",
-      "Bash(gh pr *)"
+      "Bash(gh pr *)",
+      "Bash(git stash *)"
     ],
     "deny": [
       "Read(.env*)",
@@ -112,11 +118,6 @@
       "Bash(mysqladmin *drop*)"
     ],
     "defaultMode": "auto"
-  },
-  "env": {
-    "ENABLE_PROMPT_CACHING_1H": "true",
-    "FORCE_PROMPT_CACHING_5M": "false",
-    "CLAUDE_CODE_ENABLE_AWAY_SUMMARY": "true"
   },
   "skipDangerousModePermissionPrompt": false
 }
