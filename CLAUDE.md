@@ -370,6 +370,8 @@ When something fails:
 | `ddl-auto` 게이트    | 운영·공용 프로파일에서 `validate`/`none`                 | TypeORM `synchronize: true` — **개발 환경 전용**, 운영 배포 시 마이그레이션 전환 필요          | ORM이 달라 게이트 미적용. 운영 전환은 별도 과제                                          |
 | 프런트 테스트 전략   | Vitest/Jest + React Testing Library                      | 테스트 프레임워크 미도입 — `npm run build`(tsc) + `npm run lint`로 검증                        | 프런트 테스트 인프라 없음                                                                 |
 | verifier 빌드 명령   | `./gradlew build`                                        | `backend/`: `npm run build` + `npm test` · `frontend/`: `npm run build` + `npm run lint`       | 스택 대응                                                                                 |
+| 프런트 스킬 전제     | `component`·`data-fetching`·`styling`·`frontend-testing` 등 Next.js/RSC 전제 | Next.js 미사용 → Vite + react-router-dom SPA. 서버 컴포넌트·Next 라우팅·캐싱 전략 언급 부분은 **해당 없음** | RSC 개념 자체가 없는 순수 클라이언트 SPA 구조                                            |
+| 리뷰 오케스트레이션 기본 트랙 | 조건 미충족 시 예외적으로만 경량 트랙(fast-track) 적용, 기본은 풀스쿼드(architect~verifier) | 신규 도메인·연관관계 3개 이상·보안 민감 변경이 아니면 **경량 수정 트랙을 기본값**으로 채택 (reviewer 단독 + 관련 테스트) | 1인 포트폴리오 규모라 풀스쿼드 오버헤드 대비 실효 낮음                                    |
 
 ---
 
