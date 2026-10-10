@@ -152,7 +152,7 @@ export interface MapViewHandle {
 
 - 정보: 주소, 전화번호, 영업시간, 브레이크타임, 소개글
 - 메뉴: `menus` 배열 (이름, 가격, 인기여부, 이모지)
-- 리뷰: `GET /pins/restaurant/:id` 응답 (유저 닉네임 + 별점 + 메모)
+- 리뷰: `GET /v1/pins/restaurant/:restaurantId` 응답 (유저 닉네임 + 별점 + 메모)
 
 ---
 

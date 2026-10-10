@@ -116,12 +116,16 @@ NAVER_CLIENT_SECRET=
 NAVER_CALLBACK_URL=http://localhost:3000/auth/naver/callback
 ```
 
+`KAKAO_CALLBACK_URL`·`NAVER_CALLBACK_URL`은 **`/v1` 없이** 유지한다. 두 값은 카카오·네이버 개발자 콘솔에 등록된 Redirect URI와 정확히 일치해야 하며, `main.ts`의 `setGlobalPrefix` `exclude`가 이 경로를 프리픽스에서 제외한다.
+
 ### frontend/.env
 
 ```env
-VITE_API_URL=http://localhost:3000
+VITE_API_URL=http://localhost:3000/v1
 VITE_KAKAO_MAP_KEY=<카카오 JavaScript 키>
 ```
+
+> ⚠️ `VITE_API_URL`은 **반드시 `/v1`을 포함**한다. 백엔드 전 엔드포인트가 `/v1` 프리픽스를 쓰기 때문이다. 배포 시 서버의 `.env`를 갱신하고 프런트를 **재빌드**하지 않으면 구 경로를 호출해 전면 404가 난다.
 
 ---
 
@@ -132,6 +136,20 @@ VITE_KAKAO_MAP_KEY=<카카오 JavaScript 키>
 npm run dev:backend   # NestJS → http://localhost:3000
 npm run dev:frontend  # Vite   → http://localhost:5173
 ```
+
+API 문서는 개발 환경에서 `http://localhost:3000/docs` (Swagger UI). 운영(`NODE_ENV=production`)에서는 노출되지 않는다.
+
+### 백엔드 검증 명령
+
+```bash
+cd backend
+npm run build      # nest build (타입 체크 포함)
+npm test           # jest — Service 단위 + 응답 계약 테스트
+npm run lint       # eslint (검사만, 파일 수정 안 함)
+npm run lint:fix   # eslint --fix (포매팅 자동 수정)
+```
+
+> `lint`와 `lint:fix`는 분리돼 있다. 예전에는 `lint`에 `--fix`가 붙어 있어 **검사만 하려 해도 Entity를 포함한 소스가 자동 재포매팅**됐다. `synchronize: true` 환경에서 Entity 변경은 스키마 재생성 위험이 있어 분리했다.
 
 ---
 

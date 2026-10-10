@@ -16,7 +16,7 @@
 | 파일 | 역할 |
 | ---- | ---- |
 | `backend/src/notifications/notifications.service.ts` | 알림 계산 로직 |
-| `backend/src/notifications/notifications.controller.ts` | GET /notifications |
+| `backend/src/notifications/notifications.controller.ts` | GET /v1/notifications |
 | `backend/src/notifications/notifications.module.ts` | 모듈 정의 |
 
 ### 프론트엔드
@@ -55,7 +55,7 @@ const REVIEW_LIMIT = 20;       // 새 리뷰 최대 개수
 
 ```typescript
 async getNotifications(userId, lat?, lng?, radiusKm?) {
-  const items: NotificationItem[] = [];
+  const items: NotificationResponse[] = [];
 
   // 1. 내 핀 식당의 타인 리뷰
   const myPins = await this.pinRepo.find({ where: { userId } });
@@ -67,7 +67,7 @@ async getNotifications(userId, lat?, lng?, radiusKm?) {
       order: { createdAt: 'DESC' },
       take: REVIEW_LIMIT,
     });
-    // → NotificationItem { type: 'new_review', ... }
+    // → NotificationResponse { type: 'new_review', ... }
   }
 
   // 2. 근처 새 맛집 (lat/lng 있을 때만)
@@ -81,7 +81,7 @@ async getNotifications(userId, lat?, lng?, radiusKm?) {
     const nearby = recent
       .filter(r => haversineKm(lat, lng, r.latitude, r.longitude) <= (radiusKm ?? NEARBY_RADIUS_KM))
       .slice(0, NEARBY_LIMIT);
-    // → NotificationItem { type: 'new_restaurant', ... }
+    // → NotificationResponse { type: 'new_restaurant', ... }
   }
 
   items.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
@@ -136,7 +136,7 @@ const hasUnread = filtered.some(
 ## 프론트엔드 타입
 
 ```typescript
-export interface NotificationItem {
+export class NotificationResponse {
   type: 'new_restaurant' | 'new_review';
   restaurantId: number;
   restaurantName: string;

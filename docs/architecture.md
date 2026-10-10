@@ -37,11 +37,47 @@
 
 ```
 Controller  →  Service  →  TypeORM Repository<Entity>
+    ↑            │
+    └── Response DTO ──┘   (Entity는 Service 밖으로 나가지 않는다)
 ```
 
 - 별도의 Repository 클래스 계층 없음
 - `@InjectRepository(Entity)`로 TypeORM Repository를 Service에 직접 주입
 - Module이 의존성 조립 역할 담당
+
+### Entity 캡슐화 규칙
+
+Service의 public 메서드는 **Entity를 반환하거나 파라미터로 받지 않는다.**
+
+- 반환은 `dto/{domain}.response.dto.ts`의 Response DTO로만. 변환은 `static from()` 정적 팩토리 한 곳에서 일어난다.
+- Entity를 다루는 조회 헬퍼는 `private`로 둔다 (예: `RestaurantsService.findEntityOrFail`).
+- 인증 주체는 `User` Entity가 아니라 `src/common/types/auth-request.ts`의 `AuthUser`(id·nickname·email·role·isBanned)를 쓴다. Controller는 `@Req() req: AuthRequest`로 받는다.
+- 예외: `admin`·`notifications`는 자체 Entity가 없는 집계 전용 도메인이라 타 도메인 Repository를 직접 주입한다. 대신 반환은 반드시 Response DTO다.
+
+### 트랜잭션 경계
+
+`DataSource.transaction()` 콜백을 **다중 쓰기가 있는 메서드에만** 선언한다. 조회와 단일 statement 쓰기는 TypeORM autocommit으로 원자적이라 선언하지 않는다.
+
+| 지점 | 이유 |
+| ---- | ---- |
+| `UsersService.updateProfile` | 프로필 저장 + 선호 카테고리 delete/insert. 분리하면 delete 성공 후 insert 실패 시 카테고리가 전량 소실된다 |
+| `AuthService.register` | 유저 저장 + 선호 카테고리 저장. 분리하면 카테고리 없는 유저가 생기는 부분 실패가 가능하다 |
+
+두 가지 함정을 코드 주석과 테스트로 고정해 두었다.
+
+- **콜백 내부에서는 반드시 `manager.getRepository(...)`를 쓴다.** 주입된 Repository는 트랜잭션 밖 커넥션이라 원자성이 사라진다.
+- **커밋 이후 조회해야 한다.** `updateProfile`이 `getMe()`를 콜백 안에서 부르면 별도 커넥션이 미커밋 데이터를 못 읽어 카테고리가 빈 배열로 응답된다.
+- `bcrypt.hash`는 트랜잭션 밖에 둔다 (CPU 100ms급 작업이 DB 커넥션을 점유하지 않도록).
+
+### 공통 모듈 (`src/common/`)
+
+```
+common/
+├── types/auth-request.ts               ← AuthUser, AuthRequest
+├── utils/mask.util.ts                  ← maskEmail, maskName (로그 PII 마스킹)
+├── dto/error.response.dto.ts           ← Swagger 문서화 전용 (런타임 미사용)
+└── swagger/api-error-responses.decorator.ts  ← @ApiErrorResponses(400, 404, ...)
+```
 
 ### 모듈 구성
 
@@ -53,25 +89,42 @@ AppModule
 │   └── exports: [JwtModule]
 ├── RestaurantsModule
 ├── PinsModule
-├── UsersModule        ← GET/PATCH /users/me (프로필)
+├── UsersModule        ← GET/PATCH /v1/users/me (프로필)
 ├── NotificationsModule
-├── InquiriesModule    ← GET/POST /inquiries (1:1 문의)
-├── AdminModule        ← /admin/* (회원·식당·리뷰·문의 관리, AdminGuard)
+├── InquiriesModule    ← GET/POST /v1/inquiries (1:1 문의)
+├── AdminModule        ← /v1/admin/* (회원·식당·리뷰·문의 관리, AdminGuard)
 └── UploadModule
 ```
+
+### 라우팅 프리픽스
+
+`main.ts`가 `setGlobalPrefix('v1')`로 전 엔드포인트에 `/v1`을 붙인다. **제외 3개**는 `exclude` 옵션으로 레거시 경로를 유지한다.
+
+| 제외 경로 | 이유 |
+| --------- | ---- |
+| `GET /auth/kakao/callback` | 카카오 개발자 콘솔 등록 Redirect URI와 일치해야 함 |
+| `GET /auth/naver/callback` | 네이버 개발자 콘솔 등록 Callback URL과 일치해야 함 |
+| `GET /` | 헬스체크성 루트 |
+
+정적 파일은 `useStaticAssets`가 프리픽스 영향을 받지 않으므로 **`/uploads`와 `/v1/uploads` 양쪽에 등록**한다. 프런트가 `${VITE_API_URL}${photoUrl}`로 조립하기 때문에 한쪽만 등록하면 식당 사진이 전부 404가 된다.
 
 ### 파일 구조 (도메인별 반복 패턴)
 
 ```
 {domain}/
 ├── {domain}.module.ts         ← 모듈 정의 + 엔티티 등록
-├── {domain}.controller.ts     ← HTTP 엔드포인트
-├── {domain}.service.ts        ← 비즈니스 로직
+├── {domain}.controller.ts     ← HTTP 엔드포인트 + Swagger 데코레이터
+├── {domain}.service.ts        ← 비즈니스 로직 (Response DTO 반환)
+├── {domain}.service.spec.ts   ← Service 단위 테스트 (Repository는 mock)
 ├── {domain}.entity.ts         ← TypeORM 엔티티
 └── dto/
-    ├── create-{domain}.dto.ts
-    └── update-{domain}.dto.ts
+    ├── create-{domain}.dto.ts          ← 요청 DTO (class-validator + @ApiProperty)
+    ├── update-{domain}.dto.ts          ← PartialType(@nestjs/swagger)
+    ├── {domain}.response.dto.ts        ← 응답 DTO 전체 (static from)
+    └── {domain}.response.spec.ts       ← 응답 계약 회귀 테스트
 ```
+
+`update-*.dto.ts`의 `PartialType`은 `@nestjs/mapped-types`가 아니라 **`@nestjs/swagger`**에서 import한다. mapped-types 판은 `@ApiProperty` 메타데이터를 상속하지 않아 Swagger 스키마가 빈 객체로 나온다 (검증 동작은 두 구현이 동일).
 
 ---
 
@@ -172,7 +225,7 @@ const activeBase = isBase ? location.pathname : lastBase;
 ### 일반 로그인
 
 ```
-1. POST /auth/login { email, password }
+1. POST /v1/auth/login { email, password }
 2. bcrypt.compare() 검증
 3. jwtService.sign({ sub: user.id }) → JWT
 4. 프론트: localStorage.setItem('token', token)

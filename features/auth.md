@@ -37,7 +37,7 @@
 
 ## 회원가입 (일반)
 
-**엔드포인트:** `POST /auth/register` (rate limit 5회/분)
+**엔드포인트:** `POST /v1/auth/register` (rate limit 5회/분)
 
 **DTO 필드**
 - `email: string` — `@IsEmail()`
@@ -56,11 +56,11 @@
 2. `bcrypt.hash(password, 10)` 해싱
 3. User 저장 (name, nickname, address, age, gender 모두 저장) — 저장 시 `email` 유니크 위반(race)이 나면 동일한 `ConflictException`(409)으로 변환
 4. 즐겨찾는 카테고리가 있으면 `user_favorite_category` 테이블에 저장
-5. `generateToken(user)` → `{ token }`
+5. `issueToken(user)` → `{ token }` (서비스가 `TokenResponse`로 반환)
 
 ### 이메일 중복 확인 (회원가입 1단계)
 
-**엔드포인트:** `GET /auth/check-email?email={email}` (rate limit 20회/분)
+**엔드포인트:** `GET /v1/auth/check-email?email={email}` (rate limit 20회/분)
 
 프론트엔드 회원가입 폼은 3단계로 구성된다 (기본 정보 → 추가 정보 → 선호 음식).
 이메일 중복 확인은 **1단계(기본 정보) 입력 완료 후, 2단계로 넘어가기 전**에 수행한다.
@@ -68,10 +68,10 @@
 
 ```typescript
 // authService.isEmailAvailable(email) → boolean
-// 컨트롤러: GET /auth/check-email → { available: boolean }
+// 컨트롤러: GET /v1/auth/check-email → { available: boolean }
 ```
 
-실제 가입(`POST /auth/register`) 시에도 동일한 중복 체크를 한 번 더 수행하고, 그 사이를 뚫은 race는 DB의 `email` 유니크 제약이 막는다 (유니크 위반 → 409 변환).
+실제 가입(`POST /v1/auth/register`) 시에도 동일한 중복 체크를 한 번 더 수행하고, 그 사이를 뚫은 race는 DB의 `email` 유니크 제약이 막는다 (유니크 위반 → 409 변환).
 
 ### 주소 입력 (다음 우편번호 서비스)
 
@@ -91,7 +91,7 @@ new daum.Postcode({
 
 ## 로그인 (일반)
 
-**엔드포인트:** `POST /auth/login` (`@HttpCode(200)`, rate limit 5회/분)
+**엔드포인트:** `POST /v1/auth/login` (`@HttpCode(200)`, rate limit 5회/분)
 
 **DTO 필드**
 - `email: string`
@@ -100,7 +100,7 @@ new daum.Postcode({
 **서비스 로직**
 1. `email`로 유저 조회 → 없으면 `UnauthorizedException('이메일 또는 비밀번호가 올바르지 않습니다.')`
 2. `bcrypt.compare(password, user.password)` → 불일치 시 동일 메시지
-3. `generateToken(user)` → `{ token }` — 정지(`isBanned`) 계정은 여기서 `UnauthorizedException('정지된 계정입니다.')` (관리자·소셜 로그인도 동일 지점에서 차단)
+3. `issueToken(user)` → `{ token }` — 정지(`isBanned`) 계정은 여기서 `UnauthorizedException('정지된 계정입니다.')` (관리자·소셜 로그인도 동일 지점에서 차단)
 
 ---
 
@@ -122,7 +122,7 @@ new daum.Postcode({
 - 없으면 자동 회원가입 (nickname, profileImage 소셜 프로필에서 가져옴)
 - 있으면 기존 유저 반환
 - 동시 콜백(더블클릭 등)으로 insert가 유니크 제약에 걸리면 먼저 생성된 유저를 재조회해서 반환
-- 정지(`isBanned`) 계정은 `generateToken`에서 차단 — 리다이렉트 대신 401 JSON 반환
+- 정지(`isBanned`) 계정은 `issueToken`에서 차단 — 리다이렉트 대신 401 JSON 반환
 
 **AuthCallback 구현**
 ```tsx
@@ -153,7 +153,7 @@ AuthCallback: localStorage에 token 저장
 - 뒤로가기 없음 — 필수 입력이므로 건너뛸 수 없다
 - 진입 시 `usersApi.getMe()`로 카카오/네이버 프로필의 닉네임을 기본값으로 채워둠 (그 자리에서 바로 수정 가능)
 - 필드: 이름(필수), 닉네임(필수, 소셜 프로필 값이 기본 채워짐), 주소(다음 우편번호 팝업, 필수), 나이(필수), 성별(필수), 선호 음식(선택)
-- 제출 시 `usersApi.updateProfile({ name, nickname, address, age, gender, favoriteCategories })` → `PATCH /users/me`
+- 제출 시 `usersApi.updateProfile({ name, nickname, address, age, gender, favoriteCategories })` → `PATCH /v1/users/me`
 - 성공 시 `navigate('/', { replace: true })`
 
 **재로그인 시 처리:** 이미 완성된 유저는 매번 `getMe()`로 확인만 하고 바로 홈으로 이동한다.
@@ -165,7 +165,7 @@ AuthCallback: localStorage에 token 저장
 
 ```typescript
 // 생성 — 모든 발급 경로(일반·관리자·소셜)가 이 메서드를 거치며, 정지 계정은 여기서 차단
-generateToken(user: User): string {
+issueToken(user: AuthUser): string {
   if (user.isBanned) throw new UnauthorizedException('정지된 계정입니다.');
   return this.jwtService.sign({ sub: user.id });
 }

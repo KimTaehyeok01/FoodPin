@@ -135,16 +135,19 @@
 ## 📡 API 명세
 
 - 상세 명세 문서. [`docs/api.md`](docs/api.md)
-- Base URL(개발). `http://localhost:3000`
+- Base URL(개발). `http://localhost:3000/v1`
+- Swagger UI(개발). `http://localhost:3000/docs` — 운영에서는 노출되지 않는다
+
+모든 엔드포인트는 `/v1` 프리픽스를 쓴다. 예외는 OAuth 콜백 2종(`/auth/kakao/callback`·`/auth/naver/callback`)과 루트(`/`)로, 카카오·네이버 개발자 콘솔에 등록된 Redirect URI와 일치해야 해서 프리픽스에서 제외했다. 정적 파일은 `/uploads`·`/v1/uploads` 양쪽에서 접근된다.
 
 대표 엔드포인트.
-- `POST /auth/register`
-- `POST /auth/login`
-- `GET/POST/PATCH/DELETE /restaurants`
-- `GET/POST/PATCH/DELETE /pins`
-- `GET /notifications`
-- `POST /upload/image`
-- `GET/PATCH /users/me`
+- `POST /v1/auth/register`
+- `POST /v1/auth/login`
+- `GET/POST/PATCH/DELETE /v1/restaurants`
+- `GET/POST/PATCH/DELETE /v1/pins`
+- `GET /v1/notifications`
+- `POST /v1/upload/image`
+- `GET/PATCH /v1/users/me`
 
 ---
 
@@ -303,6 +306,9 @@ erDiagram
 1. 토큰 저장은 `localStorage` 기반이라 XSS 대응 관점에서 개선 여지가 있습니다.
 2. `restaurant.userId = null` 레코드는 현재 정책상 인증 유저가 수정 가능한 상태입니다.
 3. 알림은 실시간 푸시가 아닌 조회 기반 계산 방식입니다.
+4. `latitude`/`longitude`가 엔드포인트마다 타입이 다릅니다. 조회 응답은 MySQL `DECIMAL`을 TypeORM이 문자열로 주고(`"37.3670000"`), 생성 응답은 요청 값이 그대로 나가 숫자입니다. 프런트가 `Number()`로 감싸 흡수하고 있으며, 정합화하려면 프런트 4곳과 API 문서를 함께 고쳐야 합니다.
+5. 알림의 근처 식당 필터링이 in-memory 하버사인 계산입니다. 최근 식당 100건을 적재한 뒤 거리로 거르는 방식이라 데이터가 늘면 SQL 레벨 필터링으로 옮겨야 합니다.
+6. `synchronize: true`는 개발 환경 전용입니다. 운영 배포 전 마이그레이션 방식으로 전환해야 합니다.
 
 ---
 
@@ -328,8 +334,9 @@ npm run dev:backend
 npm run dev:frontend
 ```
 
-- Backend. `http://localhost:3000`
+- Backend. `http://localhost:3000` (API는 `/v1` 프리픽스)
 - Frontend. `http://localhost:5173`
+- Swagger UI. `http://localhost:3000/docs`
 
 ### 4) 빌드
 
@@ -337,6 +344,17 @@ npm run dev:frontend
 npm run build:backend
 npm run build:frontend
 ```
+
+### 5) 백엔드 검증
+
+```bash
+cd backend
+npm test           # jest — Service 단위 + 응답 계약 테스트
+npm run lint       # eslint 검사만 (파일 수정 안 함)
+npm run lint:fix   # 포매팅 자동 수정이 필요할 때만
+```
+
+`lint`와 `lint:fix`는 분리돼 있습니다. `lint`에 `--fix`가 붙어 있으면 검사만 하려 해도 Entity를 포함한 소스가 자동 재포매팅되는데, `synchronize: true` 환경에서 Entity 변경은 스키마 재생성 위험이 있기 때문입니다.
 
 ---
 
@@ -365,12 +383,16 @@ NAVER_CLIENT_SECRET=
 NAVER_CALLBACK_URL=http://localhost:3000/auth/naver/callback
 ```
 
+`KAKAO_CALLBACK_URL`·`NAVER_CALLBACK_URL`은 **`/v1` 없이** 유지합니다. 두 값은 개발자 콘솔에 등록된 Redirect URI와 정확히 일치해야 하며, 백엔드가 이 경로만 프리픽스에서 제외합니다.
+
 ### frontend/.env
 
 ```env
-VITE_API_URL=http://localhost:3000
+VITE_API_URL=http://localhost:3000/v1
 VITE_KAKAO_MAP_KEY=
 ```
+
+> ⚠️ `VITE_API_URL`은 반드시 `/v1`을 포함합니다. 배포 시 서버의 `.env`를 갱신하고 프런트를 **재빌드**하지 않으면 구 경로를 호출해 전면 404가 납니다.
 
 ---
 

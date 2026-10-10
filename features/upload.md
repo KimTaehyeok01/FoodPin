@@ -13,7 +13,7 @@ multer를 사용하여 `backend/uploads/` 디렉토리에 저장한다.
 
 | 파일 | 역할 |
 | ---- | ---- |
-| `backend/src/upload/upload.controller.ts` | POST /upload/image 엔드포인트 |
+| `backend/src/upload/upload.controller.ts` | POST /v1/upload/image 엔드포인트 |
 | `backend/src/upload/upload.module.ts` | multer 설정 |
 | `backend/src/main.ts` | 정적 파일 서빙 설정 |
 | `frontend/src/api/restaurants.ts` | `uploadImage()` 함수 |

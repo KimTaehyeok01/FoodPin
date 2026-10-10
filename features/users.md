@@ -22,7 +22,7 @@
 | `backend/src/users/user.entity.ts` | 유저 엔티티 (+ FOOD_CATEGORIES re-export) |
 | `backend/src/users/user-favorite-category.entity.ts` | 즐겨찾는 카테고리 엔티티 |
 | `backend/src/users/users.service.ts` | 프로필 조회·수정 서비스 |
-| `backend/src/users/users.controller.ts` | GET/PATCH /users/me |
+| `backend/src/users/users.controller.ts` | GET/PATCH /v1/users/me |
 | `backend/src/users/users.module.ts` | 모듈 정의 |
 | `backend/src/users/dto/update-profile.dto.ts` | 프로필 수정 DTO |
 

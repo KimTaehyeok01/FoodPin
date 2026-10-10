@@ -23,7 +23,7 @@
 | `backend/src/users/user.entity.ts` | `role`, `isBanned` 컬럼 |
 | `backend/src/auth/auth.service.ts` | `adminLogin()` — role이 admin인 계정만 로그인 허용, 정지 계정 차단 |
 | `backend/src/auth/strategies/jwt.strategy.ts` | 매 요청마다 `isBanned` 재확인 |
-| `backend/src/auth/auth.controller.ts` | `POST /auth/admin/login`, `GET /auth/admin/me` |
+| `backend/src/auth/auth.controller.ts` | `POST /v1/auth/admin/login`, `GET /v1/auth/admin/me` |
 | `backend/src/auth/guards/admin.guard.ts` | `JwtAuthGuard` 통과 후 `role === 'admin'` 검사 |
 | `backend/src/admin/admin.service.ts` | 회원/식당/리뷰/문의 관리 로직 (소유권 체크 없이 전체 접근) |
 | `backend/src/admin/admin.controller.ts` | `/admin/*` 엔드포인트, 전부 `JwtAuthGuard`+`AdminGuard` |

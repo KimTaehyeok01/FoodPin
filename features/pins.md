@@ -6,7 +6,7 @@
 
 유저가 식당에 별점(1~5)과 메모를 남기는 기능.
 한 유저는 한 식당에 핀 1개만 등록할 수 있다 (`(userId, restaurantId)` UNIQUE).
-"찜한 맛집" 목록은 내 핀 목록(`GET /pins/me`)을 기반으로 한다.
+"찜한 맛집" 목록은 내 핀 목록(`GET /v1/pins/me`)을 기반으로 한다.
 
 ---
 
@@ -73,7 +73,7 @@ export class Pin {
 | Method | URL | 설명 |
 | ------ | --- | ---- |
 | GET | /pins/me | 내 핀 목록 (restaurant 포함) |
-| GET | /pins/restaurant/:id | 특정 식당의 모든 핀 (user 정보 포함) |
+| GET | /v1/pins/restaurant/:restaurantId | 특정 식당의 모든 핀 (user 정보 포함) |
 | POST | /pins/:restaurantId | 핀 등록 |
 | PATCH | /pins/:restaurantId | 핀 수정 |
 | DELETE | /pins/:restaurantId | 핀 삭제 (204) |

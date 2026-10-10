@@ -1,6 +1,48 @@
 # API Reference
 
-Base URL: `http://localhost:3000` (개발) / 배포 도메인 (운영)
+Base URL: `http://localhost:3000/v1` (개발) / `{배포 도메인}/v1` (운영)
+
+---
+
+## API 버전 프리픽스
+
+모든 엔드포인트는 `/v1` 프리픽스를 사용한다 (`main.ts`의 `setGlobalPrefix('v1')`).
+
+**프리픽스가 붙지 않는 예외 3가지.**
+
+| 경로 | 이유 |
+| ---- | ---- |
+| `GET /auth/kakao/callback` | 카카오 개발자 콘솔에 등록된 Redirect URI와 일치해야 한다. 프리픽스를 붙이면 콘솔을 수동 수정해야 하고 누락 시 소셜 로그인이 전면 장애난다 |
+| `GET /auth/naver/callback` | 위와 동일 (네이버 개발자 콘솔) |
+| `GET /` | 헬스체크성 루트 핸들러 |
+
+로그인 **개시** URL(`/v1/auth/kakao`, `/v1/auth/naver`)은 콘솔 등록 대상이 아니라 프리픽스가 붙는다.
+
+정적 파일(`/uploads/{filename}`)은 `setGlobalPrefix`의 영향을 받지 않으며, 프런트가 `${VITE_API_URL}${photoUrl}`로 경로를 조립하는 것에 대응하기 위해 **`/uploads`와 `/v1/uploads` 양쪽에 등록**돼 있다.
+
+> ⚠️ 프런트엔드의 `VITE_API_URL`은 반드시 `/v1`을 포함해야 한다. 배포 시 서버의 `.env`를 갱신하고 프런트를 재빌드하지 않으면 구 경로를 호출해 전면 404가 난다.
+
+---
+
+## Swagger
+
+개발 환경에서 `GET /docs`로 대화형 API 문서를 제공한다 (`@nestjs/swagger`).
+
+- **운영 환경(`NODE_ENV=production`)에서는 노출되지 않는다** — 관리자 API 목록과 DTO 스키마 전체가 공개되면 공격 표면이 넓어지기 때문.
+- JWT는 우측 상단 `Authorize` 버튼에 `Bearer {token}` 형식으로 입력한다.
+- 문서상의 경로에는 `/v1` 프리픽스가 반영되어 있다.
+
+---
+
+## 응답 형태
+
+Service는 Entity를 직접 반환하지 않고 **Response DTO**를 반환한다 (`dto/{domain}.response.dto.ts`). Entity → DTO 변환은 각 DTO의 `static from()` 정적 팩토리 한 곳에서만 일어난다.
+
+주의할 직렬화 특성 세 가지.
+
+- **생성 응답도 모든 키를 유지하며, 요청에 없던 컬럼은 `null`로 나간다.** TypeORM `repo.create()`가 nullable 컬럼을 `null`로, `default`가 있는 컬럼을 기본값으로 채우기 때문에 `undefined`가 발생하지 않는다. `POST /v1/restaurants` 응답은 `phone`·`description`·`hoursWeekday`·`hoursWeekend`·`breakTime`을 `null`로 담은 키 15개, `POST /v1/inquiries` 응답은 `status: "pending"`·`answer: null`·`answeredAt: null`을 포함한 키 8개다.
+- **키가 생략되는 곳은 서비스가 `select`로 명시 제외한 필드다.** 값이 `undefined`이면 `JSON.stringify`가 키를 빼기 때문이다. 예를 들어 `GET /v1/pins/restaurant/:restaurantId` 응답에는 `updatedAt` 키가 없고, `GET /v1/admin/pins` 응답에는 `userId`·`restaurantId`·`updatedAt` 키가 없다.
+- **`latitude`/`longitude`는 엔드포인트마다 타입이 다르다.** 조회 응답은 MySQL `DECIMAL`을 TypeORM이 문자열로 주므로 `"37.3670000"`, 생성 응답은 요청 값이 그대로 나가므로 `37.367`이다. 프런트는 `Number()`로 감싸 사용한다.
 
 ---
 
@@ -23,7 +65,7 @@ Authorization: Bearer {token}
 | 조회 성공 | 200 OK |
 | 생성 성공 | 201 Created |
 | 삭제 성공 | 204 No Content |
-| POST /auth/login 성공 | 200 OK (명시적 지정) |
+| POST /v1/auth/login 성공 | 200 OK (명시적 지정) |
 | 유효성 검사 실패 | 400 Bad Request |
 | 인증 없음 / 토큰 무효 | 401 Unauthorized |
 | 권한 없음 (타인 리소스) | 403 Forbidden |
@@ -35,7 +77,7 @@ Authorization: Bearer {token}
 
 ## Auth
 
-### GET /auth/check-email
+### GET /v1/auth/check-email
 
 이메일 중복 확인. 회원가입 1단계(기본 정보 입력)에서 다음 단계로 넘어가기 전 호출. rate limit 20회/분.
 
@@ -52,7 +94,7 @@ Authorization: Bearer {token}
 
 ---
 
-### POST /auth/register
+### POST /v1/auth/register
 
 회원가입 (일반 이메일). `address`, `age`, `gender`는 필수값 — 소셜 로그인과 달리 일반 가입은 추가 정보를 의무 입력한다. rate limit 5회/분.
 
@@ -79,7 +121,7 @@ Authorization: Bearer {token}
 
 ---
 
-### POST /auth/login
+### POST /v1/auth/login
 
 일반 로그인. rate limit 5회/분.
 
@@ -98,7 +140,7 @@ Authorization: Bearer {token}
 
 ---
 
-### GET /auth/kakao
+### GET /v1/auth/kakao
 
 카카오 OAuth2 시작. 브라우저를 카카오 로그인 페이지로 리다이렉트. (API 호출이 아닌 전체 페이지 이동)
 
@@ -114,7 +156,7 @@ redirect → {FRONTEND_URL}/auth/callback#token={jwt}
 
 ---
 
-### GET /auth/naver
+### GET /v1/auth/naver
 
 네이버 OAuth2 시작.
 
@@ -126,7 +168,7 @@ redirect → {FRONTEND_URL}/auth/callback#token={jwt}
 
 ---
 
-### POST /auth/admin/login
+### POST /v1/auth/admin/login
 
 관리자 로그인. 이메일+비밀번호만 지원(소셜 로그인 없음). `role`이 `admin`이 아닌 계정은 비밀번호가 맞아도 거부된다. 정지(`isBanned`)된 계정도 거부. rate limit 5회/분.
 
@@ -144,7 +186,7 @@ redirect → {FRONTEND_URL}/auth/callback#token={jwt}
 
 ---
 
-### GET /auth/admin/me *(관리자 인증 필요)*
+### GET /v1/auth/admin/me *(관리자 인증 필요)*
 
 관리자 세션 확인. `role`이 `admin`이 아니면 403.
 
@@ -157,7 +199,7 @@ redirect → {FRONTEND_URL}/auth/callback#token={jwt}
 
 ## Restaurants
 
-### GET /restaurants
+### GET /v1/restaurants
 
 전체 식당 목록 조회. 인증 불필요.
 
@@ -185,7 +227,7 @@ redirect → {FRONTEND_URL}/auth/callback#token={jwt}
 
 ---
 
-### GET /restaurants/:id
+### GET /v1/restaurants/:id
 
 식당 단건 조회 (메뉴 포함). 인증 불필요.
 
@@ -197,6 +239,7 @@ redirect → {FRONTEND_URL}/auth/callback#token={jwt}
   "menus": [
     {
       "id": 1,
+      "restaurantId": 1,
       "name": "돈가스",
       "price": 12000,
       "isPopular": true,
@@ -207,9 +250,11 @@ redirect → {FRONTEND_URL}/auth/callback#token={jwt}
 }
 ```
 
+메뉴 항목의 `restaurantId`는 프런트 `Menu` 타입에는 선언돼 있지 않지만 **응답에 실제로 존재하는 키**다. `RestaurantMenuResponse`에서 빼면 계약 위반이 된다.
+
 ---
 
-### POST /restaurants *(인증 필요)*
+### POST /v1/restaurants *(인증 필요)*
 
 식당 등록.
 
@@ -229,7 +274,7 @@ redirect → {FRONTEND_URL}/auth/callback#token={jwt}
 
 ---
 
-### PATCH /restaurants/:id *(인증 필요)*
+### PATCH /v1/restaurants/:id *(인증 필요)*
 
 식당 수정. 등록자 본인만 가능. 소유자가 없는(`userId: null`) 시드 식당은 관리자만 가능.
 
@@ -242,7 +287,7 @@ redirect → {FRONTEND_URL}/auth/callback#token={jwt}
 
 ---
 
-### DELETE /restaurants/:id *(인증 필요)*
+### DELETE /v1/restaurants/:id *(인증 필요)*
 
 식당 삭제. 등록자 본인만 가능. 소유자가 없는(`userId: null`) 시드 식당은 관리자만 가능.
 
@@ -252,7 +297,7 @@ redirect → {FRONTEND_URL}/auth/callback#token={jwt}
 
 ## Pins
 
-### GET /pins/me *(인증 필요)*
+### GET /v1/pins/me *(인증 필요)*
 
 내 핀 목록. restaurant 관계 포함.
 
@@ -273,7 +318,7 @@ redirect → {FRONTEND_URL}/auth/callback#token={jwt}
 
 ---
 
-### GET /pins/restaurant/:id *(인증 필요)*
+### GET /v1/pins/restaurant/:restaurantId *(인증 필요)*
 
 특정 식당의 핀(리뷰) 목록. user 정보 포함.
 
@@ -298,7 +343,7 @@ redirect → {FRONTEND_URL}/auth/callback#token={jwt}
 
 ---
 
-### POST /pins/:restaurantId *(인증 필요)*
+### POST /v1/pins/:restaurantId *(인증 필요)*
 
 핀 등록. (userId, restaurantId) 조합은 UNIQUE — 중복 시 409.
 
@@ -314,7 +359,7 @@ redirect → {FRONTEND_URL}/auth/callback#token={jwt}
 
 ---
 
-### PATCH /pins/:restaurantId *(인증 필요)*
+### PATCH /v1/pins/:restaurantId *(인증 필요)*
 
 핀 수정. 본인 핀만 가능.
 
@@ -327,7 +372,7 @@ redirect → {FRONTEND_URL}/auth/callback#token={jwt}
 
 ---
 
-### DELETE /pins/:restaurantId *(인증 필요)*
+### DELETE /v1/pins/:restaurantId *(인증 필요)*
 
 핀 삭제.
 
@@ -337,7 +382,7 @@ redirect → {FRONTEND_URL}/auth/callback#token={jwt}
 
 ## Notifications
 
-### GET /notifications *(인증 필요)*
+### GET /v1/notifications *(인증 필요)*
 
 알림 목록. 근처 새 맛집 + 내 핀 식당의 새 리뷰.
 
@@ -380,7 +425,7 @@ redirect → {FRONTEND_URL}/auth/callback#token={jwt}
 
 ## Upload
 
-### POST /upload/image *(인증 필요)*
+### POST /v1/upload/image *(인증 필요)*
 
 이미지 업로드. `multipart/form-data`.
 
@@ -401,7 +446,7 @@ field: file (이미지 파일, 최대 10MB)
 
 ## Users
 
-### GET /users/me *(인증 필요)*
+### GET /v1/users/me *(인증 필요)*
 
 내 프로필 조회. password 등 민감 정보 제외.
 
@@ -424,7 +469,7 @@ field: file (이미지 파일, 최대 10MB)
 
 ---
 
-### PATCH /users/me *(인증 필요)*
+### PATCH /v1/users/me *(인증 필요)*
 
 프로필 수정. 수정할 필드만 포함. `favoriteCategories`를 보내면 기존 즐겨찾는 카테고리를 전부 교체한다 (빈 배열이면 전체 삭제). `profileImage`에 `null`을 보내면 기본 프로필로 되돌린다.
 
@@ -441,13 +486,13 @@ field: file (이미지 파일, 최대 10MB)
 }
 ```
 
-**Response** `200 OK` — 수정된 프로필 (GET /users/me와 동일 형식, favoriteCategories 포함)
+**Response** `200 OK` — 수정된 프로필 (GET /v1/users/me와 동일 형식, favoriteCategories 포함)
 
 ---
 
 ## Inquiries
 
-### GET /inquiries *(인증 필요)*
+### GET /v1/inquiries *(인증 필요)*
 
 내 문의 목록.
 
@@ -469,7 +514,7 @@ field: file (이미지 파일, 최대 10MB)
 
 ---
 
-### POST /inquiries *(인증 필요)*
+### POST /v1/inquiries *(인증 필요)*
 
 문의 등록.
 
@@ -483,7 +528,7 @@ field: file (이미지 파일, 최대 10MB)
 
 **Response** `201 Created` — 생성된 문의 객체 (`status: "pending"`)
 
-**답변:** `PATCH /admin/inquiries/:id/answer`(관리자 전용)으로 등록한다.
+**답변:** `PATCH /v1/admin/inquiries/:id/answer`(관리자 전용)으로 등록한다.
 
 ---
 
@@ -491,7 +536,7 @@ field: file (이미지 파일, 최대 10MB)
 
 모든 엔드포인트 `JwtAuthGuard` + `AdminGuard` 적용 — `role`이 `admin`이 아니면 403.
 
-### GET /admin/stats
+### GET /v1/admin/stats
 
 요약 통계.
 
@@ -502,7 +547,7 @@ field: file (이미지 파일, 최대 10MB)
 
 ---
 
-### GET /admin/users
+### GET /v1/admin/users
 
 회원 목록. `search` 쿼리로 닉네임/이메일 부분 검색.
 
@@ -523,7 +568,7 @@ field: file (이미지 파일, 최대 10MB)
 
 ---
 
-### PATCH /admin/users/:id/ban
+### PATCH /v1/admin/users/:id/ban
 
 회원 정지/해제.
 
@@ -535,7 +580,7 @@ field: file (이미지 파일, 최대 10MB)
 
 ---
 
-### DELETE /admin/users/:id
+### DELETE /v1/admin/users/:id
 
 회원 삭제. 연관된 핀·즐겨찾기·문의가 CASCADE로 함께 삭제된다.
 
@@ -543,13 +588,13 @@ field: file (이미지 파일, 최대 10MB)
 
 ---
 
-### GET /admin/restaurants
+### GET /v1/admin/restaurants
 
 식당 목록. `search` 쿼리로 이름 부분 검색.
 
 ---
 
-### DELETE /admin/restaurants/:id
+### DELETE /v1/admin/restaurants/:id
 
 식당 삭제 (등록자 소유권 무관, 관리자는 전체 삭제 가능). 관련 핀·메뉴가 CASCADE로 함께 삭제된다.
 
@@ -557,13 +602,13 @@ field: file (이미지 파일, 최대 10MB)
 
 ---
 
-### GET /admin/pins
+### GET /v1/admin/pins
 
 전체 리뷰(핀) 목록. 작성자 닉네임 + 식당 이름 포함.
 
 ---
 
-### DELETE /admin/pins/:id
+### DELETE /v1/admin/pins/:id
 
 부적절한 리뷰 삭제.
 
@@ -571,13 +616,13 @@ field: file (이미지 파일, 최대 10MB)
 
 ---
 
-### GET /admin/inquiries
+### GET /v1/admin/inquiries
 
 전체 유저의 문의 목록 (작성자 닉네임/이메일 포함).
 
 ---
 
-### PATCH /admin/inquiries/:id/answer
+### PATCH /v1/admin/inquiries/:id/answer
 
 문의 답변 등록. `status`를 `answered`로, `answeredAt`을 현재 시각으로 자동 설정.
 
