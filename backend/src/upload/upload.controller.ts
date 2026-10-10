@@ -1,43 +1,57 @@
+// 이미지 업로드 API 엔드포인트 — 인증 필요
 import {
   Controller,
   Post,
+  Req,
   UseInterceptors,
   UploadedFile,
   UseGuards,
-  BadRequestException,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { diskStorage } from 'multer';
-import { extname } from 'path';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
+  ApiCreatedResponse,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { UploadService } from './upload.service';
+import { MULTER_IMAGE_OPTIONS } from './upload.options';
+import { UploadImageResponse } from './dto/upload.response.dto';
+import { AuthRequest } from '../common/types/auth-request';
+import { ApiErrorResponses } from '../common/swagger/api-error-responses.decorator';
 
-const ALLOWED_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
-
+@ApiTags('7.업로드')
+@ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
 @Controller('upload')
 export class UploadController {
+  constructor(private readonly uploadService: UploadService) {}
+
   @Post('image')
-  @UseInterceptors(
-    FileInterceptor('file', {
-      storage: diskStorage({
-        destination: './uploads',
-        filename: (_req, file, cb) => {
-          const unique = `${Date.now()}-${Math.round(Math.random() * 1e6)}`;
-          cb(null, `${unique}${extname(file.originalname)}`);
+  @UseInterceptors(FileInterceptor('file', MULTER_IMAGE_OPTIONS))
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        file: {
+          type: 'string',
+          format: 'binary',
+          description: '이미지 파일 (jpg·jpeg·png·gif·webp, 최대 10MB)',
         },
-      }),
-      fileFilter: (_req, file, cb) => {
-        const ext = extname(file.originalname).toLowerCase();
-        if (!file.mimetype.match(/^image\//) || !ALLOWED_EXTENSIONS.includes(ext)) {
-          return cb(new BadRequestException('이미지 파일만 업로드 가능합니다.'), false);
-        }
-        cb(null, true);
       },
-      limits: { fileSize: 10 * 1024 * 1024 }, // 10MB
-    }),
-  )
-  uploadImage(@UploadedFile() file: Express.Multer.File) {
-    if (!file) throw new BadRequestException('파일이 없습니다.');
-    return { url: `/uploads/${file.filename}` };
+    },
+  })
+  @ApiOperation({ summary: '이미지 업로드' })
+  @ApiCreatedResponse({ type: UploadImageResponse })
+  @ApiErrorResponses(400, 401)
+  uploadImage(
+    @UploadedFile() file: Express.Multer.File,
+    @Req() req: AuthRequest,
+  ): UploadImageResponse {
+    return this.uploadService.buildImageUrl(file, req.user.id);
   }
 }

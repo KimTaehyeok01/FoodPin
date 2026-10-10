@@ -5,6 +5,7 @@ import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../../users/user.entity';
+import { AuthUser } from '../../common/types/auth-request';
 
 interface JwtPayload {
   sub: number;
@@ -24,28 +25,27 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
     });
   }
 
-  async validate(payload: JwtPayload): Promise<User> {
-    // password를 제외하고 조회 — req.user가 실수로 응답에 실려도 해시가 유출되지 않도록
+  async validate(payload: JwtPayload): Promise<AuthUser> {
+    // AuthUser가 소비하는 5필드만 조회 — 비밀번호 해시를 포함한 불필요한 PII를 요청 컨텍스트에 싣지 않는다
     const user = await this.userRepository.findOne({
       where: { id: payload.sub },
       select: {
         id: true,
-        provider: true,
-        providerId: true,
-        email: true,
-        name: true,
         nickname: true,
-        profileImage: true,
-        address: true,
-        age: true,
-        gender: true,
+        email: true,
         role: true,
         isBanned: true,
-        createdAt: true,
       },
     });
     if (!user) throw new UnauthorizedException();
     if (user.isBanned) throw new UnauthorizedException('정지된 계정입니다.');
-    return user;
+
+    return {
+      id: user.id,
+      nickname: user.nickname,
+      email: user.email,
+      role: user.role,
+      isBanned: user.isBanned,
+    };
   }
 }

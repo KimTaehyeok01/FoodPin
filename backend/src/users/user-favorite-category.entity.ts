@@ -19,7 +19,9 @@ export class UserFavoriteCategory {
   @Column({ type: 'varchar', length: 50 })
   category: FoodCategory;
 
-  @ManyToOne(() => User, (user) => user.favoriteCategories, { onDelete: 'CASCADE' })
+  @ManyToOne(() => User, (user) => user.favoriteCategories, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'userId' })
   user: User;
 }

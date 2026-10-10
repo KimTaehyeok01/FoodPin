@@ -1,5 +1,10 @@
 // JwtAuthGuard 통과 후 role이 admin인지 검사하는 가드
-import { CanActivate, ExecutionContext, ForbiddenException, Injectable } from '@nestjs/common';
+import {
+  CanActivate,
+  ExecutionContext,
+  ForbiddenException,
+  Injectable,
+} from '@nestjs/common';
 import { User } from '../../users/user.entity';
 
 @Injectable()

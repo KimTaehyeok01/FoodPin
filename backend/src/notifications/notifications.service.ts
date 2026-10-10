@@ -4,22 +4,20 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { In, MoreThanOrEqual, Not, Repository } from 'typeorm';
 import { Restaurant } from '../restaurants/restaurant.entity';
 import { Pin } from '../pins/pin.entity';
+import { NotificationResponse } from './dto/notification.response.dto';
 
 const NEARBY_RADIUS_KM = 5;
 const NEARBY_DAYS = 3; // 최근 3일 이내 등록된 식당만 새 맛집 알림
 const NEARBY_LIMIT = 5;
 const REVIEW_LIMIT = 20;
 
-export interface NotificationItem {
-  type: 'new_restaurant' | 'new_review';
-  restaurantId: number;
-  restaurantName: string;
-  message: string;
-  createdAt: Date;
-}
-
 // 두 좌표 사이 거리(km) — 하버사인
-function haversineKm(lat1: number, lng1: number, lat2: number, lng2: number): number {
+function haversineKm(
+  lat1: number,
+  lng1: number,
+  lat2: number,
+  lng2: number,
+): number {
   const R = 6371;
   const dLat = ((lat2 - lat1) * Math.PI) / 180;
   const dLng = ((lng2 - lng1) * Math.PI) / 180;
@@ -45,8 +43,8 @@ export class NotificationsService {
     lat?: number,
     lng?: number,
     radiusKm?: number,
-  ): Promise<NotificationItem[]> {
-    const items: NotificationItem[] = [];
+  ): Promise<NotificationResponse[]> {
+    const items: NotificationResponse[] = [];
 
     // 1. 내가 핀한 식당에 남겨진 다른 사람의 리뷰
     const myPins = await this.pinRepo.find({ where: { userId } });
